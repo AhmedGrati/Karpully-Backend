@@ -1,43 +1,20 @@
+import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-
+import {EnvironmentVariables} from '../common/EnvironmentVariables';
 require('dotenv').config();
 
 class DatabaseConfigService {
 
-  constructor(private env: { [k: string]: string | undefined }) { }
-
-  private getValue(key: string, throwOnMissing = true): string {
-    const value = this.env[key];
-    if (!value && throwOnMissing) {
-      throw new Error(`config error - missing env.${key}`);
-    }
-
-    return value;
-  }
-
-  public ensureValues(keys: string[]) {
-    keys.forEach(k => this.getValue(k, true));
-    return this;
-  }
-
-  public getPort() {
-    return this.getValue('PORT', true);
-  }
-
-  public isProduction() {
-    const mode = this.getValue('MODE', false);
-    return mode != 'DEV';
-  }
+  constructor(private readonly configService: ConfigService<EnvironmentVariables>) { }
 
   public getTypeOrmConfig(): TypeOrmModuleOptions {
     return {
       type: 'postgres',
-
-      host: this.getValue('HOST'),
-      port: parseInt(this.getValue('DB_PORT')),
-      username: this.getValue('USER_NAME'),
-      password: this.getValue('PASSWORD'),
-      database: this.getValue('DATABASE'),
+      host: this.configService.get<string>('HOST'),
+      port: this.configService.get<number>('DB_PORT'),
+      username: this.configService.get<string>('USER_NAME'),
+      password: this.configService.get<string>('PASSWORD'),
+      database: this.configService.get<string>('DATABASE'),
 
       entities: ['./src/**/*.entity{.ts,.js}','./dist/**/*.entity{.ts,.js}'],
       logging:true
@@ -46,13 +23,6 @@ class DatabaseConfigService {
 
 }
 
-const databaseConfigService = new DatabaseConfigService(process.env)
-  .ensureValues([
-    'HOST',
-    'PORT',
-    'USER_NAME',
-    'PASSWORD',
-    'DATABASE'
-  ]);
+const databaseConfigService = new DatabaseConfigService(new ConfigService<EnvironmentVariables>()).getTypeOrmConfig();
 
 export { databaseConfigService };
