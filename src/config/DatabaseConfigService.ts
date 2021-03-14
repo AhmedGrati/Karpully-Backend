@@ -40,8 +40,7 @@ class DatabaseConfigService {
       database: this.getValue('DATABASE'),
 
       entities: ['./src/**/*.entity{.ts,.js}','./dist/**/*.entity{.ts,.js}'],
-      logging:true,
-      synchronize:true
+      logging:true
     };
   }
 

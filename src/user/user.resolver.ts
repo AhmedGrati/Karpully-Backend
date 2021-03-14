@@ -3,13 +3,14 @@ import { UserService } from './user.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
+import { Logger } from '@nestjs/common';
 
 @Resolver('User')
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Mutation(returns => User)
-  createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
+  createUser(@Args('createUserInput') createUserInput: CreateUserInput) { 
     return this.userService.create(createUserInput);
   }
 
@@ -20,9 +21,7 @@ export class UserResolver {
 
   @Query(returns => User)
   findOne(@Args('id') id: number) {
-    // const user: User = new User(id, "ahmedgrati","ahmed","grati",20);
-    // return user;
-    //return this.userService.findOne(id);
+    return this.userService.findOne(id);
   }
 
   @Mutation(returns => User)
