@@ -30,6 +30,8 @@
     "@nestjs/typeorm": "^7.1.5",
     "apollo-server-express": "^2.21.1",
     "bcryptjs": "^2.4.3",
+    "class-transformer": "^0.4.0",
+    "class-validator": "^0.13.1",
     "dotenv": "^8.2.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-jest": "^24.2.0",

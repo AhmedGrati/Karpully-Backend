@@ -1,7 +1,9 @@
 import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import {Gender} from './gender';
 import * as bcrypt from 'bcryptjs';
+import { IsEmail, IsPhoneNumber, Max, Min } from "class-validator";
 @Entity()
 @ObjectType()
 export class User {
@@ -23,16 +25,21 @@ export class User {
 
     @Column()
     @Field()
+    @Min(5)
+    @Max(100)
     age: number;
 
     
     @Column({default:0.0})
     @Field()
+    @Min(0)
+    @Max(5)
     rate: number;
 
     
     @Column()
     @Field()
+    @IsEmail()
     email: string;
 
     
@@ -43,6 +50,7 @@ export class User {
     
     @Column()
     @Field()
+    @IsPhoneNumber()
     telNumber: string;
 
     
@@ -66,8 +74,6 @@ export class User {
     @Column({default:null})
     @Field({nullable:true})
     resetToken: string;
-
-    
 
 
     constructor(id: number,
