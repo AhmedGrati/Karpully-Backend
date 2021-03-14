@@ -74,5 +74,3 @@ and support by the amazing backers. If you'd like to join them, please
 ## License
 
 Nest is [MIT licensed](LICENSE).
-
-## You Find the details for env file in : src/config/DatabaseConfigService.ts
