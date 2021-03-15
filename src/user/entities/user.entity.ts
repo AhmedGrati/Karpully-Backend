@@ -25,8 +25,6 @@ export class User {
 
     @Column()
     @Field()
-    @Min(5)
-    @Max(100)
     age: number;
 
     
@@ -55,7 +53,6 @@ export class User {
 
     
     @Column()
-    @Field()
     password: string;
 
     

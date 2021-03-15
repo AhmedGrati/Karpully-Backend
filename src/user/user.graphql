@@ -12,7 +12,6 @@ type User {
   email: String!
   localization: String!
   telNumber: String!
-  password: String!
   authorities: [String!]
   roles: [String!]
   gender: Float!
