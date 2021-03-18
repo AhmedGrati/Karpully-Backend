@@ -1,9 +1,9 @@
 import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
+import { Field, HideField, ID, Int, ObjectType } from "@nestjs/graphql";
 import {Gender} from './gender';
-import * as bcrypt from 'bcryptjs';
-import { IsEmail, IsPhoneNumber, Max, Min } from "class-validator";
+import * as bcrypt from 'bcrypt';
+import { IsEmail, IsNotEmpty, isNotEmpty, IsPhoneNumber, Max, Min } from "class-validator";
 @Entity()
 @ObjectType()
 export class User {
@@ -40,6 +40,10 @@ export class User {
     @IsEmail()
     email: string;
 
+    @Column()
+    @HideField()
+    salt: string;
+
     
     @Column()
     @Field()
@@ -53,6 +57,7 @@ export class User {
 
     
     @Column()
+    @HideField()
     password: string;
 
     
@@ -61,8 +66,8 @@ export class User {
     authorities: string[];
     
     @Column("text",{array:true, default:null})
-    @Field(() => [String],{nullable:true})
-    roles: string[];
+    @Field(() => String,{nullable:true})
+    role: string;
     
     @Column()
     @Field()
@@ -84,7 +89,8 @@ export class User {
         password:string,
         resetToken:string,
         gender:Gender,
-        roles:string[],
+        salt: string,
+        roles:string,
         authorities:string[],
         localization:string) {
         this.id = id;
@@ -98,14 +104,16 @@ export class User {
         this.password = password;
         this.resetToken = resetToken;
         this.gender = gender;
-        this.roles = roles;
+        this.role = roles;
         this.authorities = authorities;
         this.localization = localization;
+        this.salt = salt;
     }
 
     @BeforeInsert()
     async hashPassword() {
-        this.password = await bcrypt.hash(this.password, 10);
+        this.salt = await bcrypt.genSalt();
+        this.password = await bcrypt.hash(this.password, this.salt);
     }
 
 }

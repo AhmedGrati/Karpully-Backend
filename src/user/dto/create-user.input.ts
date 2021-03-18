@@ -1,5 +1,5 @@
 import { Field, ID, InputType, ObjectType,Int } from "@nestjs/graphql";
-import { IsEmail, IsPhoneNumber, Max, Min } from "class-validator";
+import { IsEmail, IsNotEmpty, IsPhoneNumber, Max, Min } from "class-validator";
 import { Gender } from "../entities/gender";
 
 @InputType()
@@ -8,17 +8,21 @@ export class CreateUserInput {
     id: number;
 
     @Field()
+    @IsNotEmpty()
     username: string;
 
     @Field()
+    @IsNotEmpty()
     firstname: string;
 
     @Field()
+    @IsNotEmpty()
     lastname: string;
 
     @Field()
     @Min(5)
     @Max(100)
+    @IsNotEmpty()
     age: number;
 
     
@@ -30,19 +34,23 @@ export class CreateUserInput {
     
     @Field()
     @IsEmail()
+    @IsNotEmpty()
     email: string;
 
     
     @Field()
+    @IsNotEmpty()
     localization: string;
 
     
     @Field()
     @IsPhoneNumber()
+    @IsNotEmpty()
     telNumber: string;
 
     
     @Field()
+    @IsNotEmpty()
     password: string;
 
     

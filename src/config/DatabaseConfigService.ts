@@ -17,7 +17,7 @@ class DatabaseConfigService {
       database: this.configService.get<string>('DATABASE'),
 
       entities: ['./src/**/*.entity{.ts,.js}','./dist/**/*.entity{.ts,.js}'],
-      logging:true
+      logging:true,
     };
   }
 

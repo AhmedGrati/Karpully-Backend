@@ -13,9 +13,13 @@ type User {
   localization: String!
   telNumber: String!
   authorities: [String!]
-  roles: [String!]
+  role: String
   gender: Float!
   resetToken: String
+}
+
+type TokenModel {
+  access_token: String!
 }
 
 type Query {
@@ -27,6 +31,7 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   update(updateUserInput: UpdateUserInput!): User!
   remove(id: Float!): User!
+  login(credentialsInput: CredentialsInput!): TokenModel!
 }
 
 input CreateUserInput {
@@ -61,4 +66,9 @@ input UpdateUserInput {
   roles: [String!]
   gender: Float
   resetToken: String
+}
+
+input CredentialsInput {
+  username: String!
+  password: String!
 }

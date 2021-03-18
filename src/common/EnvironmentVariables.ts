@@ -5,4 +5,5 @@ export interface EnvironmentVariables {
     USER_NAME:string;
     PASSWORD:string;
     DATABASE:string;
+    SECRET: string;
 }

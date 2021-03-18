@@ -3,11 +3,19 @@ import { UserService } from './user.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
-import { Logger } from '@nestjs/common';
+import { forwardRef, Inject, Logger, UseGuards } from '@nestjs/common';
+import { GqlAuthGuard } from '../auth/gql-auth-guard';
+import { CurrentUser } from '../shared/current-user.decorator';
+import { AuthService } from '../auth/auth.service';
+import { CredentialsInput } from '../auth/dto/credentials.input';
 
-@Resolver('User')
+
+@Resolver(of => User)
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService, 
+    private readonly authService:  AuthService     
+    ) {}
 
   @Mutation(returns => User)
   createUser(@Args('createUserInput') createUserInput: CreateUserInput) { 
@@ -15,6 +23,7 @@ export class UserResolver {
   }
 
   @Query(returns => [User])
+  @UseGuards(GqlAuthGuard)
   findAll() {
     return this.userService.findAll();
   }
@@ -33,4 +42,5 @@ export class UserResolver {
   remove(@Args('id') id: number) {
     return this.userService.remove(id);
   }
+
 }

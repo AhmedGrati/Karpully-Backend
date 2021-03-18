@@ -1,14 +1,19 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { check } from 'prettier';
 import { Repository } from 'typeorm';
 import { CreateUserInput } from './dto/create-user.input';
+import { CredentialsInput } from '../auth/dto/credentials.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
-
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(User) private readonly userRepository: Repository<User>){}
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>
+  ){}
+
+
   async create(createUserInput: CreateUserInput): Promise<User> {
     // check if the user is unique or not
     let checkUser = await this.userRepository.findOne({username: createUserInput.username, email: createUserInput.email})
@@ -46,4 +51,9 @@ export class UserService {
     await this.userRepository.delete(id);
     return userToRemove;
   }
+
+  async findByUsername(username: string): Promise<User> {
+    return await this.userRepository.findOne({where:{username}});
+  }
+
 }
