@@ -5,7 +5,7 @@ import { User } from './entities/user.entity';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtStrategy } from '../auth/jwt.strategy';
+import { JwtStrategy } from '../auth/strategies/jwt.strategy';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AuthModule } from '../auth/auth.module';
 import { AuthService } from '../auth/auth.service';

@@ -8,6 +8,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './shared/guards/roles.guards';
 
 
 @Module({
@@ -17,6 +19,7 @@ import { join } from 'path';
     ConfigModule.forRoot({isGlobal:true}),
     AuthModule,
     GraphQLModule.forRoot({
+      fieldResolverEnhancers:["guards"],
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
     }),
   ],

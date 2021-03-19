@@ -8,7 +8,7 @@ import { join } from 'path';
 import { EnvironmentVariables } from 'src/common/EnvironmentVariables';
 import { User } from '../user/entities/user.entity';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthResolver } from './auth.resolver';
 import * as dotenv from 'dotenv';
 

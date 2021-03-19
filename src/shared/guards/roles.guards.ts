@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, Logger } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { Observable } from "rxjs";
@@ -18,12 +18,14 @@ export class RolesGuard implements CanActivate {
         // if the required roles are undefined we activate the guard so we return true
         if(!requiredRoles) {
             return true;
+            
         }else{
             const ctx = GqlExecutionContext.create(context);
-            const {user} = ctx.getContext().req.user;
-            return requiredRoles.some((role) => user.roles?.include(role));
+            const user = ctx.getContext().req.user;
+            Logger.log({user}, "USER");
+            Logger.log(requiredRoles, "ROLES");
+            return requiredRoles.some((role) => user.roles?.indexOf(role) > -1);
         }
-        throw new Error("Method not implemented.");
     }
     
 }
