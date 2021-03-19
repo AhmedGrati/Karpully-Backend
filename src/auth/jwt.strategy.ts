@@ -27,8 +27,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     // if the user is not null or undefined which means that we find it
     if (user) {
-      const {password, salt, ...result} = user;
-      return result
+      delete user.salt;
+      delete user.password;
+      return user;
     }else{
       // if we don't find the user it means that he's unauthorized
       throw new UnauthorizedException()

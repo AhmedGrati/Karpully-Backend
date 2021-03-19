@@ -13,7 +13,7 @@ type User {
   localization: String!
   telNumber: String!
   authorities: [String!]
-  role: String
+  role: String!
   gender: Float!
   resetToken: String
 }

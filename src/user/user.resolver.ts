@@ -24,7 +24,8 @@ export class UserResolver {
 
   @Query(returns => [User])
   @UseGuards(GqlAuthGuard)
-  findAll() {
+  findAll(@CurrentUser() user: User) {
+    Logger.log({user}, "USER RESOLVER");
     return this.userService.findAll();
   }
 

@@ -4,6 +4,7 @@ import { Field, HideField, ID, Int, ObjectType } from "@nestjs/graphql";
 import {Gender} from './gender';
 import * as bcrypt from 'bcrypt';
 import { IsEmail, IsNotEmpty, isNotEmpty, IsPhoneNumber, Max, Min } from "class-validator";
+import { UserRoleEnum } from "./user-role.enum";
 @Entity()
 @ObjectType()
 export class User {
@@ -65,8 +66,14 @@ export class User {
     @Field(() => [String], {nullable:true})
     authorities: string[];
     
-    @Column("text",{array:true, default:null})
-    @Field(() => String,{nullable:true})
+    @Column(
+        {
+        type: 'enum',
+        enum: UserRoleEnum,
+        default: UserRoleEnum.USER
+        }
+    )
+    @Field()
     role: string;
     
     @Column()
