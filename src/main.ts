@@ -18,6 +18,7 @@ async function bootstrap() {
         },
       },
   }));
+  // TODO: Add CORS configuration
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(port);
   Logger.log(`Server start on https://localhost:${port}`, 'BOOTSTRAP');

@@ -13,9 +13,14 @@ type User {
   localization: String!
   telNumber: String!
   authorities: [String!]
-  role: String!
+  roles: [UserRoleEnum!]!
   gender: Float!
   resetToken: String
+}
+
+enum UserRoleEnum {
+  ADMIN
+  USER
 }
 
 type TokenModel {

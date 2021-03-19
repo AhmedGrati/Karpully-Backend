@@ -18,6 +18,7 @@ class DatabaseConfigService {
 
       entities: ['./src/**/*.entity{.ts,.js}','./dist/**/*.entity{.ts,.js}'],
       logging:true,
+      synchronize:true
     };
   }
 

@@ -5,6 +5,7 @@ import {Gender} from './gender';
 import * as bcrypt from 'bcrypt';
 import { IsEmail, IsNotEmpty, isNotEmpty, IsPhoneNumber, Max, Min } from "class-validator";
 import { UserRoleEnum } from "./user-role.enum";
+import { type } from "os";
 @Entity()
 @ObjectType()
 export class User {
@@ -70,11 +71,12 @@ export class User {
         {
         type: 'enum',
         enum: UserRoleEnum,
-        default: UserRoleEnum.USER
+        default: [UserRoleEnum.USER],
+        array:true
         }
     )
-    @Field()
-    role: string;
+    @Field(type => [UserRoleEnum])
+    roles: string[];
     
     @Column()
     @Field()
@@ -97,7 +99,7 @@ export class User {
         resetToken:string,
         gender:Gender,
         salt: string,
-        roles:string,
+        roles:string[],
         authorities:string[],
         localization:string) {
         this.id = id;
@@ -111,7 +113,7 @@ export class User {
         this.password = password;
         this.resetToken = resetToken;
         this.gender = gender;
-        this.role = roles;
+        this.roles = roles;
         this.authorities = authorities;
         this.localization = localization;
         this.salt = salt;

@@ -3,6 +3,6 @@ export interface PayloadInterface {
     username: string;
     firstname: string;
     lastname: string;
-    role: string;
+    roles: string[];
 
 }
