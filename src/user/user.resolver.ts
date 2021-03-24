@@ -33,18 +33,21 @@ export class UserResolver {
   }
 
   @Query(returns => User)
-  findOne(@Args('id') id: number) {
-    return this.userService.findOne(id);
+  @Auth(UserRoleEnum.USER)
+  findOne(@CurrentUser() user: User,@Args('id') id: number) {
+    return this.userService.findOne(user,id);
   }
 
   @Mutation(returns => User)
-  update(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-    return this.userService.update(updateUserInput.id, updateUserInput);
+  @Auth(UserRoleEnum.USER)
+  update(@CurrentUser() user:User, @Args('updateUserInput') updateUserInput: UpdateUserInput) {
+    return this.userService.update(user,updateUserInput.id, updateUserInput);
   }
 
   @Mutation(returns => User)
-  remove(@Args('id') id: number) {
-    return this.userService.remove(id);
+  @Auth(UserRoleEnum.USER)
+  remove(@CurrentUser()user:User, @Args('id') id: number) {
+    return this.userService.remove(user,id);
   }
 
 }

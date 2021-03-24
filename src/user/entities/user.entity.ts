@@ -13,7 +13,7 @@ export class User {
     @Field(type => Int,{nullable:true})
     id: number;
 
-    @Column()
+    @Column({unique:true})
     @Field()
     username: string;
 
@@ -37,7 +37,7 @@ export class User {
     rate: number;
 
     
-    @Column()
+    @Column({unique:true})
     @Field()
     @IsEmail()
     email: string;
@@ -72,7 +72,8 @@ export class User {
         type: 'enum',
         enum: UserRoleEnum,
         default: [UserRoleEnum.USER],
-        array:true
+        array:true,
+        nullable:true,
         }
     )
     @Field(type => [UserRoleEnum])

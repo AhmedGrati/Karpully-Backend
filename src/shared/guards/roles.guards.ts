@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, Logger } from "@nestjs/commo
 import { Reflector } from "@nestjs/core";
 import { GqlExecutionContext } from "@nestjs/graphql";
 import { Observable } from "rxjs";
-import { UserRoleEnum } from "src/user/entities/user-role.enum";
+import { UserRoleEnum } from "../../user/entities/user-role.enum";
 import { ROLES_KEY } from "../decorators/roles.decorator";
 
 @Injectable()
@@ -15,16 +15,25 @@ export class RolesGuard implements CanActivate {
             context.getHandler(),
             context.getClass()
         ]);
-        // if the required roles are undefined we activate the guard so we return true
+        // if the required roles are undefined we return true so we don't activate the guard
         if(!requiredRoles) {
             return true;
             
         }else{
             const ctx = GqlExecutionContext.create(context);
             const user = ctx.getContext().req.user;
-            Logger.log({user}, "USER");
-            Logger.log(requiredRoles, "ROLES");
-            return requiredRoles.some((role) => user.roles?.indexOf(role) > -1);
+            // if the required role is admin
+            if(requiredRoles.indexOf(UserRoleEnum.ADMIN) > -1) {
+                // if the user role is also admin we return true
+                if( user.roles.indexOf(UserRoleEnum.ADMIN) > -1) {
+                    return true;
+                }
+                // else we activate the guard
+                return false;
+            }else{
+                // if the required role is USER it actually means that we won't activate the guard
+                return true;
+            }
         }
     }
     
