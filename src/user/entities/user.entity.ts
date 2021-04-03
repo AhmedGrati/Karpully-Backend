@@ -87,6 +87,10 @@ export class User {
     @Field({nullable:true})
     resetToken: string;
 
+    @Column({default: false})
+    @Field()
+    isConfirmed: boolean;
+
 
     constructor(id: number,
         username:string,
@@ -102,6 +106,7 @@ export class User {
         salt: string,
         roles:string[],
         authorities:string[],
+        isConfirmed: boolean,
         localization:string) {
         this.id = id;
         this.username = username;
@@ -118,6 +123,7 @@ export class User {
         this.authorities = authorities;
         this.localization = localization;
         this.salt = salt;
+        this.isConfirmed = isConfirmed;
     }
 
     @BeforeInsert()
