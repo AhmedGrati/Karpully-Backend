@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CredentialsInput } from 'src/auth/dto/credentials.input';
@@ -8,6 +8,7 @@ import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { PayloadInterface } from './dto/payload.interface';
 import { TokenModel } from './dto/token.model';
+import { PASSWORD_LOGIN_MISSMATCH_ERROR_MESSAGE, ACCOUNT_NOT_ACTIVATED_ERROR_MESSAGE } from "../utils/constants";
 @Injectable()
 export class AuthService {
     constructor(
@@ -32,7 +33,9 @@ export class AuthService {
         
         // if the user is null is means that we don't have any user with that email or password
         if (!user) {
-            throw new NotFoundException("Your username and/or password do not match");
+            throw new NotFoundException(PASSWORD_LOGIN_MISSMATCH_ERROR_MESSAGE);
+        } else if (!user.isConfirmed) {
+          throw new UnauthorizedException(ACCOUNT_NOT_ACTIVATED_ERROR_MESSAGE);
         }else{
           // if we get the user
           const hashedPassword = await bcrypt.hash(password, user.salt)
@@ -52,7 +55,7 @@ export class AuthService {
             }
           } else {
             // if the password is not equal to user.password that means that the credentials are not true
-            throw new NotFoundException("Your username and/or password do not match");
+            throw new NotFoundException(PASSWORD_LOGIN_MISSMATCH_ERROR_MESSAGE);
           }
         }
     }

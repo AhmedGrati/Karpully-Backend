@@ -16,6 +16,7 @@ type User {
   roles: [UserRoleEnum!]!
   gender: Float!
   resetToken: String
+  isConfirmed: Boolean!
 }
 
 enum UserRoleEnum {
