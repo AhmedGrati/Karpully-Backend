@@ -13,3 +13,8 @@
 1. The user will sign up
 2. An email will be sent to the user
 3. The user must confirm his registration after a maximum of two days
+
+## License
+
+The source code for the site is licensed under the MIT license, which you can
+find in the LICENSE.txt file.
