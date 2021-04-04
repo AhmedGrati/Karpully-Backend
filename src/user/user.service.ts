@@ -90,6 +90,11 @@ export class UserService {
     }
   }
 
+  /*
+    if email confirmation is true it means that the user confirm the registration in a maximum of two days
+    so we should update the user and make his confirmation attribute to true
+    else we should delete him from database so he could make another registration with the same data (email, username etc..)
+  */
   async validUserConfirmation(emailVerificationInput:EmailVerificationInput): Promise<Boolean> {
     const {userId, token, verificationToken} = emailVerificationInput;
     const user: User = await this.userRepository.findOne({where:{id:userId}}); 
@@ -98,6 +103,8 @@ export class UserService {
       if(emailConfirmation) {
         user.isConfirmed = true;
         await this.userRepository.save(user);
+      }else{
+        await this.userRepository.delete(userId);
       }
       return emailConfirmation;
     }else{
