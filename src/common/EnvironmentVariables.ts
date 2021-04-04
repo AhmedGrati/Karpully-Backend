@@ -6,4 +6,6 @@ export interface EnvironmentVariables {
     PASSWORD:string;
     DATABASE:string;
     SECRET: string;
+    KARPULLY_EMAIL_LOGIN: string;
+    KARPULLY_EMAIL_PASSWORD: string;
 }

@@ -7,6 +7,7 @@ import { UserService } from '../user/user.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
+import { emailCredentials } from '../config/EmailConfigService';
 
 @Module({
   providers: [EmailResolver, EmailService],
@@ -16,10 +17,7 @@ import { join } from 'path';
       transport: {
         host: "smtp.gmail.com",
         port:587,
-        auth: {
-          user:'karpully.tech@gmail.com',
-          pass:'karpully2021'
-        }
+        auth: emailCredentials
       },
       defaults:{
         from: 'karpully.tech@gmail.com'

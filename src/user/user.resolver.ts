@@ -13,6 +13,7 @@ import { UserRoleEnum } from './entities/user-role.enum';
 import { RolesGuard } from '../shared/guards/roles.guards';
 import { Auth } from '../shared/decorators/auth.decorator';
 import { EmailVerificationInput } from '../email/dto/email-verification.input';
+import { ResetPasswordInput } from '../email/dto/reset-password.input';
 
 
 @Resolver(of => User)
@@ -55,6 +56,11 @@ export class UserResolver {
   @Mutation(returns => Boolean)
   confirmEmail(@Args('emailVerificationInput') emailVerificationInput: EmailVerificationInput) {
     return this.userService.validUserConfirmation(emailVerificationInput);
+  }
+
+  @Mutation(returns => Boolean)
+  sendResetPasswordEmail(@Args('ResetPasswordInput')resetPasswordInput: ResetPasswordInput) {
+    return this.userService.sendResetPasswordEmail(resetPasswordInput);
   }
 
 }

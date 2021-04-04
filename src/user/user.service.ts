@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, InternalServerErrorException, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { check } from 'prettier';
 import { Repository } from 'typeorm';
@@ -12,7 +12,8 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { EmailService } from '../email/email.service';
 import { EmailTypeEnum } from '../email/entities/email-type.enum';
 import { EmailVerificationInput } from '../email/dto/email-verification.input';
-import { USER_NOT_FOUND_ERROR_MESSAGE } from '../utils/constants';
+import { SENDING_EMAIL_ERROR_MESSAGE, USER_NOT_FOUND_ERROR_MESSAGE } from '../utils/constants';
+import { ResetPasswordInput } from 'src/email/dto/reset-password.input';
 @Injectable()
 export class UserService {
   constructor(
@@ -29,8 +30,12 @@ export class UserService {
       const user = await this.userRepository.create(createUserInput);
       await this.userRepository.save(user);
       // send a confirmation to the user
-      this.emailService.sendEmail(user, EmailTypeEnum.CONFIRMATION);
-      return user;
+      const isEmailSent: Boolean = await this.emailService.sendEmail(user, EmailTypeEnum.CONFIRMATION);
+      if(isEmailSent) {
+        return user;
+      }else{
+        throw new InternalServerErrorException(SENDING_EMAIL_ERROR_MESSAGE);
+      }
     }else{
       // if the user has the same username or email with someone else we throw an exception
       throw new HttpException("The User Already Exists", HttpStatus.BAD_REQUEST);
@@ -108,6 +113,21 @@ export class UserService {
       }
       return emailConfirmation;
     }else{
+      throw new NotFoundException(USER_NOT_FOUND_ERROR_MESSAGE);
+    }
+  }
+
+  async sendResetPasswordEmail(resetPasswordEmail: ResetPasswordInput): Promise<Boolean> {
+    const {email} = resetPasswordEmail;
+    const user: User = await this.userRepository.findOne({where:{email}});
+    if(user) {
+      const isEmailSent: Boolean = await this.emailService.sendEmail(user,EmailTypeEnum.RESET_PASSWORD);
+      if(isEmailSent) {
+        return isEmailSent;
+      }else{
+        throw new InternalServerErrorException(SENDING_EMAIL_ERROR_MESSAGE);
+      }
+    } else {
       throw new NotFoundException(USER_NOT_FOUND_ERROR_MESSAGE);
     }
   }
