@@ -13,7 +13,8 @@ import { EmailService } from '../email/email.service';
 import { EmailTypeEnum } from '../email/entities/email-type.enum';
 import { EmailVerificationInput } from '../email/dto/email-verification.input';
 import { SENDING_EMAIL_ERROR_MESSAGE, USER_NOT_FOUND_ERROR_MESSAGE } from '../utils/constants';
-import { ResetPasswordInput } from 'src/email/dto/reset-password.input';
+import { ResetPasswordEmailInput } from 'src/email/dto/reset-password-email.input';
+import { ResetPasswordInput } from './dto/reset-password.input';
 @Injectable()
 export class UserService {
   constructor(
@@ -104,12 +105,15 @@ export class UserService {
     const {userId, token, verificationToken} = emailVerificationInput;
     const user: User = await this.userRepository.findOne({where:{id:userId}}); 
     if(user) {
-      const emailConfirmation = await this.emailService.confirmEmail(user, token, verificationToken);
+      const emailConfirmation = await this.emailService.confirmEmail(user, token, verificationToken, EmailTypeEnum.CONFIRMATION);
       if(emailConfirmation) {
         user.isConfirmed = true;
         await this.userRepository.save(user);
       }else{
-        await this.userRepository.delete(userId);
+        // if the user account is not confirmed we should delete his account so he can try another registration
+        if(user.isConfirmed === false) {
+          await this.userRepository.delete(userId);
+        }
       }
       return emailConfirmation;
     }else{
@@ -117,7 +121,7 @@ export class UserService {
     }
   }
 
-  async sendResetPasswordEmail(resetPasswordEmail: ResetPasswordInput): Promise<Boolean> {
+  async sendResetPasswordEmail(resetPasswordEmail: ResetPasswordEmailInput): Promise<Boolean> {
     const {email} = resetPasswordEmail;
     const user: User = await this.userRepository.findOne({where:{email}});
     if(user) {
@@ -128,6 +132,21 @@ export class UserService {
         throw new InternalServerErrorException(SENDING_EMAIL_ERROR_MESSAGE);
       }
     } else {
+      throw new NotFoundException(USER_NOT_FOUND_ERROR_MESSAGE);
+    }
+  }
+
+  async resetPassword(resetPasswordInput: ResetPasswordInput){
+    const {email, password, token, verificationToken} = resetPasswordInput;
+    const user: User = await this.userRepository.findOne({where:{email}});
+    if(user) {
+      const emailConfirmation = await this.emailService.confirmEmail(user, token, verificationToken,EmailTypeEnum.RESET_PASSWORD);
+      if(emailConfirmation) {
+        user.password = password;
+        await this.userRepository.save(user);
+      }
+      return emailConfirmation;
+    }else{
       throw new NotFoundException(USER_NOT_FOUND_ERROR_MESSAGE);
     }
   }

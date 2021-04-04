@@ -35,7 +35,6 @@ type User {
   authorities: [String!]
   roles: [UserRoleEnum!]!
   gender: Gender!
-  resetToken: String
   isConfirmed: Boolean!
   sentEmails: [Email!]!
 }
@@ -65,7 +64,8 @@ type Mutation {
   update(updateUserInput: UpdateUserInput!): User!
   remove(id: Float!): User!
   confirmEmail(emailVerificationInput: EmailVerificationInput!): Boolean!
-  sendResetPasswordEmail(ResetPasswordInput: ResetPasswordInput!): Boolean!
+  sendResetPasswordEmail(ResetPasswordEmailInput: ResetPasswordEmailInput!): Boolean!
+  resetPassword(ResetPasswordInput: ResetPasswordInput!): Boolean!
   login(credentialsInput: CredentialsInput!): TokenModel!
 }
 
@@ -104,13 +104,20 @@ input UpdateUserInput {
 }
 
 input EmailVerificationInput {
-  userId: Float!
   token: String!
   verificationToken: String!
+  userId: Float!
+}
+
+input ResetPasswordEmailInput {
+  email: String!
 }
 
 input ResetPasswordInput {
+  token: String!
+  verificationToken: String!
   email: String!
+  password: String!
 }
 
 input CredentialsInput {

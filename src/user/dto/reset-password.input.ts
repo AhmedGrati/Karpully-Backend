@@ -2,8 +2,10 @@ import { Field, InputType } from "@nestjs/graphql";
 import { TokensInterface } from "../../shared/types/tokens.interface";
 
 @InputType()
-export class EmailVerificationInput extends TokensInterface {
+export class ResetPasswordInput extends TokensInterface{
     @Field()
-    userId: number;
+    email: string;
 
+    @Field()
+    password:string;
 }

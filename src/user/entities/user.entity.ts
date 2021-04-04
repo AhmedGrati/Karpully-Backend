@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 import { Field, HideField, ID, Int, ObjectType } from "@nestjs/graphql";
 import {Gender} from './gender';
@@ -85,9 +85,6 @@ export class User {
     @Field(type=>Gender)
     gender : Gender;
     
-    @Column({default:null})
-    @Field({nullable:true})
-    resetToken: string;
 
     @Column({default: false})
     @Field()
@@ -98,6 +95,7 @@ export class User {
     sentEmails: [Email];
 
     @BeforeInsert()
+    @BeforeUpdate()
     async hashPassword() {
         this.salt = await bcrypt.genSalt();
         this.password = await bcrypt.hash(this.password, this.salt);

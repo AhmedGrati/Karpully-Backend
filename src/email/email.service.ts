@@ -85,12 +85,14 @@ export class EmailService {
   else we check the difference between the date of confirmation and the date of sending the email
   if this duration is bigger than 2 days we update the email and set its expiration field to true
   else we return true
+
+  After we check, we should set the mail as expired to prevent the user of using it other times.
   */
-  async confirmEmail(user: User, token: string, verificationToken: string) {
+  async confirmEmail(user: User, token: string, verificationToken: string, emailType: EmailTypeEnum) {
     const userId: number = user.id;
     const email: Email = await this.emailRepository.createQueryBuilder("email")
-      .where("email.sender.id = :userId and email.token = :token and email.verificationToken = :verificationToken",
-        {userId, token, verificationToken}
+      .where("email.sender.id = :userId and email.token = :token and email.verificationToken = :verificationToken and email.emailType = :emailType",
+        {userId, token, verificationToken, emailType}
       ).getOne();
     
     const {isExpired, sentDate} = email;
@@ -104,14 +106,13 @@ export class EmailService {
         const confirmationDate: Date = new Date(); 
 
         const duration: number = DatesOperations.getDayDuration(emailSendingDate, confirmationDate);
+        const expiredEmail = email.setExpired(true);
+        await this.emailRepository.save(expiredEmail);
         if(duration > 2) {
-          const expiredEmail = email.setExpired(true);
-          await this.emailRepository.save(expiredEmail);
           return false;
         }else {
           return true;
         }
-        
       }
     }
 
