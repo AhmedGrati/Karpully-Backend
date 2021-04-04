@@ -11,6 +11,8 @@ import { UserRoleEnum } from './entities/user-role.enum';
 import { MailerService } from '@nestjs-modules/mailer';
 import { EmailService } from '../email/email.service';
 import { EmailTypeEnum } from '../email/entities/email-type.enum';
+import { EmailVerificationInput } from '../email/dto/email-verification.input';
+import { USER_NOT_FOUND_ERROR_MESSAGE } from '../utils/constants';
 @Injectable()
 export class UserService {
   constructor(
@@ -85,6 +87,21 @@ export class UserService {
     }else {
       // else we check if the user who demand to find userById correspond to the actual user in database or not.
       return user.id === id;
+    }
+  }
+
+  async validUserConfirmation(emailVerificationInput:EmailVerificationInput): Promise<Boolean> {
+    const {userId, token, verificationToken} = emailVerificationInput;
+    const user: User = await this.userRepository.findOne({where:{id:userId}}); 
+    if(user) {
+      const emailConfirmation = await this.emailService.confirmEmail(user, token, verificationToken);
+      if(emailConfirmation) {
+        user.isConfirmed = true;
+        await this.userRepository.save(user);
+      }
+      return emailConfirmation;
+    }else{
+      throw new NotFoundException(USER_NOT_FOUND_ERROR_MESSAGE);
     }
   }
 

@@ -97,41 +97,6 @@ export class User {
     @Field(type => [Email])
     sentEmails: [Email];
 
-
-    constructor(id: number,
-        username:string,
-        firstname: string,
-        lastname: string,
-        age: number,
-        email:string,
-        rate:number,
-        telNumber: string,
-        password:string,
-        resetToken:string,
-        gender:Gender,
-        salt: string,
-        roles:string[],
-        authorities:string[],
-        isConfirmed: boolean,
-        localization:string) {
-        this.id = id;
-        this.username = username;
-        this.lastname = lastname;
-        this.firstname = firstname;
-        this.age = age;
-        this.email = email;
-        this.rate = rate;
-        this.telNumber = telNumber;
-        this.password = password;
-        this.resetToken = resetToken;
-        this.gender = gender;
-        this.roles = roles;
-        this.authorities = authorities;
-        this.localization = localization;
-        this.salt = salt;
-        this.isConfirmed = isConfirmed;
-    }
-
     @BeforeInsert()
     async hashPassword() {
         this.salt = await bcrypt.genSalt();

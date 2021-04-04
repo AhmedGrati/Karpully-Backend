@@ -8,6 +8,8 @@ import { EmailBuilder } from './email.builder';
 @Entity()
 export class Email implements EmailBuilder {
 
+
+
   @PrimaryGeneratedColumn()
   @Field(type => Int,{nullable:true})
   id: number;
@@ -24,6 +26,18 @@ export class Email implements EmailBuilder {
   @Field(type => User)
   sender: User;
 
+  @Field()
+  @Column({type: 'uuid'})
+  token: string;
+
+  @Field()
+  @Column({type: 'uuid'})
+  verificationToken: string;
+
+  @Field(type=> Boolean,{nullable: true})
+  @Column({type: 'boolean', default:false})
+  isExpired: Boolean;
+
   setSender(user: User): Email {
     this.sender = user;
     return this;
@@ -34,6 +48,20 @@ export class Email implements EmailBuilder {
   }
   setEmailType(emailType: EmailTypeEnum): Email {
     this.emailType = emailType;
+    return this;
+  }
+
+  setToken(token: string) {
+    this.token = token;
+    return this;
+  }
+  setVerificationToken(token: string) {
+    this.verificationToken = token;
+    return this;
+  }
+
+  setExpired(expired: Boolean) {
+    this.isExpired = expired;
     return this;
   }
 

@@ -7,6 +7,9 @@ type Email {
   sentDate: DateTime!
   emailType: EmailTypeEnum!
   sender: User!
+  token: String!
+  verificationToken: String!
+  isExpired: Boolean
 }
 
 """
@@ -61,6 +64,7 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   update(updateUserInput: UpdateUserInput!): User!
   remove(id: Float!): User!
+  confirmEmail(emailVerificationInput: EmailVerificationInput!): Boolean!
   login(credentialsInput: CredentialsInput!): TokenModel!
 }
 
@@ -96,6 +100,12 @@ input UpdateUserInput {
   roles: [String!]
   gender: Float
   resetToken: String
+}
+
+input EmailVerificationInput {
+  userId: Float!
+  token: String!
+  verificationToken: String!
 }
 
 input CredentialsInput {

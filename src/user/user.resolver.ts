@@ -12,6 +12,7 @@ import { Roles } from '../shared/decorators/roles.decorator';
 import { UserRoleEnum } from './entities/user-role.enum';
 import { RolesGuard } from '../shared/guards/roles.guards';
 import { Auth } from '../shared/decorators/auth.decorator';
+import { EmailVerificationInput } from '../email/dto/email-verification.input';
 
 
 @Resolver(of => User)
@@ -49,6 +50,11 @@ export class UserResolver {
   @Auth(UserRoleEnum.USER)
   remove(@CurrentUser()user:User, @Args('id') id: number) {
     return this.userService.remove(user,id);
+  }
+
+  @Mutation(returns => Boolean)
+  confirmEmail(@Args('emailVerificationInput') emailVerificationInput: EmailVerificationInput) {
+    return this.userService.validUserConfirmation(emailVerificationInput);
   }
 
 }
