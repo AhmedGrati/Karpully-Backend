@@ -25,6 +25,7 @@ export class UserResolver {
   createUser(@Args('createUserInput') createUserInput: CreateUserInput) { 
     return this.userService.create(createUserInput);
   }
+  
 
   @Query(returns => [User])
   @Auth(UserRoleEnum.ADMIN)

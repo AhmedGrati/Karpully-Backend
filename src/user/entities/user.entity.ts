@@ -1,11 +1,13 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 import { Field, HideField, ID, Int, ObjectType } from "@nestjs/graphql";
 import {Gender} from './gender';
 import * as bcrypt from 'bcrypt';
 import { IsEmail, IsNotEmpty, isNotEmpty, IsPhoneNumber, Max, Min } from "class-validator";
 import { UserRoleEnum } from "./user-role.enum";
-import { type } from "os";
+import { Email } from "../../email/entities/email.entity";
+
+
 @Entity()
 @ObjectType()
 export class User {
@@ -80,7 +82,7 @@ export class User {
     roles: string[];
     
     @Column()
-    @Field()
+    @Field(type=>Gender)
     gender : Gender;
     
     @Column({default:null})
@@ -90,6 +92,10 @@ export class User {
     @Column({default: false})
     @Field()
     isConfirmed: boolean;
+
+    @OneToMany(() => Email, email => email.sender)
+    @Field(type => [Email])
+    sentEmails: [Email];
 
 
     constructor(id: number,

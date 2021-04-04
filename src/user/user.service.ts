@@ -8,10 +8,15 @@ import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UserRoleEnum } from './entities/user-role.enum';
+import { MailerService } from '@nestjs-modules/mailer';
+import { EmailService } from '../email/email.service';
+import { EmailTypeEnum } from '../email/entities/email-type.enum';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+
+    private readonly emailService: EmailService
   ){}
 
 
@@ -21,6 +26,8 @@ export class UserService {
     if(!checkUser) {
       const user = await this.userRepository.create(createUserInput);
       await this.userRepository.save(user);
+      // send a confirmation to the user
+      this.emailService.sendEmail(user, EmailTypeEnum.CONFIRMATION);
       return user;
     }else{
       // if the user has the same username or email with someone else we throw an exception
@@ -74,11 +81,8 @@ export class UserService {
   checkAuthorities(user:User, id:number): boolean {
     // If the user is admin he has all authorities
     if(user.roles.indexOf(UserRoleEnum.ADMIN) > -1) {
-      Logger.log("HEy")
       return true;
     }else {
-      Logger.log(user.id,"IIII")
-      Logger.log(id,"IIII")
       // else we check if the user who demand to find userById correspond to the actual user in database or not.
       return user.id === id;
     }

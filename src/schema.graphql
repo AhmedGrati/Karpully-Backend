@@ -2,6 +2,23 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Email {
+  id: Int
+  sentDate: DateTime!
+  emailType: EmailTypeEnum!
+  sender: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum EmailTypeEnum {
+  CONFIRMATION
+  RESET_PASSWORD
+}
+
 type User {
   id: Int
   username: String!
@@ -14,14 +31,20 @@ type User {
   telNumber: String!
   authorities: [String!]
   roles: [UserRoleEnum!]!
-  gender: Float!
+  gender: Gender!
   resetToken: String
   isConfirmed: Boolean!
+  sentEmails: [Email!]!
 }
 
 enum UserRoleEnum {
   ADMIN
   USER
+}
+
+enum Gender {
+  MALE
+  FEMALE
 }
 
 type TokenModel {
@@ -31,6 +54,7 @@ type TokenModel {
 type Query {
   findAll: [User!]!
   findOne(id: Float!): User!
+  email(id: Int!): Email!
 }
 
 type Mutation {

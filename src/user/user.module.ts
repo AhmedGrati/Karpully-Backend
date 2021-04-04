@@ -6,14 +6,15 @@ import { GraphQLModule } from '@nestjs/graphql';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtStrategy } from '../auth/strategies/jwt.strategy';
-import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AuthModule } from '../auth/auth.module';
-import { AuthService } from '../auth/auth.service';
+import { EmailService } from '../email/email.service';
+import { EmailModule } from '../email/email.module';
 @Module({
   providers: [UserResolver, UserService, JwtStrategy],
   imports:[
     TypeOrmModule.forFeature([User]),
-    AuthModule
+    AuthModule,
+    EmailModule
   ],
   exports:[UserService]
 })
