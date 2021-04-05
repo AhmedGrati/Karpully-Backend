@@ -14,6 +14,14 @@
 2. An email will be sent to the user
 3. The user must confirm his registration after a maximum of two days
 
+## Managing applciation:
+1. Make sure you have docker installed on your host
+2. Make the file run-stop.sh executable
+3. To run the up on a specific mode run the following command
+   ./run-stop.sh --type=start --mode=$MODE where $MODE is in (test | prod | dev)
+4. To stop or restart the application you should just change the "--type=start", and fit it to your needs
+#### It should be noted that test implementation is not ready.
+
 ## License
 
 The source code for the site is licensed under the MIT license, which you can
