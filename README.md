@@ -19,7 +19,7 @@
 2. Make the file run-stop.sh executable.
 3. To run the up on a specific mode run the following command<br>
 ```linux
-./run-stop.sh --type=start --mode=$MODE<br>
+./run-stop.sh --type=start --mode=$MODE
 ```
 where $MODE is in (test | prod | dev).
 4. To stop or restart the application you should just change the "--type=start", and fit it to your needs.
