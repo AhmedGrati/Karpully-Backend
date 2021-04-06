@@ -25,8 +25,8 @@
 ```
 
 where $MODE is in (test | prod | dev).<br> 4. To stop or restart the application
-you should just change the "--type=start", and fit it to your needs. 5. In .env
-file, the HOST key should have 'postgres' as value.
+you should just change the "--type=start", and fit it to your needs.<br> 5. In
+.env file, the HOST key should have 'postgres' as value.
 
 #### _It should be noted that test implementation is not ready._
 
