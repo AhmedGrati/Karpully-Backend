@@ -15,15 +15,20 @@
 3. The user must confirm his registration after a maximum of two days.
 
 ## Managing applciation:
+
 1. Make sure you have docker installed on your host.
 2. Make the file run-stop.sh executable.
 3. To run the up on a specific mode run the following command<br>
+
 ```linux
 ./run-stop.sh --type=start --mode=$MODE
 ```
-where $MODE is in (test | prod | dev).<br>
-4. To stop or restart the application you should just change the "--type=start", and fit it to your needs.
-#### *It should be noted that test implementation is not ready.*
+
+where $MODE is in (test | prod | dev).<br> 4. To stop or restart the application
+you should just change the "--type=start", and fit it to your needs. 5. In .env
+file, the HOST key should have 'postgres' as value.
+
+#### _It should be noted that test implementation is not ready._
 
 ## License
 
