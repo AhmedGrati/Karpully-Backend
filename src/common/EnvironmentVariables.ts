@@ -8,4 +8,5 @@ export interface EnvironmentVariables {
     SECRET: string;
     KARPULLY_EMAIL_LOGIN: string;
     KARPULLY_EMAIL_PASSWORD: string;
+    SEED_NUMBER: number;
 }

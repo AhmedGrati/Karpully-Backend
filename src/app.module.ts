@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { EmailModule } from './email/email.module';
+import { FakeUserModule } from './faker/fake-user/fake-user.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { EmailModule } from './email/email.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
     }),
     EmailModule,
+    FakeUserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
