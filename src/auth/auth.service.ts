@@ -42,6 +42,7 @@ export class AuthService {
           // if the password is correct we sign the jwt and return it from the payload
           
           if (hashedPassword === user.password) {
+           
             const payload: PayloadInterface = {
               username: user.username,
               roles: user.roles,

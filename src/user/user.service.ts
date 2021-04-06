@@ -1,20 +1,17 @@
 import { HttpException, HttpStatus, Injectable, InternalServerErrorException, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { check } from 'prettier';
 import { Repository } from 'typeorm';
 import { CreateUserInput } from './dto/create-user.input';
-import { CredentialsInput } from '../auth/dto/credentials.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
-import { JwtService } from '@nestjs/jwt';
 import { UserRoleEnum } from './entities/user-role.enum';
-import { MailerService } from '@nestjs-modules/mailer';
 import { EmailService } from '../email/email.service';
 import { EmailTypeEnum } from '../email/entities/email-type.enum';
 import { EmailVerificationInput } from '../email/dto/email-verification.input';
 import { SENDING_EMAIL_ERROR_MESSAGE, USER_NOT_FOUND_ERROR_MESSAGE } from '../utils/constants';
 import { ResetPasswordEmailInput } from 'src/email/dto/reset-password-email.input';
 import { ResetPasswordInput } from './dto/reset-password.input';
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UserService {
   constructor(
@@ -142,7 +139,7 @@ export class UserService {
     if(user) {
       const emailConfirmation = await this.emailService.confirmEmail(user, token, verificationToken,EmailTypeEnum.RESET_PASSWORD);
       if(emailConfirmation) {
-        user.password = password;
+        user.password = await bcrypt.hash(password, user.salt);
         await this.userRepository.save(user);
       }
       return emailConfirmation;

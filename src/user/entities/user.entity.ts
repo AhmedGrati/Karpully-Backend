@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { IsEmail, IsNotEmpty, isNotEmpty, IsPhoneNumber, Max, Min } from "class-validator";
 import { UserRoleEnum } from "./user-role.enum";
 import { Email } from "../../email/entities/email.entity";
+import { Logger } from "@nestjs/common";
 
 
 @Entity()
@@ -95,7 +96,6 @@ export class User {
     sentEmails: [Email];
 
     @BeforeInsert()
-    @BeforeUpdate()
     async hashPassword() {
         this.salt = await bcrypt.genSalt();
         this.password = await bcrypt.hash(this.password, this.salt);
