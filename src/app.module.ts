@@ -18,6 +18,9 @@ import { FakeUserModule } from './faker/fake-user/fake-user.module';
     ConfigModule.forRoot({isGlobal:true}),
     AuthModule,
     GraphQLModule.forRoot({
+      
+      introspection:true,
+      playground: true,
       fieldResolverEnhancers:["guards"],
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
     }),

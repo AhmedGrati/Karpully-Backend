@@ -40,15 +40,26 @@ while test $# -gt 0; do
       ;;
   esac
 done
-
+if [ -f .env ]; then
+    # Load Environment Variables
+    export $(cat .env | grep -v '#' | awk '/=/ {print $1}')
+fi
 case $TYPE in
-start) 
+start)
+
+    docker build -t karpully/karpully-backend:latest .
+    docker login -u karpully -p $KARPULLY_EMAIL_PASSWORD
+    docker push karpully/karpully-backend:latest 
     docker-compose -f docker-compose.$MODE.yml up
     ;;
 stop)
     docker-compose -f docker-compose.$MODE.yml down
     ;;
 restart)
+
+    docker build -t karpully/karpully-backend:latest .
+    docker login -u karpully -p $KARPULLY_EMAIL_PASSWORD
+    docker push karpully/karpully-backend:latest
     docker-compose -f docker-compose.$MODE.yml restart
     ;;
 esac;

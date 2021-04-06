@@ -3,15 +3,12 @@ version: '3.7'
 services:
   main:
     container_name: karpully-backend
-    build:
-      context: .
-      target: production
+    image: karpully/karpully-backend
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - ${PORT}:${PORT}
-    command: npm run start:prod
     env_file:
       - .env
     networks:
@@ -20,7 +17,7 @@ services:
       - postgres
   postgres:
     container_name: postgres
-    image: postgres:12
+    image: postgres:12-alpine
     networks:
       - webnet
     environment:
