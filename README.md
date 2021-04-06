@@ -21,7 +21,7 @@
 ```linux
 ./run-stop.sh --type=start --mode=$MODE
 ```
-where $MODE is in (test | prod | dev).
+where $MODE is in (test | prod | dev).<br>
 4. To stop or restart the application you should just change the "--type=start", and fit it to your needs.
 #### *It should be noted that test implementation is not ready.*
 
