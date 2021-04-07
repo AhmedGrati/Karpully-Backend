@@ -10,6 +10,9 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { EmailModule } from './email/email.module';
 import { FakeUserModule } from './faker/fake-user/fake-user.module';
+import { CarpoolModule } from './carpool/carpool.module';
+import { GovModule } from './gov/gov.module';
+import { CityModule } from './city/city.module';
 
 @Module({
   imports: [
@@ -26,6 +29,9 @@ import { FakeUserModule } from './faker/fake-user/fake-user.module';
     }),
     EmailModule,
     FakeUserModule,
+    CarpoolModule,
+    GovModule,
+    CityModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -53,10 +53,28 @@ type TokenModel {
   access_token: String!
 }
 
+type Carpool {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Gov {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type City {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Query {
   findAll: [User!]!
   findOne(id: Float!): User!
   email(id: Int!): Email!
+  carpool(id: Int!): Carpool!
+  gov(id: Int!): Gov!
+  city(id: Int!): City!
 }
 
 type Mutation {
@@ -67,6 +85,15 @@ type Mutation {
   sendResetPasswordEmail(ResetPasswordEmailInput: ResetPasswordEmailInput!): Boolean!
   resetPassword(ResetPasswordInput: ResetPasswordInput!): Boolean!
   login(credentialsInput: CredentialsInput!): TokenModel!
+  createCarpool(createCarpoolInput: CreateCarpoolInput!): Carpool!
+  updateCarpool(updateCarpoolInput: UpdateCarpoolInput!): Carpool!
+  removeCarpool(id: Int!): Carpool!
+  createGov(createGovInput: CreateGovInput!): Gov!
+  updateGov(updateGovInput: UpdateGovInput!): Gov!
+  removeGov(id: Int!): Gov!
+  createCity(createCityInput: CreateCityInput!): City!
+  updateCity(updateCityInput: UpdateCityInput!): City!
+  removeCity(id: Int!): City!
 }
 
 input CreateUserInput {
@@ -123,4 +150,37 @@ input ResetPasswordInput {
 input CredentialsInput {
   username: String!
   password: String!
+}
+
+input CreateCarpoolInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCarpoolInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateGovInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateGovInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateCityInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCityInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
