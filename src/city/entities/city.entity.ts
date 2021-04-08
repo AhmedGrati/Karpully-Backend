@@ -13,7 +13,7 @@ export class City {
   @Column({nullable:false})
   cityName:string;
 
-  @ManyToOne(() => Gov, gov => gov.cities)
+  @ManyToOne(() => Gov, gov => gov.cities, {eager: true})
   @Field(type => Gov, {nullable:false})
   gov: Gov;
 }

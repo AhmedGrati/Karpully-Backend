@@ -18,11 +18,11 @@ export class CityService {
   }
 
   async findAll(): Promise<City[]> {
-    return await this.cityRepository.find({relations:["gov"]});
+    return await this.cityRepository.find();
   }
 
   async findOne(id: number): Promise<City> {
-    const city = await this.cityRepository.findOne({where:{id}, relations:["gov"]});
+    const city = await this.cityRepository.findOne({where:{id}});
     if(city) {
       return city;
     }
@@ -61,6 +61,7 @@ export class CityService {
 
   async findCitiesByGov(govId: number): Promise<City[]> {
     const cities = await this.cityRepository.createQueryBuilder('city')
+        .leftJoinAndSelect("city.gov","gov")
         .where("city.gov.id = :govId",{govId})
         .getMany();
     return cities;
