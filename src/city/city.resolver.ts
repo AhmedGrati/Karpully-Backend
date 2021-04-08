@@ -20,9 +20,7 @@ export class CityResolver {
   @Query(() => [City])
   @Auth(UserRoleEnum.ADMIN)
   async findAllCities(): Promise<City[]> {
-    const a = await this.cityService.findAll();
-    Logger.log({a},"HEY")
-    return a;
+    return await this.cityService.findAll();
   }
 
   @Query(() => City)
@@ -41,5 +39,11 @@ export class CityResolver {
   @Auth(UserRoleEnum.ADMIN)
   removeCity(@Args('id', { type: () => Int }) id: number): Promise<City> {
     return this.cityService.remove(id);
+  }
+
+  @Query(() => [City])
+  @Auth(UserRoleEnum.ADMIN)
+  findCitiesByGov(@Args('govId', {type: () => Int}) govId: number): Promise<City[]> {
+    return this.cityService.findCitiesByGov(govId);
   }
 }

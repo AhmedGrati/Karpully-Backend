@@ -44,6 +44,9 @@ export class CityService {
     return cityToRemove;
   }
 
+  // this function checks if the gov of the city exists or not
+  // if it does we will save the city normally
+  // else we will throw an exception
   async checkGovAndSave(city: CreateCityInput | UpdateCityInput): Promise<City> {
     const gov = await this.govService.findOne(city.govId);
       if(gov) {
@@ -54,5 +57,12 @@ export class CityService {
       } else {
         throw new NotFoundException(GOV_NOT_FOUND_ERROR_MESSAGE);
       }
+  }
+
+  async findCitiesByGov(govId: number): Promise<City[]> {
+    const cities = await this.cityRepository.createQueryBuilder('city')
+        .where("city.gov.id = :govId",{govId})
+        .getMany();
+    return cities;
   }
 }

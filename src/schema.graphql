@@ -79,6 +79,7 @@ type Query {
   findOneGov(id: Int!): Gov!
   findAllCities: [City!]!
   findOneCity(id: Int!): City!
+  findCitiesByGov(govId: Int!): [City!]!
 }
 
 type Mutation {
