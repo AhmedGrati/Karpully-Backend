@@ -10,7 +10,7 @@ import { Gov } from './entities/gov.entity';
 export class GovService {
   constructor( @InjectRepository(Gov) private readonly govRepository: Repository<Gov>){}
   async create(createGovInput: CreateGovInput): Promise<Gov> {
-    const gov = this.govRepository.create(createGovInput);
+    const gov = await this.govRepository.create(createGovInput);
     await this.govRepository.save(gov);
     return gov;
   }

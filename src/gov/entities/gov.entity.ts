@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { City } from '../../city/entities/city.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType()
 @Entity()
@@ -9,7 +10,11 @@ export class Gov {
   id: number;
 
   @Column({unique: true})
-  @Field()
+  @Field({nullable:false})
   govName: string;
+
+  @OneToMany(() => City, city => city.gov)
+  @Field(type => [City])
+  cities: [City];
 
 }

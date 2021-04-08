@@ -6,6 +6,7 @@ import { Gov } from './entities/gov.entity';
 
 @Module({
   providers: [GovResolver, GovService],
-  imports:[TypeOrmModule.forFeature([Gov])]
+  imports:[TypeOrmModule.forFeature([Gov])],
+  exports:[GovService]
 })
 export class GovModule {}

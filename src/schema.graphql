@@ -58,14 +58,16 @@ type Carpool {
   exampleField: Int!
 }
 
+type City {
+  id: Int!
+  cityName: String!
+  gov: Gov!
+}
+
 type Gov {
   id: Int
   govName: String!
-}
-
-type City {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  cities: [City!]!
 }
 
 type Query {
@@ -75,7 +77,8 @@ type Query {
   carpool(id: Int!): Carpool!
   findAllGovs: [Gov!]!
   findOneGov(id: Int!): Gov!
-  city(id: Int!): City!
+  findAllCities: [City!]!
+  findOneCity(id: Int!): City!
 }
 
 type Mutation {
@@ -174,12 +177,12 @@ input UpdateGovInput {
 }
 
 input CreateCityInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  cityName: String!
+  govId: Float!
 }
 
 input UpdateCityInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  cityName: String
+  govId: Float
   id: Int!
 }

@@ -1,7 +1,13 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
+import { CreateGovInput } from '../../gov/dto/create-gov.input';
+import { Gov } from '../../gov/entities/gov.entity';
 
 @InputType()
 export class CreateCityInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+
+  @Field()
+  cityName:string;
+
+  @Field()
+  govId: number;
 }

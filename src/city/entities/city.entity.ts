@@ -1,7 +1,19 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Gov } from '../../gov/entities/gov.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType()
+@Entity()
 export class City {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @Field(() => Int)
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Field()
+  @Column({nullable:false})
+  cityName:string;
+
+  @ManyToOne(() => Gov, gov => gov.cities)
+  @Field(type => Gov, {nullable:false})
+  gov: Gov;
 }
