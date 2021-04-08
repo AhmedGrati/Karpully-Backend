@@ -59,8 +59,8 @@ type Carpool {
 }
 
 type Gov {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: Int
+  govName: String!
 }
 
 type City {
@@ -73,7 +73,8 @@ type Query {
   findOne(id: Float!): User!
   email(id: Int!): Email!
   carpool(id: Int!): Carpool!
-  gov(id: Int!): Gov!
+  findAllGovs: [Gov!]!
+  findOneGov(id: Int!): Gov!
   city(id: Int!): City!
 }
 
@@ -164,13 +165,11 @@ input UpdateCarpoolInput {
 }
 
 input CreateGovInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  govName: String!
 }
 
 input UpdateGovInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  govName: String
   id: Int!
 }
 

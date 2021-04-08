@@ -1,26 +1,46 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { GOV_NOT_FOUND_ERROR_MESSAGE } from '../utils/constants';
+import { Repository } from 'typeorm';
 import { CreateGovInput } from './dto/create-gov.input';
 import { UpdateGovInput } from './dto/update-gov.input';
+import { Gov } from './entities/gov.entity';
 
 @Injectable()
 export class GovService {
-  create(createGovInput: CreateGovInput) {
-    return 'This action adds a new gov';
+  constructor( @InjectRepository(Gov) private readonly govRepository: Repository<Gov>){}
+  async create(createGovInput: CreateGovInput): Promise<Gov> {
+    const gov = this.govRepository.create(createGovInput);
+    await this.govRepository.save(gov);
+    return gov;
   }
 
-  findAll() {
-    return `This action returns all gov`;
+  async findAll():Promise<Gov[]> {
+    return await this.govRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} gov`;
+  async findOne(id: number): Promise<Gov> {
+    const gov: Gov = await this.govRepository.findOne({where:{id}});
+    if(gov) {
+      return gov;
+    }else{
+      throw new NotFoundException(GOV_NOT_FOUND_ERROR_MESSAGE);
+    }
   }
 
-  update(id: number, updateGovInput: UpdateGovInput) {
-    return `This action updates a #${id} gov`;
+  async update(id: number, updateGovInput: UpdateGovInput): Promise<Gov> {
+    let gov = await this.govRepository.findOne({where:{id}});
+    if(!gov) {
+      throw new NotFoundException(GOV_NOT_FOUND_ERROR_MESSAGE);
+    }else{
+      gov  = await this.govRepository.save(updateGovInput);
+      return gov;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} gov`;
+  async remove(id: number): Promise<Gov> {
+    const govToRemove = await this.govRepository.findOne({where:{id}});
+    await this.govRepository.delete(id);
+    return govToRemove;
   }
 }
