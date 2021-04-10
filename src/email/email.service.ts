@@ -58,8 +58,6 @@ export class EmailService {
       .setVerificationToken(uuidv4());
 
     const createdEmail = await this.create(email);
-    Logger.log(createdEmail.sender, "EMAIL SERVICE");
-    Logger.log(user.email, "EMAIL SERVICE");
 
     // build the email and send it
     this.mailerService.sendMail({

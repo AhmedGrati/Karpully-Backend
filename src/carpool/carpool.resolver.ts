@@ -40,4 +40,9 @@ export class CarpoolResolver {
   removeCarpool(@Args('id', { type: () => Int }) id: number): Promise<Carpool> {
     return this.carpoolService.remove(id);
   }
+
+  @Mutation(() => Carpool)
+  restoreCarpool(@Args('id', { type: () => Int }) id: number): Promise<Carpool> {
+    return this.carpoolService.restoreCarpool(id);
+  }
 }

@@ -8,6 +8,7 @@ import { Carpool } from './entities/carpool.entity';
 import { UserService } from '../user/user.service';
 import { CityService } from '../city/city.service';
 import { User } from '../user/entities/user.entity';
+import { City } from '../city/entities/city.entity';
 
 @Injectable()
 export class CarpoolService {
@@ -31,6 +32,11 @@ export class CarpoolService {
     return carpool;
   }
 
+  async restoreCarpool(id: number): Promise<Carpool> {
+    await this.carpoolRepository.restore(id);
+    return await this.carpoolRepository.findOne({where:{id}});
+  }
+
   async update(owner: User, carpoolId: number, updateCarpoolInput: UpdateCarpoolInput): Promise<Carpool> {
     const {id, ...data} = updateCarpoolInput;
     const carpool = await this.findOne(carpoolId);
@@ -49,7 +55,7 @@ export class CarpoolService {
 
   async remove(id: number):Promise<Carpool> {
     const carpoolToRemove = await this.findOne(id);
-    await this.carpoolRepository.delete(id);
+    await this.carpoolRepository.softDelete(id);
     return carpoolToRemove;
   }
 

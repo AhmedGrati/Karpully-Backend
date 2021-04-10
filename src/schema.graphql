@@ -102,6 +102,7 @@ type Mutation {
   createCarpool(createCarpoolInput: CreateCarpoolInput!): Carpool!
   updateCarpool(updateCarpoolInput: UpdateCarpoolInput!): Carpool!
   removeCarpool(id: Int!): Carpool!
+  restoreCarpool(id: Int!): Carpool!
   createCity(createCityInput: CreateCityInput!): City!
   updateCity(updateCityInput: UpdateCityInput!): City!
   removeCity(id: Int!): City!
