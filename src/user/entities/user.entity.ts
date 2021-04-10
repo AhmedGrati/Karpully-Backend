@@ -7,6 +7,7 @@ import { IsEmail, IsNotEmpty, isNotEmpty, IsPhoneNumber, Max, Min } from "class-
 import { UserRoleEnum } from "./user-role.enum";
 import { Email } from "../../email/entities/email.entity";
 import { Logger } from "@nestjs/common";
+import { Carpool } from "../../carpool/entities/carpool.entity";
 
 
 @Entity()
@@ -94,6 +95,10 @@ export class User {
     @OneToMany(() => Email, email => email.sender)
     @Field(type => [Email])
     sentEmails: [Email];
+
+    @OneToMany(() => Carpool, carpool => carpool.owner)
+    @Field(type => [Carpool])
+    carpools: Carpool[];
 
     @BeforeInsert()
     async hashPassword() {

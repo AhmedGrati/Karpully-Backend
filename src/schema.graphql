@@ -22,6 +22,30 @@ enum EmailTypeEnum {
   RESET_PASSWORD
 }
 
+type Gov {
+  id: Int
+  govName: String!
+  cities: [City!]!
+}
+
+type City {
+  id: Int!
+  cityName: String!
+  gov: Gov!
+  carpools: [Carpool!]!
+}
+
+type Carpool {
+  id: Float!
+  departureDate: DateTime!
+  nbrOfAvailablePlaces: Float!
+  description: String!
+  hasSmokePermission: Boolean!
+  departureCity: City!
+  destinationCity: City!
+  owner: User!
+}
+
 type User {
   id: Int
   username: String!
@@ -37,6 +61,7 @@ type User {
   gender: Gender!
   isConfirmed: Boolean!
   sentEmails: [Email!]!
+  carpools: [Carpool!]!
 }
 
 enum UserRoleEnum {
@@ -51,23 +76,6 @@ enum Gender {
 
 type TokenModel {
   access_token: String!
-}
-
-type Carpool {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type City {
-  id: Int!
-  cityName: String!
-  gov: Gov!
-}
-
-type Gov {
-  id: Int
-  govName: String!
-  cities: [City!]!
 }
 
 type Query {
