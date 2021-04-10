@@ -3,10 +3,11 @@ import { User } from '../../user/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { EmailTypeEnum } from './email-type.enum';
 import { EmailBuilder } from './email.builder';
+import { TimestampEntites } from '../../generics/timestamp.entity';
 
 @ObjectType()
 @Entity()
-export class Email implements EmailBuilder {
+export class Email extends TimestampEntites implements EmailBuilder {
 
 
 

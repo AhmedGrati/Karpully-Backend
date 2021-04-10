@@ -8,11 +8,12 @@ import { UserRoleEnum } from "./user-role.enum";
 import { Email } from "../../email/entities/email.entity";
 import { Logger } from "@nestjs/common";
 import { Carpool } from "../../carpool/entities/carpool.entity";
+import { TimestampEntites } from "../../generics/timestamp.entity";
 
 
 @Entity()
 @ObjectType()
-export class User {
+export class User extends TimestampEntites{
     @PrimaryGeneratedColumn()
     @Field(type => Int,{nullable:true})
     id: number;

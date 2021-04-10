@@ -4,6 +4,7 @@ import { Check, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeor
 import { City } from '../../city/entities/city.entity';
 import { User } from '../../user/entities/user.entity';
 import { Max, Min } from 'class-validator';
+import { TimestampEntites } from '../../generics/timestamp.entity';
 
 /*
   constraints:
@@ -14,7 +15,7 @@ import { Max, Min } from 'class-validator';
 @Entity()
 @Check(`"departureCityId" != "destinationCityId"`)
 @Check(`"departureDate" >= current_timestamp`)
-export class Carpool {
+export class Carpool extends TimestampEntites{
   @Field()
   @PrimaryGeneratedColumn()
   id: number;

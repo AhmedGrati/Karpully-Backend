@@ -2,10 +2,11 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Gov } from '../../gov/entities/gov.entity';
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Carpool } from '../../carpool/entities/carpool.entity';
+import { TimestampEntites } from '../../generics/timestamp.entity';
 
 @ObjectType()
 @Entity()
-export class City {
+export class City extends TimestampEntites{
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;
