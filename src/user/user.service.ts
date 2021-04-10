@@ -53,6 +53,11 @@ export class UserService {
     }
   }
 
+  // this function is for internal use
+  async internalFindOne(id: number): Promise<User> {
+    return await this.userRepository.findOne({where:{id}});
+  }
+
   async update(currentUser:User,id: number, updateUserInput: UpdateUserInput) : Promise<User>{
     let user = await this.findOne(currentUser, id);
 

@@ -3,6 +3,7 @@ import { Gov } from '../../gov/entities/gov.entity';
 import { Check, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { City } from '../../city/entities/city.entity';
 import { User } from '../../user/entities/user.entity';
+import { Max, Min } from 'class-validator';
 
 /*
   constraints:
@@ -23,6 +24,8 @@ export class Carpool {
   departureDate: Date;
 
   @Field()
+  @Max(4)
+  @Min(1)
   @Column()
   nbrOfAvailablePlaces: number;
 
@@ -36,19 +39,22 @@ export class Carpool {
 
   @Field(type => City)
   @ManyToOne(() => City, city=> city.carpools, {
-    eager: true
+    eager: true,
+    nullable: false
   })
   departureCity: City;
 
   @Field(type => City)
   @ManyToOne(() => City,city  => city.carpools, {
-    eager:true
+    eager:true,
+    nullable:false
   })
   destinationCity: City;
 
   @Field(type => User)
   @ManyToOne(() => User, user => user.carpools, {
-    eager: true
+    eager: true,
+    nullable: false
   })
   owner: User;
   

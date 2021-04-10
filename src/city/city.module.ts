@@ -7,6 +7,7 @@ import { GovModule } from '../gov/gov.module';
 
 @Module({
   providers: [CityResolver, CityService],
-  imports:[TypeOrmModule.forFeature([City]), GovModule]
+  imports:[TypeOrmModule.forFeature([City]), GovModule],
+  exports: [CityService]
 })
 export class CityModule {}
