@@ -14,6 +14,28 @@
 2. An email will be sent to the user.
 3. The user must confirm his registration after a maximum of two days.
 
+## Authorization Policies
+
+### For Carpools:
+
+<ul>
+<li> All Users could see all carpools and/or specific carpool.</li>
+<li> Only The owner of the carpool could update or remove it.</li>
+</ul>
+
+### For Cities And Govs:
+
+<ul>
+<li> Only the admin could access and manage those resources.</li>
+</ul>
+
+### For User And Emails:
+
+<ul>
+<li>The admin could access all informations.</li>
+<li>The user could manage only its own informations.</li>
+</ul>
+
 ## Managing applciation:
 
 1. Make sure you have docker installed on your host.
