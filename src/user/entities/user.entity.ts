@@ -63,7 +63,7 @@ export class User extends TimestampEntites{
     telNumber: string;
 
     
-    @Column({select: false})
+    @Column()
     @HideField()
     password: string;
 

@@ -13,6 +13,7 @@ import { FakeUserModule } from './faker/fake-user/fake-user.module';
 import { CarpoolModule } from './carpool/carpool.module';
 import { GovModule } from './gov/gov.module';
 import { CityModule } from './city/city.module';
+import { CaslModule } from './casl/casl.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { CityModule } from './city/city.module';
     CarpoolModule,
     GovModule,
     CityModule,
+    CaslModule,
   ],
   controllers: [AppController],
   providers: [AppService],

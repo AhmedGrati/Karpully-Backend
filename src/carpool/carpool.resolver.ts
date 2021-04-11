@@ -26,23 +26,26 @@ export class CarpoolResolver {
   }
 
   @Query(() => Carpool)
+  @Auth(UserRoleEnum.USER)
   findOneCarpool(@Args('id', { type: () => Int }) id: number): Promise<Carpool> {
     return this.carpoolService.findOne(id);
   }
 
   @Mutation(() => Carpool)
   @Auth(UserRoleEnum.USER)
-  async updateCarpool(@CurrentUser() owner: User, @Args('updateCarpoolInput') updateCarpoolInput: UpdateCarpoolInput): Promise<Carpool> {
-    return await this.carpoolService.update(owner,updateCarpoolInput.id, updateCarpoolInput);
+  async updateCarpool(@CurrentUser() user: User, @Args('updateCarpoolInput') updateCarpoolInput: UpdateCarpoolInput): Promise<Carpool> {
+    return await this.carpoolService.update(user,updateCarpoolInput.id, updateCarpoolInput);
   }
 
   @Mutation(() => Carpool)
-  removeCarpool(@Args('id', { type: () => Int }) id: number): Promise<Carpool> {
-    return this.carpoolService.remove(id);
+  @Auth(UserRoleEnum.USER)
+  removeCarpool(@CurrentUser() user: User, @Args('id', { type: () => Int }) id: number): Promise<Carpool> {
+    return this.carpoolService.remove(user, id);
   }
 
   @Mutation(() => Carpool)
-  restoreCarpool(@Args('id', { type: () => Int }) id: number): Promise<Carpool> {
-    return this.carpoolService.restoreCarpool(id);
+  @Auth(UserRoleEnum.USER)
+  restoreCarpool(@CurrentUser()user: User, @Args('id', { type: () => Int }) id: number): Promise<Carpool> {
+    return this.carpoolService.restoreCarpool(user, id);
   }
 }

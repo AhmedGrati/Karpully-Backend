@@ -40,7 +40,6 @@ export class AuthService {
           // if we get the user
           const hashedPassword = await bcrypt.hash(password, user.salt)
           // if the password is correct we sign the jwt and return it from the payload
-          
           if (hashedPassword === user.password) {
            
             const payload: PayloadInterface = {

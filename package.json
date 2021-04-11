@@ -22,6 +22,7 @@
     "format": "prettier --write \"src/**/*.+(js|md|ts|css|sass|less|graphql|yml|yaml|scss|json|vue)\""
   },
   "dependencies": {
+    "@casl/ability": "^5.2.2",
     "@nestjs-modules/mailer": "^1.5.1",
     "@nestjs/common": "^7.6.13",
     "@nestjs/config": "^0.6.3",

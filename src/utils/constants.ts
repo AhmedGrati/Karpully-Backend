@@ -10,3 +10,4 @@ export const SENDING_EMAIL_ERROR_MESSAGE: string = 'Error While Sending The Emai
 export const GOV_NOT_FOUND_ERROR_MESSAGE: String = "Governorate Not Found!";
 export const CITY_NOT_FOUND_ERROR_MESSAGE: String = "City Not Found!";
 export const CARPOOL_NOT_FOUND_ERROR_MESSAGE: String = "Carpool Not Found!";
+export const CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE: string = "The User Who's Trying To Access This Resource Is not The Owner." 

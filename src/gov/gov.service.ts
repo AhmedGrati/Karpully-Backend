@@ -5,10 +5,13 @@ import { Repository } from 'typeorm';
 import { CreateGovInput } from './dto/create-gov.input';
 import { UpdateGovInput } from './dto/update-gov.input';
 import { Gov } from './entities/gov.entity';
+import { CaslAbilityFactory } from '../casl/casl-ability.factory';
 
 @Injectable()
 export class GovService {
-  constructor( @InjectRepository(Gov) private readonly govRepository: Repository<Gov>){}
+  constructor( @InjectRepository(Gov) private readonly govRepository: Repository<Gov>,
+
+  ){}
   async create(createGovInput: CreateGovInput): Promise<Gov> {
     const gov = await this.govRepository.create(createGovInput);
     await this.govRepository.save(gov);
