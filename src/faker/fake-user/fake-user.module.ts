@@ -5,6 +5,6 @@ import { FakeUserService } from './fake-user.service';
 
 @Module({
   providers: [FakeUserService],
-  imports: [TypeOrmModule.forFeature([User]),]
+  imports: [TypeOrmModule.forFeature([User])]
 })
 export class FakeUserModule {}
