@@ -1,0 +1,8 @@
+{
+    "data":{
+        "states":[{"code":1,"name":"Tunis"},{"code":2,"name":"Ariana"},{"code":3,"name":"Ben Arous"},{"code":4,"name":"Manouba"},{"code":5,"name":"Nabeul"},{"code":6,"name":"Zaghouan"},{"code":7,"name":"Bizerte"},{"code":8,"name":"B\u00e9ja"},{"code":9,"name":"Jendouba"},{"code":10,"name":"Kef"},{"code":11,"name":"Siliana"},{"code":12,"name":"Sousse"},{"code":13,"name":"Monastir"},{"code":14,"name":"Mahdia"},{"code":15,"name":"Sfax"},{"code":16,"name":"Kairouan"},{"code":17,"name":"Kasserine"}
+            ,{"code":18,"name":"Sidi Bouzid"},{"code":19,"name":"Gab\u00e8s"},{"code":20,"name":"Mednine"},{"code":21,"name":"Tataouine"},
+            {"code":22,"name":"Gafsa"},{"code":23,"name":"Tozeur"},{"code":24,"name":"Kebili"}
+    ]
+    }
+}

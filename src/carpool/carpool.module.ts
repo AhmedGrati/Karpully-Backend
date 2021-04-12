@@ -10,5 +10,6 @@ import { CaslModule } from '../casl/casl.module';
 @Module({
   providers: [CarpoolResolver, CarpoolService],
   imports: [TypeOrmModule.forFeature([Carpool]), UserModule, CityModule, CaslModule],
+  exports: [CarpoolService]
 })
 export class CarpoolModule {}

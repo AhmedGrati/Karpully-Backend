@@ -14,6 +14,9 @@ import { CarpoolModule } from './carpool/carpool.module';
 import { GovModule } from './gov/gov.module';
 import { CityModule } from './city/city.module';
 import { CaslModule } from './casl/casl.module';
+import { FakerCarpoolModule } from './faker/faker-carpool/faker-carpool.module';
+import { FakerCityModule } from './faker/faker-city/faker-city.module';
+import { FakerGovModule } from './faker/faker-gov/faker-gov.module';
 
 @Module({
   imports: [
@@ -34,6 +37,9 @@ import { CaslModule } from './casl/casl.module';
     GovModule,
     CityModule,
     CaslModule,
+    FakerCarpoolModule,
+    FakerCityModule,
+    FakerGovModule,
   ],
   controllers: [AppController],
   providers: [AppService],
