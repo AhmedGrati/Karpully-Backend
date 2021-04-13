@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CARPOOL_NOT_FOUND_ERROR_MESSAGE, CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE, CITY_NOT_FOUND_ERROR_MESSAGE, USER_NOT_FOUND_ERROR_MESSAGE } from '../utils/constants';
-import { Repository } from 'typeorm';
+import { FindConditions, QueryBuilder, Repository, SelectQueryBuilder } from 'typeorm';
 import { CreateCarpoolInput } from './dto/create-carpool.input';
 import { UpdateCarpoolInput } from './dto/update-carpool.input';
 import { Carpool } from './entities/carpool.entity';
@@ -11,7 +11,11 @@ import { User } from '../user/entities/user.entity';
 import { City } from '../city/entities/city.entity';
 import { CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { Action } from '../casl/enums/action.enum';
-
+import { PaginationInput } from '../generics/pagination.input';
+import { Meta } from '../generics/meta';
+import { PaginatedCarpool } from './entities/paginatedCarpool.entity';
+import {Pagination} from "../utils/pagination";
+import { OrderBy } from '../generics/ordery-by';
 @Injectable()
 export class CarpoolService {
   constructor(@InjectRepository(Carpool) private readonly carpoolRepository: Repository<Carpool>,
@@ -52,6 +56,20 @@ export class CarpoolService {
       throw new NotFoundException(CARPOOL_NOT_FOUND_ERROR_MESSAGE);
     }
     return carpool;
+  }
+
+  async paginatedCarpools(paginationInput: PaginationInput): Promise<PaginatedCarpool> {
+
+    return await Pagination.paginate<Carpool>(this.carpoolRepository, paginationInput,
+      {
+        hasSmokePermission: false,
+      }
+      ,
+      {
+        departureDate: OrderBy.DESC
+      }
+      );
+
   }
 
   async restoreCarpool(user: User, id: number): Promise<Carpool> {

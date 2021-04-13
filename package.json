@@ -42,6 +42,7 @@
     "eslint-plugin-jest": "^24.2.0",
     "faker": "^5.5.2",
     "graphql": "^15.5.0",
+    "graphql-relay": "^0.6.0",
     "graphql-tools": "^7.0.4",
     "handlebars": "^4.7.7",
     "helmet": "^4.4.1",
@@ -57,6 +58,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.6",
+    "type-graphql": "^1.1.1",
     "typeorm": "^0.2.31",
     "uuid": "^8.3.2"
   },

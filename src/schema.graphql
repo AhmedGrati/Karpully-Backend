@@ -78,17 +78,39 @@ type TokenModel {
   access_token: String!
 }
 
+type Meta {
+  itemCount: Float!
+  currentPage: Float!
+}
+
+type PaginatedCarpool {
+  items: [Carpool!]!
+  meta: Meta!
+}
+
 type Query {
   findAll: [User!]!
   findOne(id: Float!): User!
   email(id: Int!): Email!
   findAllCarpools: [Carpool!]!
   findOneCarpool(id: Int!): Carpool!
+  paginatedCarpool(paginationInput: PaginationInput!): PaginatedCarpool!
   findAllCities: [City!]!
   findOneCity(id: Int!): City!
   findCitiesByGov(govId: Int!): [City!]!
   findAllGovs: [Gov!]!
   findOneGov(id: Int!): Gov!
+}
+
+input PaginationInput {
+  page: Float!
+  limit: Float!
+  orderBy: OrderBy
+}
+
+enum OrderBy {
+  ASC
+  DESC
 }
 
 type Mutation {

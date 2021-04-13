@@ -8,9 +8,13 @@ import { User } from '../user/entities/user.entity';
 import { Auth } from '../shared/decorators/auth.decorator';
 import { UserRoleEnum } from '../user/entities/user-role.enum';
 import { Logger } from '@nestjs/common';
+import { PaginatedCarpool } from './entities/paginatedCarpool.entity';
+import { PaginationInput } from '../generics/pagination.input';
+
 
 @Resolver(() => Carpool)
 export class CarpoolResolver {
+  
   constructor(private readonly carpoolService: CarpoolService) {}
 
   @Mutation(() => Carpool)
@@ -47,5 +51,10 @@ export class CarpoolResolver {
   @Auth(UserRoleEnum.USER)
   restoreCarpool(@CurrentUser()user: User, @Args('id', { type: () => Int }) id: number): Promise<Carpool> {
     return this.carpoolService.restoreCarpool(user, id);
+  }
+
+  @Query(() => PaginatedCarpool)
+  async paginatedCarpool( @Args('paginationInput') paginationInput: PaginationInput): Promise<PaginatedCarpool> {
+    return await this.carpoolService.paginatedCarpools(paginationInput);
   }
 }
