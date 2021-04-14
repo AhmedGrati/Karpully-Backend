@@ -1,7 +1,7 @@
 import { Field, InputType } from "@nestjs/graphql";
 import { Carpool } from "../carpool/entities/carpool.entity";
 import { FindConditions } from "typeorm";
-import { OrderBy } from "./ordery-by";
+import { OrderByDirection } from "./ordery-by-direction";
 
 @InputType()
 export class PaginationInput {
@@ -11,7 +11,7 @@ export class PaginationInput {
     @Field()
     limit: number;
 
-    @Field(() => OrderBy, {nullable: true})
-    orderBy?: OrderBy;
+    @Field(() => OrderByDirection, {nullable: true})
+    orderBy?: OrderByDirection;
 
 }

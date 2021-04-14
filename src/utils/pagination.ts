@@ -1,8 +1,8 @@
 import { Meta } from "../generics/meta";
 import { PaginationInput } from "src/generics/pagination.input";
-import { FindConditions, FindManyOptions, Repository } from "typeorm";
+import { FindConditions, FindManyOptions, QueryBuilder, Repository, SelectQueryBuilder } from "typeorm";
 import { Carpool } from "src/carpool/entities/carpool.entity";
-import { OrderBy } from "src/generics/ordery-by";
+import { OrderByDirection } from "src/generics/ordery-by-direction";
 import { EntityFieldsNames } from "typeorm/common/EntityFieldsNames";
 import { Logger } from "@nestjs/common";
 
@@ -26,7 +26,6 @@ export class Pagination {
             if(options) {
                 const {...conditions} = options;
                 items = await repository.find({
-                    order,
                     where:conditions,
                     skip,
                     take: limit,
@@ -44,4 +43,32 @@ export class Pagination {
             };
             return {items, meta};
     }
+
+    //     static async queryBuilderPaginate<T>(
+    //     queryBuilder: SelectQueryBuilder<T>,
+    //     paginationInput: PaginationInput, 
+    //     options?: Partial<Record<KeysMatching<T, Object>, Object>>,
+    //     orders?: [string],
+    //     orderByDirection?: OrderBy | OrderBy.ASC
+    //     ): Promise<any> {
+    //         const {page, limit} = paginationInput;
+    //         const skip = (limit * page) - limit;
+    //         let items =await queryBuilder
+    //                     .take(limit)
+    //                     .skip(skip)
+    //                     .orderBy(orders[0], orderByDirection);
+            
+    //         orders.forEach((order) => {
+    //             if(order !== order[0]) {
+    //                 items = items.addOrderBy()
+    //             }
+    //         })
+
+    //         const itemCount = items.length;
+    //         const currentPage = page;
+    //         const meta: Meta = {
+    //             itemCount, currentPage
+    //         };
+    //         return {items, meta};
+    // }
 }

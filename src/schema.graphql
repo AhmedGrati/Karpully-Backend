@@ -107,8 +107,6 @@ input Where {
   nbrOfAvailablePlaces: Float
   description: String
   hasSmokePermission: Boolean
-  departureCityId: Float
-  destinationCityId: Float
   id: Int
 }
 

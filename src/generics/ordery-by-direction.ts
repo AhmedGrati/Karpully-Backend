@@ -1,9 +1,9 @@
 import { registerEnumType } from '@nestjs/graphql';
 
-export enum OrderBy {
+export enum OrderByDirection {
   ASC = 'ASC',
   DESC = 'DESC',
   
 }
 
-registerEnumType(OrderBy, { name: 'OrderBy' });
+registerEnumType(OrderByDirection, { name: 'OrderBy' });

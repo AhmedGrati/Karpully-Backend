@@ -10,7 +10,9 @@ import { UserRoleEnum } from '../user/entities/user-role.enum';
 import { Logger } from '@nestjs/common';
 import { PaginatedCarpool } from './entities/paginatedCarpool.entity';
 import { PaginationInput } from '../generics/pagination.input';
-import { Where } from './dto/where';
+import { Where } from './dto/where.input';
+import { Arg } from 'type-graphql';
+import { OrderByDirection } from '../generics/ordery-by-direction';
 
 
 @Resolver(() => Carpool)
@@ -56,7 +58,7 @@ export class CarpoolResolver {
 
   @Query(() => PaginatedCarpool)
   async paginatedCarpool( @Args('paginationInput') paginationInput: PaginationInput,
-  @Args('where') where?: Where    
+  @Args('where') where?: Where,
   ): Promise<PaginatedCarpool> {
     return await this.carpoolService.paginatedCarpools(paginationInput,where);
   }
