@@ -52,6 +52,33 @@ you should just change the "--type=start", and fit it to your needs.<br> 5. In
 
 #### _It should be noted that test implementation is not ready._
 
+## Pagination:
+
+The pagination feature is now implemented simply for carpools. Simple Example
+Query:
+
+```gql
+query {
+  paginatedCarpool(
+    where: {hasSmokePermission: true}
+    paginationInput: {page: 1, limit: 20}
+  ) {
+    meta {
+      itemCount
+      currentPage
+    }
+    items {
+      hasSmokePermission
+      description
+      owner {
+        username
+      }
+      departureDate
+    }
+  }
+}
+```
+
 ## License
 
 The source code for the site is licensed under the MIT license, which you can
