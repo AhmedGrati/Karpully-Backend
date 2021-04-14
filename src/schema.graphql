@@ -94,12 +94,22 @@ type Query {
   email(id: Int!): Email!
   findAllCarpools: [Carpool!]!
   findOneCarpool(id: Int!): Carpool!
-  paginatedCarpool(paginationInput: PaginationInput!): PaginatedCarpool!
+  paginatedCarpool(where: Where!, paginationInput: PaginationInput!): PaginatedCarpool!
   findAllCities: [City!]!
   findOneCity(id: Int!): City!
   findCitiesByGov(govId: Int!): [City!]!
   findAllGovs: [Gov!]!
   findOneGov(id: Int!): Gov!
+}
+
+input Where {
+  departureDate: DateTime
+  nbrOfAvailablePlaces: Float
+  description: String
+  hasSmokePermission: Boolean
+  departureCityId: Float
+  destinationCityId: Float
+  id: Int
 }
 
 input PaginationInput {

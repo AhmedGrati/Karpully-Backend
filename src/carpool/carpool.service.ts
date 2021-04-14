@@ -16,6 +16,7 @@ import { Meta } from '../generics/meta';
 import { PaginatedCarpool } from './entities/paginatedCarpool.entity';
 import {Pagination} from "../utils/pagination";
 import { OrderBy } from '../generics/ordery-by';
+import { Where } from './dto/where';
 @Injectable()
 export class CarpoolService {
   constructor(@InjectRepository(Carpool) private readonly carpoolRepository: Repository<Carpool>,
@@ -58,12 +59,9 @@ export class CarpoolService {
     return carpool;
   }
 
-  async paginatedCarpools(paginationInput: PaginationInput): Promise<PaginatedCarpool> {
-
+  async paginatedCarpools(paginationInput: PaginationInput, where: Where): Promise<PaginatedCarpool> {
     return await Pagination.paginate<Carpool>(this.carpoolRepository, paginationInput,
-      {
-        hasSmokePermission: false,
-      }
+      where
       ,
       {
         departureDate: OrderBy.DESC

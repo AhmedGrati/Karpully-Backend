@@ -4,6 +4,7 @@ import { FindConditions, FindManyOptions, Repository } from "typeorm";
 import { Carpool } from "src/carpool/entities/carpool.entity";
 import { OrderBy } from "src/generics/ordery-by";
 import { EntityFieldsNames } from "typeorm/common/EntityFieldsNames";
+import { Logger } from "@nestjs/common";
 
 
 type KeysMatching<T,V> = NonNullable<
@@ -19,15 +20,14 @@ export class Pagination {
         options?: Partial<Record<KeysMatching<T, Object>, Object>>,
         order?: { [P in EntityFieldsNames<T>]?: "ASC" | "DESC" | 1 | -1; }
         ): Promise<any> {
-
-
             const {page, limit} = paginationInput;
             const skip = (limit * page) - limit;
             let items;
             if(options) {
+                const {...conditions} = options;
                 items = await repository.find({
                     order,
-                    where: options,
+                    where:conditions,
                     skip,
                     take: limit,
                 });
