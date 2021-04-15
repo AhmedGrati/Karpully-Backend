@@ -31,13 +31,14 @@ export class GovService {
     }
   }
 
-  async update(id: number, updateGovInput: UpdateGovInput): Promise<Gov> {
-    let gov = await this.govRepository.findOne({where:{id}});
+  async update(govId: number, updateGovInput: UpdateGovInput): Promise<Gov> {
+    let gov = await this.govRepository.findOne({where:{govId}});
     if(!gov) {
       throw new NotFoundException(GOV_NOT_FOUND_ERROR_MESSAGE);
     }else{
-      gov  = await this.govRepository.save(updateGovInput);
-      return gov;
+      const {id, ...data} = updateGovInput;
+      await this.govRepository.update(govId,data).then(updatedGov => updatedGov.raw[0]);
+      return await this.findOne(govId);
     }
   }
 
