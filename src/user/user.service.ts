@@ -58,22 +58,17 @@ export class UserService {
     return await this.userRepository.findOne({where:{id}});
   }
 
-  async update(currentUser:User,id: number, updateUserInput: UpdateUserInput) : Promise<User>{
-    let user = await this.findOne(currentUser, id);
+  async update(currentUser:User,userId: number, updateUserInput: UpdateUserInput) : Promise<User>{
+    // this will throw an error if the current user does not have the right to update.
+    let user = await this.findOne(currentUser, userId);
 
     // we check if the user is not found in the database we couldn't update so we throw an exception
     if (!user){
       throw new HttpException("User Not Found!",HttpStatus.NOT_FOUND);
     }else{
-      // same process as create
-      let checkUser = await this.userRepository.findOne({username: updateUserInput.username, email: updateUserInput.email})
-      if(!checkUser) {
-        const user = await this.userRepository.save(updateUserInput);
-        return await this.userRepository.findOne({where:{id}});
-      }else{
-        // if the user has the same username or email with someone else we throw an exception
-        throw new HttpException("The User Already Exists", HttpStatus.BAD_REQUEST);
-      }
+      const {id, ...data} = updateUserInput;
+      await this.userRepository.update(userId,data).then(updatedUser => updatedUser.raw[0]);
+      return await this.findOne(currentUser, userId);
     }
   }
 
