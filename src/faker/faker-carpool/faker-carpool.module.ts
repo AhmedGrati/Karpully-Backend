@@ -6,6 +6,7 @@ import { CityModule } from '../../city/city.module';
 
 @Module({
   providers: [FakerCarpoolService],
-  imports: [CarpoolModule, UserModule, CityModule]
+  imports: [CarpoolModule, UserModule, CityModule],
+  exports:[FakerCarpoolService]
 })
 export class FakerCarpoolModule {}

@@ -4,6 +4,7 @@ import { FakerGovService } from './faker-gov.service';
 
 @Module({
   providers: [FakerGovService],
-  imports: [GovModule]
+  imports: [GovModule],
+  exports:[FakerGovService]
 })
 export class FakerGovModule {}

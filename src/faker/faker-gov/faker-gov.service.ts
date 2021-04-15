@@ -4,10 +4,10 @@ import { Gov } from 'src/gov/entities/gov.entity';
 import { GovService } from '../../gov/gov.service';
 const govData = require('../../../data/govs.json');
 @Injectable()
-export class FakerGovService implements OnApplicationBootstrap {
+export class FakerGovService{
     
     constructor(private readonly govService:GovService){}
-    async onApplicationBootstrap() {
+    async seed() {
         const allGovInDB = await this.govService.findAll();
         const TUNISIAN_GOVS_COUNT = 24;
 

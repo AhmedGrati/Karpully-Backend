@@ -20,7 +20,6 @@ import { Where } from './dto/where.input';
 @Injectable()
 export class CarpoolService {
   constructor(@InjectRepository(Carpool) private readonly carpoolRepository: Repository<Carpool>,
-  private readonly userService: UserService,
   private readonly cityService: CityService,
   private caslAbilityFactory: CaslAbilityFactory<Carpool>
   ) {}

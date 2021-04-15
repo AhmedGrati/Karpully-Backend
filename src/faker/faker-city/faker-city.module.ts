@@ -4,6 +4,7 @@ import { FakerCityService } from './faker-city.service';
 
 @Module({
   providers: [FakerCityService],
-  imports: [CityModule]
+  imports: [CityModule],
+  exports: [FakerCityService]
 })
 export class FakerCityModule {}

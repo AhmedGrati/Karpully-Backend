@@ -8,12 +8,12 @@ import { UserRoleEnum } from '../../user/entities/user-role.enum';
 import { Gender } from '../../user/entities/gender';
 const faker = require('faker'); 
 @Injectable()
-export class FakeUserService implements OnApplicationBootstrap {
+export class FakeUserService{
     constructor(
         @InjectRepository(User) private readonly userRepository: Repository<User>,
         private readonly configService: ConfigService<EnvironmentVariables>
     ) {}
-    async onApplicationBootstrap() {
+    async seed() {
         const seedNumber = this.configService.get<number>('SEED_NUMBER');
         const currentUsers: User[] = await this.userRepository.find();
         if(currentUsers.length < seedNumber) {

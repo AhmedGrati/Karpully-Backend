@@ -17,6 +17,7 @@ import { CaslModule } from './casl/casl.module';
 import { FakerCarpoolModule } from './faker/faker-carpool/faker-carpool.module';
 import { FakerCityModule } from './faker/faker-city/faker-city.module';
 import { FakerGovModule } from './faker/faker-gov/faker-gov.module';
+import { FakerModule } from './faker/faker.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { FakerGovModule } from './faker/faker-gov/faker-gov.module';
     FakerCarpoolModule,
     FakerCityModule,
     FakerGovModule,
+    FakerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

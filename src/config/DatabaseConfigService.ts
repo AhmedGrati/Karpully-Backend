@@ -21,9 +21,9 @@ class DatabaseConfigService {
       type: 'postgres',
       host: this.configService.get<string>('HOST'),
       port: this.configService.get<number>('DB_PORT'),
-      username: this.configService.get<string>('USER_NAME'),
-      password: this.configService.get<string>('PASSWORD'),
-      database: this.configService.get<string>('DATABASE'),
+      username: this.configService.get<string>('POSTGRES_USER'),
+      password: this.configService.get<string>('POSTGRES_PASSWORD'),
+      database: this.configService.get<string>('POSTGRES_DB'),
 
       entities: [entitiesPath+'/**/*.entity{.ts,.js}'],
       // logging:true,

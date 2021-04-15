@@ -8,13 +8,13 @@ import { Carpool } from '../../carpool/entities/carpool.entity';
 import { CreateCarpoolInput } from 'src/carpool/dto/create-carpool.input';
 const faker = require('faker'); 
 @Injectable()
-export class FakerCarpoolService implements OnApplicationBootstrap {
+export class FakerCarpoolService {
     constructor(private readonly carpoolService: CarpoolService,
         private readonly userService: UserService,
         private readonly cityService: CityService,
         private readonly configService: ConfigService<EnvironmentVariables>
         ){}
-    async onApplicationBootstrap() {
+    async seed() {
         const seedNumber = this.configService.get<number>('SEED_NUMBER');
         const allCarpools = await this.carpoolService.findAll();
         const allCities = await this.cityService.findAll();

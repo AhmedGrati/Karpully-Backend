@@ -3,9 +3,9 @@ import { CreateCityInput } from 'src/city/dto/create-city.input';
 import { CityService } from '../../city/city.service';
 const cityData = require('../../../data/cities.json');
 @Injectable()
-export class FakerCityService implements OnApplicationBootstrap{
+export class FakerCityService{
     constructor(private readonly cityService: CityService) {}
-    async onApplicationBootstrap() {
+    async seed() {
         const allCities = await this.cityService.findAll();
         const ALL_CITIES_COUNT = 264;
         if(allCities.length < ALL_CITIES_COUNT) {
