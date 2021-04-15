@@ -1,10 +1,11 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Gov } from '../../gov/entities/gov.entity';
-import { Check, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Check, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { City } from '../../city/entities/city.entity';
 import { User } from '../../user/entities/user.entity';
 import { Max, Min } from 'class-validator';
 import { TimestampEntites } from '../../generics/timestamp.entity';
+import { Submission } from '../../submission/entities/submission.entity';
 
 /*
   constraints:
@@ -58,6 +59,10 @@ export class Carpool extends TimestampEntites{
     nullable: false
   })
   owner: User;
+
+  @Field(type => Submission)
+  @OneToMany(type => Submission, submission => submission.carpool)
+  submissions: Submission[]; 
   
 
 }

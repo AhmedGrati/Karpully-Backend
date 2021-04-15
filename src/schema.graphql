@@ -35,6 +35,13 @@ type City {
   carpools: [Carpool!]!
 }
 
+type Submission {
+  id: Float!
+  status: String!
+  owner: User!
+  carpool: Carpool!
+}
+
 type Carpool {
   id: Float!
   departureDate: DateTime!
@@ -44,6 +51,7 @@ type Carpool {
   departureCity: City!
   destinationCity: City!
   owner: User!
+  submissions: Submission!
 }
 
 type User {
@@ -62,6 +70,7 @@ type User {
   isConfirmed: Boolean!
   sentEmails: [Email!]!
   carpools: [Carpool!]!
+  submissions: Submission!
 }
 
 enum UserRoleEnum {
@@ -100,6 +109,7 @@ type Query {
   findCitiesByGov(govId: Int!): [City!]!
   findAllGovs: [Gov!]!
   findOneGov(id: Int!): Gov!
+  submission(id: Int!): Submission!
 }
 
 input Where {
@@ -139,6 +149,9 @@ type Mutation {
   createGov(createGovInput: CreateGovInput!): Gov!
   updateGov(updateGovInput: UpdateGovInput!): Gov!
   removeGov(id: Int!): Gov!
+  createSubmission(createSubmissionInput: CreateSubmissionInput!): Submission!
+  updateSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
+  removeSubmission(id: Int!): Submission!
 }
 
 input CreateUserInput {
@@ -233,5 +246,16 @@ input CreateGovInput {
 
 input UpdateGovInput {
   govName: String
+  id: Int!
+}
+
+input CreateSubmissionInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateSubmissionInput {
+  """Example field (placeholder)"""
+  exampleField: Int
   id: Int!
 }

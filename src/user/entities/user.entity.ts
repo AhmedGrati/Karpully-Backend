@@ -9,6 +9,7 @@ import { Email } from "../../email/entities/email.entity";
 import { Logger } from "@nestjs/common";
 import { Carpool } from "../../carpool/entities/carpool.entity";
 import { TimestampEntites } from "../../generics/timestamp.entity";
+import { Submission } from "../../submission/entities/submission.entity";
 
 
 @Entity()
@@ -100,6 +101,10 @@ export class User extends TimestampEntites{
     @OneToMany(() => Carpool, carpool => carpool.owner)
     @Field(type => [Carpool])
     carpools: Carpool[];
+
+    @Field(type => Submission)
+    @OneToMany(type => Submission, submission => submission.owner)
+    submissions: Submission[]; 
 
     @BeforeInsert()
     async hashPassword() {
