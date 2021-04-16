@@ -109,7 +109,8 @@ type Query {
   findCitiesByGov(govId: Int!): [City!]!
   findAllGovs: [Gov!]!
   findOneGov(id: Int!): Gov!
-  submission(id: Int!): Submission!
+  findAllSubmissions: [Submission!]!
+  findOneSubmission(id: Int!): Submission!
 }
 
 input Where {
@@ -150,7 +151,8 @@ type Mutation {
   updateGov(updateGovInput: UpdateGovInput!): Gov!
   removeGov(id: Int!): Gov!
   createSubmission(createSubmissionInput: CreateSubmissionInput!): Submission!
-  updateSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
+  rejectSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
+  acceptSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
   removeSubmission(id: Int!): Submission!
 }
 
@@ -250,12 +252,10 @@ input UpdateGovInput {
 }
 
 input CreateSubmissionInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  carpoolId: Float!
 }
 
 input UpdateSubmissionInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  carpoolId: Float
   id: Int!
 }

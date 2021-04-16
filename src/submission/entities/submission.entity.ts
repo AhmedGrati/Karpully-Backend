@@ -3,10 +3,11 @@ import { User } from '../../user/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Status } from './status.enum';
 import { Carpool } from '../../carpool/entities/carpool.entity';
+import { TimestampEntites } from '../../generics/timestamp.entity';
 
 @ObjectType()
 @Entity()
-export class Submission {
+export class Submission extends TimestampEntites{
   @Field()
   @PrimaryGeneratedColumn()
   id: number;

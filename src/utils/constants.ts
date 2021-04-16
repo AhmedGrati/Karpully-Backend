@@ -11,3 +11,9 @@ export const GOV_NOT_FOUND_ERROR_MESSAGE: String = "Governorate Not Found!";
 export const CITY_NOT_FOUND_ERROR_MESSAGE: String = "City Not Found!";
 export const CARPOOL_NOT_FOUND_ERROR_MESSAGE: String = "Carpool Not Found!";
 export const CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE: string = "The User Who's Trying To Access This Resource Is not The Owner." 
+export const SUBMISSION_NOT_FOUND_ERROR_MESSAGE: String = "Submission Not Found!";
+export const CARPOOL_DOES_NO_LONGER_EXIST_ERROR_MESSAGE: String = "Carpool Does no longer exist!";
+export const DEPARTURE_DATE_ERROR_MESSAGE: String = "Departure Date should be greater than now!";
+export const UNAUTHORIZED_SUBMISSION_ERROR_MESSAGE: String = "A User cannot submit to a carpool twice!";
+
+

@@ -3,33 +3,46 @@ import { SubmissionService } from './submission.service';
 import { Submission } from './entities/submission.entity';
 import { CreateSubmissionInput } from './dto/create-submission.input';
 import { UpdateSubmissionInput } from './dto/update-submission.input';
+import { Auth } from '../shared/decorators/auth.decorator';
+import { UserRoleEnum } from '../user/entities/user-role.enum';
+import { CurrentUser } from '../shared/decorators/current-user.decorator';
+import { User } from '../user/entities/user.entity';
 
 @Resolver(() => Submission)
 export class SubmissionResolver {
   constructor(private readonly submissionService: SubmissionService) {}
 
   @Mutation(() => Submission)
-  createSubmission(@Args('createSubmissionInput') createSubmissionInput: CreateSubmissionInput) {
-    return this.submissionService.create(createSubmissionInput);
+  @Auth(UserRoleEnum.USER)
+  createSubmission(@CurrentUser() owner: User, @Args('createSubmissionInput') createSubmissionInput: CreateSubmissionInput): Promise<Submission> {
+    return this.submissionService.create(owner,createSubmissionInput);
   }
 
-  @Query(() => [Submission], { name: 'submission' })
-  findAll() {
+  @Query(() => [Submission])
+  findAllSubmissions() {
     return this.submissionService.findAll();
   }
 
-  @Query(() => Submission, { name: 'submission' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  @Query(() => Submission)
+  findOneSubmission(@Args('id', { type: () => Int }) id: number) {
     return this.submissionService.findOne(id);
   }
 
   @Mutation(() => Submission)
-  updateSubmission(@Args('updateSubmissionInput') updateSubmissionInput: UpdateSubmissionInput) {
-    return this.submissionService.update(updateSubmissionInput.id, updateSubmissionInput);
+  @Auth(UserRoleEnum.USER)
+  rejectSubmission( @CurrentUser() user: User, @Args('updateSubmissionInput') updateSubmissionInput: UpdateSubmissionInput) {
+    return this.submissionService.rejectSubmission(user,updateSubmissionInput.id, updateSubmissionInput);
   }
 
   @Mutation(() => Submission)
-  removeSubmission(@Args('id', { type: () => Int }) id: number) {
-    return this.submissionService.remove(id);
+  @Auth(UserRoleEnum.USER)
+  acceptSubmission( @CurrentUser() user: User, @Args('updateSubmissionInput') updateSubmissionInput: UpdateSubmissionInput) {
+    return this.submissionService.acceptSubmission(user,updateSubmissionInput.id, updateSubmissionInput);
+  }
+
+  @Mutation(() => Submission)
+  @Auth(UserRoleEnum.USER)
+  removeSubmission(@CurrentUser() user: User, @Args('id', { type: () => Int }) id: number) {
+    return this.submissionService.remove(user,id);
   }
 }

@@ -5,10 +5,11 @@ import { Carpool } from "../carpool/entities/carpool.entity";
 import { Action } from "./enums/action.enum";
 import { UserRoleEnum } from "../user/entities/user-role.enum";
 import { CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE } from "../utils/constants";
-import { OwnerType } from "src/generics/owner.interface";
+import { OwnerType } from "../generics/owner.interface";
+import { Submission } from "../submission/entities/submission.entity";
 
 
-type Subjects = InferSubjects<typeof Carpool | typeof User> | 'all'; 
+export type Subjects = InferSubjects<typeof Carpool | typeof User | typeof Submission> | 'all'; 
 export type AppAbility = Ability<[Action, Subjects]>;
 
 /*
@@ -28,7 +29,17 @@ export class CaslAbilityFactory<T extends OwnerType> {
       can(Action.Manage, 'all'); // read-write access to everything
     } else {
         // if the user is not admin
-      can(Action.Read, 'all'); // read-only access to everything
+        // if the resource is submission
+      if(resource instanceof Submission) {
+        // The user can read its submissions and the owner of the carpool can read its submissions.
+        if(user.submissions?.indexOf(resource) > -1 || resource.carpool.owner.id === user.id) {
+          can(Action.Read, Submission)
+        }
+      }else{
+        // if the resource is smthng else
+        // read-only access to everything
+        can(Action.Manage, 'all');
+      } 
     }
 
     // if the actual user who's trying to access the resource is the owner of the resource we allow him to update and delete
@@ -41,4 +52,7 @@ export class CaslAbilityFactory<T extends OwnerType> {
       detectSubjectType: item => item.constructor as ExtractSubjectType<Subjects>
     });
   }
+
+
+  
 }

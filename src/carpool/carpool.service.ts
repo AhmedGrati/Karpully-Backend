@@ -30,8 +30,7 @@ export class CarpoolService {
 
     if(owner && departureCity && destinationCity) {
       // create a new carpool
-      const createdCarpool = await this.carpoolRepository.create(createCarpoolInput);
-      
+      const createdCarpool = await this.carpoolRepository.create(createCarpoolInput);  
       // assign the properties
       this.carpoolRepository.merge(createdCarpool, {owner}, {departureCity}, {destinationCity});
 
@@ -90,8 +89,10 @@ export class CarpoolService {
     );
     
     return executedFunction;
-    
-    
+  }
+
+  async updateCarpool(carpool: Carpool): Promise<Carpool> {
+    return await this.carpoolRepository.save(carpool);
   }
 
   async remove(user: User, id: number):Promise<Carpool> {

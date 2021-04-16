@@ -1,11 +1,14 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Gov } from '../../gov/entities/gov.entity';
-import { Check, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, Check, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { City } from '../../city/entities/city.entity';
 import { User } from '../../user/entities/user.entity';
 import { Max, Min } from 'class-validator';
 import { TimestampEntites } from '../../generics/timestamp.entity';
 import { Submission } from '../../submission/entities/submission.entity';
+import { DatesOperations } from '../../utils/dates-operation';
+import { BadRequestException } from '@nestjs/common';
+import { DEPARTURE_DATE_ERROR_MESSAGE } from '../../utils/constants';
 
 /*
   constraints:
@@ -63,6 +66,14 @@ export class Carpool extends TimestampEntites{
   @Field(type => Submission)
   @OneToMany(type => Submission, submission => submission.carpool)
   submissions: Submission[]; 
+
+  @BeforeInsert()
+  checkDepartureDateValidity() {
+    const duration = DatesOperations.getDayDuration(new Date(), this.departureDate);
+    if(duration < 0) {
+      throw new BadRequestException(DEPARTURE_DATE_ERROR_MESSAGE);
+    }
+  }
   
 
 }
