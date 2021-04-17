@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { Repository } from 'typeorm';
@@ -6,7 +6,7 @@ import { CreateSubmissionInput } from './dto/create-submission.input';
 import { UpdateSubmissionInput } from './dto/update-submission.input';
 import { Submission } from './entities/submission.entity';
 import { User } from '../user/entities/user.entity';
-import { CARPOOL_DOES_NO_LONGER_EXIST_ERROR_MESSAGE, CARPOOL_NOT_FOUND_ERROR_MESSAGE, CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE, SUBMISSION_NOT_FOUND_ERROR_MESSAGE, UNAUTHORIZED_SUBMISSION_ERROR_MESSAGE } from '../utils/constants';
+import { BASE_TOPIC_NAME, CARPOOL_DOES_NO_LONGER_EXIST_ERROR_MESSAGE, CARPOOL_NOT_FOUND_ERROR_MESSAGE, CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE, SUBMISSION_NOT_FOUND_ERROR_MESSAGE, UNAUTHORIZED_SUBMISSION_ERROR_MESSAGE } from '../utils/constants';
 import { Action } from '../casl/enums/action.enum';
 import { CarpoolService } from '../carpool/carpool.service';
 import { UserService } from '../user/user.service';
@@ -14,16 +14,21 @@ import { checkCASLAndExecute } from '../utils/casl-authority-check';
 import { Status } from './entities/status.enum';
 import { DatesOperations } from '../utils/dates-operation';
 import { Carpool } from '../carpool/entities/carpool.entity';
+import { NotificationService } from '../notification/notification.service';
+import { acceptNotificationMessage, rejectNotificationMessage, submitNotificationMessage } from '../utils/notification-messages';
+import { Notification } from '../notification/entities/notification.entity';
+import { PubSub } from 'graphql-subscriptions';
 
 @Injectable()
 export class SubmissionService {
   constructor(@InjectRepository(Submission) private readonly submissionRepository: Repository<Submission>,
   private readonly carpoolService: CarpoolService,
   private readonly userService: UserService,
-  private caslAbilityFactory: CaslAbilityFactory<Submission>
+  private readonly caslAbilityFactory: CaslAbilityFactory<Submission>,
+  private readonly notificationService: NotificationService,
   ){}
 
-  async create(owner:User, createSubmissionInput: CreateSubmissionInput) {
+  async create(owner:User, createSubmissionInput: CreateSubmissionInput): Promise<Submission> {
     const carpoolId: number = createSubmissionInput.carpoolId;
     const carpool = await this.carpoolService.findOne(carpoolId);
 
@@ -34,7 +39,12 @@ export class SubmissionService {
         // assign the properties
         this.submissionRepository.merge(createdSubmission, {owner}, {carpool});
 
-        return await this.submissionRepository.save(createdSubmission);
+        await this.submissionRepository.save(createdSubmission);
+
+        // create a notification and publish it
+        const notification = await this.notificationService.create(carpool.owner, submitNotificationMessage(owner));
+        this.notificationService.publishNotification(notification);
+        return createdSubmission;
       } else {
         throw new BadRequestException();
       }
@@ -43,6 +53,8 @@ export class SubmissionService {
       throw new NotFoundException(CARPOOL_NOT_FOUND_ERROR_MESSAGE);
     }
   }
+
+
 
   async getSubmissionByCarpoolId(carpoolId: number): Promise<Submission[]> {
     return await this.submissionRepository.createQueryBuilder("submission")
@@ -106,6 +118,7 @@ export class SubmissionService {
 
         const {id, ...data} = submission;
         await this.submissionRepository.update(submissionId,data).then(updatedSubmission => updatedSubmission.raw[0]); 
+        
         return this.findOne(submissionId);
       }else{
         throw new UnauthorizedException();
@@ -126,9 +139,12 @@ export class SubmissionService {
           // change the status
           submission.status = Status.ACCEPTED;
           const {id, ...data} = submission;
-          // update the submission
+          
+          // update submission
           await this.submissionRepository.update(submissionId,data).then(updatedSubmission => updatedSubmission.raw[0]); 
-
+          // push notification
+          const notification = await this.notificationService.create(submission.owner, acceptNotificationMessage(carpool.owner));
+          this.notificationService.publishNotification(notification);
           // update the carpool
           carpool.nbrOfAvailablePlaces--;
           await this.carpoolService.updateCarpool(carpool);
@@ -158,13 +174,17 @@ export class SubmissionService {
           const submissionToRemove = await this.findOne(id);
           // if the submission is already accepted and we want to delete it we should update
           // carpool and increment the number of available places
+          const carpoolId = submissionToRemove.carpool.id;
+          const carpool = await this.carpoolService.findOne(carpoolId);
           if(submissionToRemove.status === Status.ACCEPTED) {
-            const carpoolId = submissionToRemove.carpool.id;
-            const carpool = await this.carpoolService.findOne(carpoolId);
-
             carpool.nbrOfAvailablePlaces++;
             await this.carpoolService.updateCarpool(carpool);
           }
+          // push notification
+          const notification = await this.notificationService.create(submissionToRemove.owner, rejectNotificationMessage(carpool.owner));
+          this.notificationService.publishNotification(notification);
+
+          // delete submission
           await this.submissionRepository.softDelete(id);
           return submissionToRemove;
         }

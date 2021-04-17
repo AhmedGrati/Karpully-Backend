@@ -15,5 +15,5 @@ export const SUBMISSION_NOT_FOUND_ERROR_MESSAGE: String = "Submission Not Found!
 export const CARPOOL_DOES_NO_LONGER_EXIST_ERROR_MESSAGE: String = "Carpool Does no longer exist!";
 export const DEPARTURE_DATE_ERROR_MESSAGE: String = "Departure Date should be greater than now!";
 export const UNAUTHORIZED_SUBMISSION_ERROR_MESSAGE: String = "A User cannot submit to a carpool twice!";
-
+export const BASE_TOPIC_NAME: string="User_";
 

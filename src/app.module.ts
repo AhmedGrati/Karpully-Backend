@@ -19,6 +19,7 @@ import { FakerCityModule } from './faker/faker-city/faker-city.module';
 import { FakerGovModule } from './faker/faker-gov/faker-gov.module';
 import { FakerModule } from './faker/faker.module';
 import { SubmissionModule } from './submission/submission.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { SubmissionModule } from './submission/submission.module';
     ConfigModule.forRoot({isGlobal:true}),
     AuthModule,
     GraphQLModule.forRoot({
-      
+      installSubscriptionHandlers: true,
       introspection:true,
       playground: true,
       fieldResolverEnhancers:["guards"],
@@ -44,6 +45,7 @@ import { SubmissionModule } from './submission/submission.module';
     FakerGovModule,
     FakerModule,
     SubmissionModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

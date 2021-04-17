@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, Subscription } from '@nestjs/graphql';
 import { SubmissionService } from './submission.service';
 import { Submission } from './entities/submission.entity';
 import { CreateSubmissionInput } from './dto/create-submission.input';
@@ -7,7 +7,8 @@ import { Auth } from '../shared/decorators/auth.decorator';
 import { UserRoleEnum } from '../user/entities/user-role.enum';
 import { CurrentUser } from '../shared/decorators/current-user.decorator';
 import { User } from '../user/entities/user.entity';
-
+import { PubSub } from 'graphql-subscriptions';
+import { Notification } from '../notification/entities/notification.entity';
 @Resolver(() => Submission)
 export class SubmissionResolver {
   constructor(private readonly submissionService: SubmissionService) {}

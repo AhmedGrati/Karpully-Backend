@@ -44,6 +44,21 @@ export class Pagination {
             return {items, meta};
     }
 
+    static async paginateQueryBuilder<T>(
+        queryBuilder: SelectQueryBuilder<T>,
+        paginationInput: PaginationInput, 
+        ): Promise<any> {
+            const {page, limit} = paginationInput;
+            const skip = (limit * page) - limit;
+            const items = await queryBuilder.take(limit).skip(skip).getMany();
+            const itemCount = items.length;
+            const currentPage = page;
+            const meta: Meta = {
+                itemCount, currentPage
+            };
+            return {items, meta};
+    }
+
     //     static async queryBuilderPaginate<T>(
     //     queryBuilder: SelectQueryBuilder<T>,
     //     paginationInput: PaginationInput, 

@@ -54,6 +54,12 @@ type Carpool {
   submissions: Submission!
 }
 
+type Notification {
+  id: Float!
+  receiver: User!
+  content: String!
+}
+
 type User {
   id: Int
   username: String!
@@ -70,7 +76,8 @@ type User {
   isConfirmed: Boolean!
   sentEmails: [Email!]!
   carpools: [Carpool!]!
-  submissions: Submission!
+  submissions: [Submission!]!
+  notifications: [Notification!]!
 }
 
 enum UserRoleEnum {
@@ -97,6 +104,11 @@ type PaginatedCarpool {
   meta: Meta!
 }
 
+type PaginatedNotification {
+  items: [Notification!]!
+  meta: Meta!
+}
+
 type Query {
   findAll: [User!]!
   findOne(id: Float!): User!
@@ -111,6 +123,8 @@ type Query {
   findOneGov(id: Int!): Gov!
   findAllSubmissions: [Submission!]!
   findOneSubmission(id: Int!): Submission!
+  notification(id: Int!): Notification!
+  findAllNotificationsByUserId(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
 }
 
 input Where {
@@ -258,4 +272,8 @@ input CreateSubmissionInput {
 input UpdateSubmissionInput {
   carpoolId: Float
   id: Int!
+}
+
+type Subscription {
+  notification(userId: Float!): Notification!
 }

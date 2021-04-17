@@ -6,9 +6,10 @@ import { UserModule } from '../user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Submission } from './entities/submission.entity';
 import { CaslModule } from '../casl/casl.module';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   providers: [SubmissionResolver, SubmissionService],
-  imports: [CarpoolModule, UserModule, TypeOrmModule.forFeature([Submission]), CaslModule]
+  imports: [CarpoolModule, UserModule, TypeOrmModule.forFeature([Submission]), CaslModule, NotificationModule]
 })
 export class SubmissionModule {}
