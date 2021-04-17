@@ -17,6 +17,7 @@ import { PaginatedCarpool } from './entities/paginatedCarpool.entity';
 import {Pagination} from "../utils/pagination";
 import { OrderByDirection } from '../generics/ordery-by-direction';
 import { Where } from './dto/where.input';
+import { checkCASLAndExecute } from '../utils/casl-authority-check';
 @Injectable()
 export class CarpoolService {
   constructor(@InjectRepository(Carpool) private readonly carpoolRepository: Repository<Carpool>,
@@ -66,8 +67,8 @@ export class CarpoolService {
 
   async restoreCarpool(user: User, id: number): Promise<Carpool> {
 
-    const executedFunction = this.checkCASLAndExecute(user, Action.Update, 
-        id, async () => {
+    const executedFunction = checkCASLAndExecute(user, this.caslAbilityFactory ,Action.Update, 
+        id, this.carpoolRepository ,async () => {
           await this.carpoolRepository.restore(id);
           return await this.carpoolRepository.findOne({where:{id}});
         }
@@ -80,8 +81,8 @@ export class CarpoolService {
 
   async update(user: User, carpoolId: number, updateCarpoolInput: UpdateCarpoolInput): Promise<Carpool> {
 
-    const executedFunction = this.checkCASLAndExecute(user, Action.Update, 
-        carpoolId, async () => {
+    const executedFunction = checkCASLAndExecute(user, this.caslAbilityFactory ,Action.Update, 
+        carpoolId, this.carpoolRepository ,async () => {
           const {id, ...data} = updateCarpoolInput;
           await this.carpoolRepository.update(carpoolId,data).then(updatedCarpool => updatedCarpool.raw[0]);
           return await this.findOne(carpoolId);
@@ -97,8 +98,8 @@ export class CarpoolService {
 
   async remove(user: User, id: number):Promise<Carpool> {
 
-        const executedFunction = this.checkCASLAndExecute(user, Action.Delete, 
-        id, async () => {
+        const executedFunction = checkCASLAndExecute(user, this.caslAbilityFactory ,Action.Delete, 
+        id, this.carpoolRepository ,async () => {
           const carpoolToRemove = await this.findOne(id);
           await this.carpoolRepository.softDelete(id);
           return carpoolToRemove;
@@ -108,19 +109,19 @@ export class CarpoolService {
     return executedFunction;
   }
 
-  async checkCASLAndExecute(user: User, action: Action, carpoolId: number, func: () => Promise<Carpool>): Promise<Carpool> {
-    const carpool = await this.findOne(carpoolId);
-    if(!carpool) {
-      throw new UnauthorizedException(CARPOOL_NOT_FOUND_ERROR_MESSAGE);
-    }else{
-      const ability = this.caslAbilityFactory.createForUser(carpool, user);
-      if(ability.can(action, Carpool)) {
-        return func();
-      } else {
-        throw new UnauthorizedException(CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE);
-      }
-    }
-  }
+  // async checkCASLAndExecute(user: User, action: Action, carpoolId: number, func: () => Promise<Carpool>): Promise<Carpool> {
+  //   const carpool = await this.findOne(carpoolId);
+  //   if(!carpool) {
+  //     throw new UnauthorizedException(CARPOOL_NOT_FOUND_ERROR_MESSAGE);
+  //   }else{
+  //     const ability = this.caslAbilityFactory.createForUser(carpool, user);
+  //     if(ability.can(action, Carpool)) {
+  //       return func();
+  //     } else {
+  //       throw new UnauthorizedException(CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE);
+  //     }
+  //   }
+  // }
 
 
 
