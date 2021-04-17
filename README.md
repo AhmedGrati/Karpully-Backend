@@ -8,7 +8,7 @@
 4. The rate of the user should be between 0 and 5.
 5. The age of the user should be between 5 and 100.
 
-## Explanation of auth process:
+## Explanation Of Authentification Process:
 
 1. The user will sign up.
 2. An email will be sent to the user.
@@ -63,7 +63,16 @@ query {
 }
 ```
 
-## Managing applciation:
+## Submissions Management:
+
+1. Only the owner of the carpool could accept or reject a submission.
+2. The user cannot make a submission to its own carpool.
+3. The owner of a carpool cannot accept(/reject) an already accepted(/rejected)
+   submission.
+4. The owner of a carpool cannot accept submissions anymore when the available
+   number of places of the carpool reaches 0.
+
+## Application Management:
 
 1. Make sure you have docker installed on your host.
 2. Make the file run-stop.sh executable.
