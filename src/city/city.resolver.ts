@@ -19,13 +19,13 @@ export class CityResolver {
     return this.cityService.create(createCityInput);
   }
 
-  @Query(() => [City])
+  @Query(() => [City], {name: 'cities'})
   @Auth(UserRoleEnum.ADMIN)
   async findAllCities(): Promise<City[]> {
     return await this.cityService.findAll();
   }
 
-  @Query(() => City)
+  @Query(() => City, {name: 'city'})
   @Auth(UserRoleEnum.ADMIN)
   findOneCity(@Args('id', {type: () => Int}) id: number): Promise<City> {
     return this.cityService.findOne(id);
@@ -45,7 +45,7 @@ export class CityResolver {
     return this.cityService.remove(id);
   }
 
-  @Query(() => [City])
+  @Query(() => [City], {name: 'citiesByGov'})
   @Auth(UserRoleEnum.ADMIN)
   findCitiesByGov(
     @Args('govId', {type: () => Int}) govId: number,

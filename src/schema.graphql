@@ -117,12 +117,13 @@ type Ahmed {
 type Query {
   users: [User!]!
   user(id: Float!): User!
-  email(id: Int!): Email!
+  email: [Email!]!
+  emails(id: Int!): Email!
   findOneCarpool(id: Int!): Carpool!
   paginatedCarpool(where: Where!, paginationInput: PaginationInput!): PaginatedCarpool!
-  findAllCities: [City!]!
-  findOneCity(id: Int!): City!
-  findCitiesByGov(govId: Int!): [City!]!
+  cities: [City!]!
+  city(id: Int!): City!
+  citiesByGov(govId: Int!): [City!]!
   govs: [Gov!]!
   gov(id: Int!): Gov!
   submissions: [Submission!]!
