@@ -92,6 +92,7 @@ enum Gender {
 
 type TokenModel {
   access_token: String!
+  user: User!
 }
 
 type Meta {

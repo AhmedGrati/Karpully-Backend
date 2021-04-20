@@ -60,6 +60,7 @@ export class AuthService {
         const jwt = await this.jwtService.sign(payload);
         return {
           access_token: jwt,
+          user,
         };
       } else {
         // if the password is not equal to user.password that means that the credentials are not true
