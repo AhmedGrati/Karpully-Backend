@@ -27,7 +27,7 @@ export class CarpoolResolver {
     return this.carpoolService.create(owner, createCarpoolInput);
   }
 
-  @Query(() => Carpool)
+  @Query(() => Carpool, {name: 'carpool'})
   @Auth(UserRoleEnum.USER)
   findOneCarpool(@Args('id', {type: () => Int}) id: number): Promise<Carpool> {
     return this.carpoolService.findOne(id);
@@ -64,7 +64,7 @@ export class CarpoolResolver {
     return this.carpoolService.restoreCarpool(user, id);
   }
 
-  @Query(() => PaginatedCarpool)
+  @Query(() => PaginatedCarpool, {name: 'carpools'})
   async paginatedCarpool(
     @Args('paginationInput') paginationInput: PaginationInput,
     @Args('where') where?: Where,
