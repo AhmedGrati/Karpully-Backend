@@ -1,4 +1,4 @@
-FROM node:14.16.1-lts-alpine3.13 As development
+FROM node:15.12.0-alpine3.10 As development
 
 LABEL maintainer="ahmedgrati1999@gmail.com"
 
@@ -14,7 +14,7 @@ RUN npm run build
 
 
 
-FROM node:14.16.1-lts-alpine3.13 as production
+FROM node:15.12.0-alpine3.10 as production
 
 LABEL maintainer="ahmedgrati1999@gmail.com"
 ARG NODE_ENV=production
