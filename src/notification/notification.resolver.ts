@@ -36,7 +36,7 @@ export class NotificationResolver {
     return this.notificationService.findOne(id);
   }
 
-  @Query(() => PaginatedNotification)
+  @Query(() => PaginatedNotification, {name: 'notifications'})
   findAllNotificationsByUserId(
     @Args('userId') userId: number,
     @Args('paginationInput') paginationInput?: PaginationInput,
