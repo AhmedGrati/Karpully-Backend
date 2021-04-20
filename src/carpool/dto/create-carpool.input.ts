@@ -1,9 +1,8 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import {InputType, Int, Field} from '@nestjs/graphql';
 
 @InputType()
 export class CreateCarpoolInput {
-
-  @Field(type => Date)
+  @Field((type) => Date)
   departureDate: Date;
 
   @Field()
@@ -15,10 +14,9 @@ export class CreateCarpoolInput {
   @Field()
   hasSmokePermission: boolean;
 
-  @Field(type => Number)
+  @Field((type) => Number)
   departureCityId: number;
 
-  @Field(type => Number)
+  @Field((type) => Number)
   destinationCityId: number;
-  
 }

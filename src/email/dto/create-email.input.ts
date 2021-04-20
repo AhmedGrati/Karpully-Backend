@@ -1,11 +1,7 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import {InputType, Int, Field} from '@nestjs/graphql';
 
-import { EmailTypeEnum } from '../entities/email-type.enum';
-import { EmailBuilder } from '../entities/email.builder';
-import { User } from '../../user/entities/user.entity';
+import {EmailTypeEnum} from '../entities/email-type.enum';
+import {EmailBuilder} from '../entities/email.builder';
+import {User} from '../../user/entities/user.entity';
 @InputType()
-export class CreateEmailInput{
-
-
-
-}
+export class CreateEmailInput {}

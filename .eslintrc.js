@@ -10,14 +10,14 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
     'airbnb-base',
-    'prettier'
+    'prettier',
   ],
   root: true,
   env: {
     browser: true,
     node: true,
     jest: true,
-    es6:true
+    es6: true,
   },
   ignorePatterns: ['.eslintrc.js'],
   rules: {
@@ -26,13 +26,13 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'no-unused-vars': [
-      "error",
+      'error',
       {
-        "vars": "local",
-        "args": "none"
-      }
+        vars: 'local',
+        args: 'none',
+      },
     ],
-    'no-plusplus': "off",
-    'no-underscore-dangle': "off",
-  }
+    'no-plusplus': 'off',
+    'no-underscore-dangle': 'off',
+  },
 };

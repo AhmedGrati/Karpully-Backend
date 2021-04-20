@@ -1,8 +1,8 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { EmailService } from './email.service';
-import { Email } from './entities/email.entity';
-import { CreateEmailInput } from './dto/create-email.input';
-import { UpdateEmailInput } from './dto/update-email.input';
+import {Resolver, Query, Mutation, Args, Int} from '@nestjs/graphql';
+import {EmailService} from './email.service';
+import {Email} from './entities/email.entity';
+import {CreateEmailInput} from './dto/create-email.input';
+import {UpdateEmailInput} from './dto/update-email.input';
 
 @Resolver(() => Email)
 export class EmailResolver {
@@ -13,13 +13,13 @@ export class EmailResolver {
   //   return this.emailService.create(createEmailInput);
   // }
 
-  @Query(() => [Email], { name: 'email' })
+  @Query(() => [Email], {name: 'email'})
   findAll(): Promise<Email[]> {
     return this.emailService.findAll();
   }
 
-  @Query(() => Email, { name: 'email' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  @Query(() => Email, {name: 'email'})
+  findOne(@Args('id', {type: () => Int}) id: number) {
     return this.emailService.findOne(id);
   }
 

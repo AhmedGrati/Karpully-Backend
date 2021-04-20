@@ -1,46 +1,70 @@
-import { Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CARPOOL_NOT_FOUND_ERROR_MESSAGE, CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE, CITY_NOT_FOUND_ERROR_MESSAGE, USER_NOT_FOUND_ERROR_MESSAGE } from '../utils/constants';
-import { FindConditions, QueryBuilder, Repository, SelectQueryBuilder } from 'typeorm';
-import { CreateCarpoolInput } from './dto/create-carpool.input';
-import { UpdateCarpoolInput } from './dto/update-carpool.input';
-import { Carpool } from './entities/carpool.entity';
-import { UserService } from '../user/user.service';
-import { CityService } from '../city/city.service';
-import { User } from '../user/entities/user.entity';
-import { City } from '../city/entities/city.entity';
-import { CaslAbilityFactory } from '../casl/casl-ability.factory';
-import { Action } from '../casl/enums/action.enum';
-import { PaginationInput } from '../generics/pagination.input';
-import { Meta } from '../generics/meta';
-import { PaginatedCarpool } from './entities/paginatedCarpool.entity';
-import {Pagination} from "../utils/pagination";
-import { OrderByDirection } from '../generics/ordery-by-direction';
-import { Where } from './dto/where.input';
-import { checkCASLAndExecute } from '../utils/casl-authority-check';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {
+  CARPOOL_NOT_FOUND_ERROR_MESSAGE,
+  CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE,
+  CITY_NOT_FOUND_ERROR_MESSAGE,
+  USER_NOT_FOUND_ERROR_MESSAGE,
+} from '../utils/constants';
+import {
+  FindConditions,
+  QueryBuilder,
+  Repository,
+  SelectQueryBuilder,
+} from 'typeorm';
+import {CreateCarpoolInput} from './dto/create-carpool.input';
+import {UpdateCarpoolInput} from './dto/update-carpool.input';
+import {Carpool} from './entities/carpool.entity';
+import {UserService} from '../user/user.service';
+import {CityService} from '../city/city.service';
+import {User} from '../user/entities/user.entity';
+import {City} from '../city/entities/city.entity';
+import {CaslAbilityFactory} from '../casl/casl-ability.factory';
+import {Action} from '../casl/enums/action.enum';
+import {PaginationInput} from '../generics/pagination.input';
+import {Meta} from '../generics/meta';
+import {PaginatedCarpool} from './entities/paginatedCarpool.entity';
+import {Pagination} from '../utils/pagination';
+import {OrderByDirection} from '../generics/ordery-by-direction';
+import {Where} from './dto/where.input';
+import {checkCASLAndExecute} from '../utils/casl-authority-check';
 @Injectable()
 export class CarpoolService {
-  constructor(@InjectRepository(Carpool) private readonly carpoolRepository: Repository<Carpool>,
-  private readonly cityService: CityService,
-  private caslAbilityFactory: CaslAbilityFactory<Carpool>
+  constructor(
+    @InjectRepository(Carpool)
+    private readonly carpoolRepository: Repository<Carpool>,
+    private readonly cityService: CityService,
+    private caslAbilityFactory: CaslAbilityFactory<Carpool>,
   ) {}
   async create(owner: User, createCarpoolInput: CreateCarpoolInput) {
     const {departureCityId, destinationCityId} = createCarpoolInput;
     const departureCity = await this.cityService.findOne(departureCityId);
     const destinationCity = await this.cityService.findOne(destinationCityId);
 
-    if(owner && departureCity && destinationCity) {
+    if (owner && departureCity && destinationCity) {
       // create a new carpool
-      const createdCarpool = await this.carpoolRepository.create(createCarpoolInput);  
+      const createdCarpool = await this.carpoolRepository.create(
+        createCarpoolInput,
+      );
       // assign the properties
-      this.carpoolRepository.merge(createdCarpool, {owner}, {departureCity}, {destinationCity});
+      this.carpoolRepository.merge(
+        createdCarpool,
+        {owner},
+        {departureCity},
+        {destinationCity},
+      );
 
       // save the created carpool
       return await this.carpoolRepository.save(createdCarpool);
     } else {
-      if(! owner) {
+      if (!owner) {
         throw new NotFoundException(USER_NOT_FOUND_ERROR_MESSAGE);
-      }else {
+      } else {
         throw new NotFoundException(CITY_NOT_FOUND_ERROR_MESSAGE);
       }
     }
@@ -51,44 +75,60 @@ export class CarpoolService {
   }
 
   async findOne(id: number): Promise<Carpool> {
-    const carpool = await this.carpoolRepository.findOne({where:{id}});
-    if(!carpool) {
+    const carpool = await this.carpoolRepository.findOne({where: {id}});
+    if (!carpool) {
       throw new NotFoundException(CARPOOL_NOT_FOUND_ERROR_MESSAGE);
     }
     return carpool;
   }
 
-  async paginatedCarpools(paginationInput: PaginationInput, where: Where): Promise<PaginatedCarpool> {
-    return await Pagination.paginate<Carpool>(this.carpoolRepository, paginationInput,
-      where
-      );
-
+  async paginatedCarpools(
+    paginationInput: PaginationInput,
+    where: Where,
+  ): Promise<PaginatedCarpool> {
+    return await Pagination.paginate<Carpool>(
+      this.carpoolRepository,
+      paginationInput,
+      where,
+    );
   }
 
   async restoreCarpool(user: User, id: number): Promise<Carpool> {
-
-    const executedFunction = checkCASLAndExecute(user, this.caslAbilityFactory ,Action.Update, 
-        id, this.carpoolRepository ,async () => {
-          await this.carpoolRepository.restore(id);
-          return await this.carpoolRepository.findOne({where:{id}});
-        }
+    const executedFunction = checkCASLAndExecute(
+      user,
+      this.caslAbilityFactory,
+      Action.Update,
+      id,
+      this.carpoolRepository,
+      async () => {
+        await this.carpoolRepository.restore(id);
+        return await this.carpoolRepository.findOne({where: {id}});
+      },
     );
-    
-    return executedFunction;
-    
 
+    return executedFunction;
   }
 
-  async update(user: User, carpoolId: number, updateCarpoolInput: UpdateCarpoolInput): Promise<Carpool> {
-
-    const executedFunction = checkCASLAndExecute(user, this.caslAbilityFactory ,Action.Update, 
-        carpoolId, this.carpoolRepository ,async () => {
-          const {id, ...data} = updateCarpoolInput;
-          await this.carpoolRepository.update(carpoolId,data).then(updatedCarpool => updatedCarpool.raw[0]);
-          return await this.findOne(carpoolId);
-        }
+  async update(
+    user: User,
+    carpoolId: number,
+    updateCarpoolInput: UpdateCarpoolInput,
+  ): Promise<Carpool> {
+    const executedFunction = checkCASLAndExecute(
+      user,
+      this.caslAbilityFactory,
+      Action.Update,
+      carpoolId,
+      this.carpoolRepository,
+      async () => {
+        const {id, ...data} = updateCarpoolInput;
+        await this.carpoolRepository
+          .update(carpoolId, data)
+          .then((updatedCarpool) => updatedCarpool.raw[0]);
+        return await this.findOne(carpoolId);
+      },
     );
-    
+
     return executedFunction;
   }
 
@@ -96,16 +136,20 @@ export class CarpoolService {
     return await this.carpoolRepository.save(carpool);
   }
 
-  async remove(user: User, id: number):Promise<Carpool> {
-
-        const executedFunction = checkCASLAndExecute(user, this.caslAbilityFactory ,Action.Delete, 
-        id, this.carpoolRepository ,async () => {
-          const carpoolToRemove = await this.findOne(id);
-          await this.carpoolRepository.softDelete(id);
-          return carpoolToRemove;
-        }
+  async remove(user: User, id: number): Promise<Carpool> {
+    const executedFunction = checkCASLAndExecute(
+      user,
+      this.caslAbilityFactory,
+      Action.Delete,
+      id,
+      this.carpoolRepository,
+      async () => {
+        const carpoolToRemove = await this.findOne(id);
+        await this.carpoolRepository.softDelete(id);
+        return carpoolToRemove;
+      },
     );
-    
+
     return executedFunction;
   }
 
@@ -122,7 +166,4 @@ export class CarpoolService {
   //     }
   //   }
   // }
-
-
-
 }

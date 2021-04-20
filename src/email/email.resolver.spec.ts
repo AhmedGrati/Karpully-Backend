@@ -1,6 +1,6 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { EmailResolver } from './email.resolver';
-import { EmailService } from './email.service';
+import {Test, TestingModule} from '@nestjs/testing';
+import {EmailResolver} from './email.resolver';
+import {EmailService} from './email.service';
 
 describe('EmailResolver', () => {
   let resolver: EmailResolver;

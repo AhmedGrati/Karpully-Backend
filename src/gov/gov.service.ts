@@ -1,51 +1,52 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { GOV_NOT_FOUND_ERROR_MESSAGE } from '../utils/constants';
-import { Repository } from 'typeorm';
-import { CreateGovInput } from './dto/create-gov.input';
-import { UpdateGovInput } from './dto/update-gov.input';
-import { Gov } from './entities/gov.entity';
-import { CaslAbilityFactory } from '../casl/casl-ability.factory';
+import {Injectable, NotFoundException} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {GOV_NOT_FOUND_ERROR_MESSAGE} from '../utils/constants';
+import {Repository} from 'typeorm';
+import {CreateGovInput} from './dto/create-gov.input';
+import {UpdateGovInput} from './dto/update-gov.input';
+import {Gov} from './entities/gov.entity';
+import {CaslAbilityFactory} from '../casl/casl-ability.factory';
 
 @Injectable()
 export class GovService {
-  constructor( @InjectRepository(Gov) private readonly govRepository: Repository<Gov>,
-
-  ){}
+  constructor(
+    @InjectRepository(Gov) private readonly govRepository: Repository<Gov>,
+  ) {}
   async create(createGovInput: CreateGovInput): Promise<Gov> {
     const gov = await this.govRepository.create(createGovInput);
     await this.govRepository.save(gov);
     return gov;
   }
 
-  async findAll():Promise<Gov[]> {
+  async findAll(): Promise<Gov[]> {
     return await this.govRepository.find();
   }
 
   async findOne(id: number): Promise<Gov> {
-    const gov: Gov = await this.govRepository.findOne({where:{id}});
-    if(gov) {
+    const gov: Gov = await this.govRepository.findOne({where: {id}});
+    if (gov) {
       return gov;
-    }else{
+    } else {
       throw new NotFoundException(GOV_NOT_FOUND_ERROR_MESSAGE);
     }
   }
 
   async update(govId: number, updateGovInput: UpdateGovInput): Promise<Gov> {
-    let gov = await this.govRepository.findOne({where:{govId}});
-    if(!gov) {
+    let gov = await this.govRepository.findOne({where: {govId}});
+    if (!gov) {
       throw new NotFoundException(GOV_NOT_FOUND_ERROR_MESSAGE);
-    }else{
+    } else {
       const {id, ...data} = updateGovInput;
-      await this.govRepository.update(govId,data).then(updatedGov => updatedGov.raw[0]);
+      await this.govRepository
+        .update(govId, data)
+        .then((updatedGov) => updatedGov.raw[0]);
       return await this.findOne(govId);
     }
   }
 
   async remove(id: number): Promise<Gov> {
-    const govToRemove = await this.govRepository.findOne({where:{id}});
+    const govToRemove = await this.govRepository.findOne({where: {id}});
     await this.govRepository.delete(id);
     return govToRemove;
   }
-
 }

@@ -1,22 +1,23 @@
-import { Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import {Logger} from '@nestjs/common';
+import {ConfigService} from '@nestjs/config';
+import {TypeOrmModuleOptions} from '@nestjs/typeorm';
 import {EnvironmentVariables} from '../common/EnvironmentVariables';
 require('dotenv').config();
-const os = require('os')
+const os = require('os');
 class DatabaseConfigService {
-
-  constructor(private readonly configService: ConfigService<EnvironmentVariables>) { }
+  constructor(
+    private readonly configService: ConfigService<EnvironmentVariables>,
+  ) {}
 
   public getTypeOrmConfig(): TypeOrmModuleOptions {
     let delimiter;
-    if(os.platform() == 'win32') {
-      delimiter="\\";
-    }else{
-      delimiter="/";
+    if (os.platform() == 'win32') {
+      delimiter = '\\';
+    } else {
+      delimiter = '/';
     }
     const path = __dirname.split(delimiter);
-    const entitiesPath = path.splice(0,path.length -1).join(delimiter);
+    const entitiesPath = path.splice(0, path.length - 1).join(delimiter);
     return {
       type: 'postgres',
       host: this.configService.get<string>('HOST'),
@@ -25,14 +26,15 @@ class DatabaseConfigService {
       password: this.configService.get<string>('POSTGRES_PASSWORD'),
       database: this.configService.get<string>('POSTGRES_DB'),
 
-      entities: [entitiesPath+'/**/*.entity{.ts,.js}'],
+      entities: [entitiesPath + '/**/*.entity{.ts,.js}'],
       // logging:true,
-      synchronize:true
+      synchronize: true,
     };
   }
-
 }
 
-const databaseConfigService = new DatabaseConfigService(new ConfigService<EnvironmentVariables>()).getTypeOrmConfig();
+const databaseConfigService = new DatabaseConfigService(
+  new ConfigService<EnvironmentVariables>(),
+).getTypeOrmConfig();
 
-export { databaseConfigService };
+export {databaseConfigService};

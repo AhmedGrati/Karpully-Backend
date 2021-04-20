@@ -1,93 +1,117 @@
-import { HttpException, HttpStatus, Injectable, InternalServerErrorException, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
-import { User } from './entities/user.entity';
-import { UserRoleEnum } from './entities/user-role.enum';
-import { EmailService } from '../email/email.service';
-import { EmailTypeEnum } from '../email/entities/email-type.enum';
-import { EmailVerificationInput } from '../email/dto/email-verification.input';
-import { SENDING_EMAIL_ERROR_MESSAGE, USER_NOT_FOUND_ERROR_MESSAGE } from '../utils/constants';
-import { ResetPasswordEmailInput } from 'src/email/dto/reset-password-email.input';
-import { ResetPasswordInput } from './dto/reset-password.input';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
+import {CreateUserInput} from './dto/create-user.input';
+import {UpdateUserInput} from './dto/update-user.input';
+import {User} from './entities/user.entity';
+import {UserRoleEnum} from './entities/user-role.enum';
+import {EmailService} from '../email/email.service';
+import {EmailTypeEnum} from '../email/entities/email-type.enum';
+import {EmailVerificationInput} from '../email/dto/email-verification.input';
+import {
+  SENDING_EMAIL_ERROR_MESSAGE,
+  USER_NOT_FOUND_ERROR_MESSAGE,
+} from '../utils/constants';
+import {ResetPasswordEmailInput} from 'src/email/dto/reset-password-email.input';
+import {ResetPasswordInput} from './dto/reset-password.input';
 import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
 
-    private readonly emailService: EmailService
-  ){}
-
+    private readonly emailService: EmailService,
+  ) {}
 
   async create(createUserInput: CreateUserInput): Promise<User> {
     // check if the user is unique or not
-    let checkUser = await this.userRepository.findOne({username: createUserInput.username, email: createUserInput.email})
-    if(!checkUser) {
+    let checkUser = await this.userRepository.findOne({
+      username: createUserInput.username,
+      email: createUserInput.email,
+    });
+    if (!checkUser) {
       const user = await this.userRepository.create(createUserInput);
       await this.userRepository.save(user);
       // send a confirmation to the user
-      const isEmailSent: Boolean = await this.emailService.sendEmail(user, EmailTypeEnum.CONFIRMATION);
-      if(isEmailSent) {
+      const isEmailSent: Boolean = await this.emailService.sendEmail(
+        user,
+        EmailTypeEnum.CONFIRMATION,
+      );
+      if (isEmailSent) {
         return user;
-      }else{
+      } else {
         throw new InternalServerErrorException(SENDING_EMAIL_ERROR_MESSAGE);
       }
-    }else{
+    } else {
       // if the user has the same username or email with someone else we throw an exception
-      throw new HttpException("The User Already Exists", HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'The User Already Exists',
+        HttpStatus.BAD_REQUEST,
+      );
     }
-    
   }
 
-  async findAll() :Promise<User[]>{
+  async findAll(): Promise<User[]> {
     return await this.userRepository.find();
   }
 
-  async findOne(user: User,id: number):Promise<User> {
-    if(this.checkAuthorities(user, id)) {
-      return await this.userRepository.findOne({where:{id}});
-    }else{
+  async findOne(user: User, id: number): Promise<User> {
+    if (this.checkAuthorities(user, id)) {
+      return await this.userRepository.findOne({where: {id}});
+    } else {
       throw new UnauthorizedException();
     }
   }
 
   // this function is for internal use
   async internalFindOne(id: number): Promise<User> {
-    return await this.userRepository.findOne({where:{id}});
+    return await this.userRepository.findOne({where: {id}});
   }
 
-  async update(currentUser:User,userId: number, updateUserInput: UpdateUserInput) : Promise<User>{
+  async update(
+    currentUser: User,
+    userId: number,
+    updateUserInput: UpdateUserInput,
+  ): Promise<User> {
     // this will throw an error if the current user does not have the right to update.
     let user = await this.findOne(currentUser, userId);
 
     // we check if the user is not found in the database we couldn't update so we throw an exception
-    if (!user){
-      throw new HttpException("User Not Found!",HttpStatus.NOT_FOUND);
-    }else{
+    if (!user) {
+      throw new HttpException('User Not Found!', HttpStatus.NOT_FOUND);
+    } else {
       const {id, ...data} = updateUserInput;
-      await this.userRepository.update(userId,data).then(updatedUser => updatedUser.raw[0]);
+      await this.userRepository
+        .update(userId, data)
+        .then((updatedUser) => updatedUser.raw[0]);
       return await this.findOne(currentUser, userId);
     }
   }
 
-  async remove(user,id: number) :Promise<User>{
-    const userToRemove = await this.findOne(user,id);
+  async remove(user, id: number): Promise<User> {
+    const userToRemove = await this.findOne(user, id);
     await this.userRepository.delete(id);
     return userToRemove;
   }
 
   async findByUsername(username: string): Promise<User> {
-    return await this.userRepository.findOne({where:{username}});
+    return await this.userRepository.findOne({where: {username}});
   }
 
   // a method which check the authority of a user
-  checkAuthorities(user:User, id:number): boolean {
+  checkAuthorities(user: User, id: number): boolean {
     // If the user is admin he has all authorities
-    if(user.roles.indexOf(UserRoleEnum.ADMIN) > -1) {
+    if (user.roles.indexOf(UserRoleEnum.ADMIN) > -1) {
       return true;
-    }else {
+    } else {
       // else we check if the user who demand to find userById correspond to the actual user in database or not.
       return user.id === id;
     }
@@ -98,34 +122,46 @@ export class UserService {
     so we should update the user and make his confirmation attribute to true
     else we should delete him from database so he could make another registration with the same data (email, username etc..)
   */
-  async validUserConfirmation(emailVerificationInput:EmailVerificationInput): Promise<Boolean> {
+  async validUserConfirmation(
+    emailVerificationInput: EmailVerificationInput,
+  ): Promise<Boolean> {
     const {userId, token, verificationToken} = emailVerificationInput;
-    const user: User = await this.userRepository.findOne({where:{id:userId}}); 
-    if(user) {
-      const emailConfirmation = await this.emailService.confirmEmail(user, token, verificationToken, EmailTypeEnum.CONFIRMATION);
-      if(emailConfirmation) {
+    const user: User = await this.userRepository.findOne({where: {id: userId}});
+    if (user) {
+      const emailConfirmation = await this.emailService.confirmEmail(
+        user,
+        token,
+        verificationToken,
+        EmailTypeEnum.CONFIRMATION,
+      );
+      if (emailConfirmation) {
         user.isConfirmed = true;
         await this.userRepository.save(user);
-      }else{
+      } else {
         // if the user account is not confirmed we should delete his account so he can try another registration
-        if(user.isConfirmed === false) {
+        if (user.isConfirmed === false) {
           await this.userRepository.delete(userId);
         }
       }
       return emailConfirmation;
-    }else{
+    } else {
       throw new NotFoundException(USER_NOT_FOUND_ERROR_MESSAGE);
     }
   }
 
-  async sendResetPasswordEmail(resetPasswordEmail: ResetPasswordEmailInput): Promise<Boolean> {
+  async sendResetPasswordEmail(
+    resetPasswordEmail: ResetPasswordEmailInput,
+  ): Promise<Boolean> {
     const {email} = resetPasswordEmail;
-    const user: User = await this.userRepository.findOne({where:{email}});
-    if(user) {
-      const isEmailSent: Boolean = await this.emailService.sendEmail(user,EmailTypeEnum.RESET_PASSWORD);
-      if(isEmailSent) {
+    const user: User = await this.userRepository.findOne({where: {email}});
+    if (user) {
+      const isEmailSent: Boolean = await this.emailService.sendEmail(
+        user,
+        EmailTypeEnum.RESET_PASSWORD,
+      );
+      if (isEmailSent) {
         return isEmailSent;
-      }else{
+      } else {
         throw new InternalServerErrorException(SENDING_EMAIL_ERROR_MESSAGE);
       }
     } else {
@@ -133,19 +169,23 @@ export class UserService {
     }
   }
 
-  async resetPassword(resetPasswordInput: ResetPasswordInput){
+  async resetPassword(resetPasswordInput: ResetPasswordInput) {
     const {email, password, token, verificationToken} = resetPasswordInput;
-    const user: User = await this.userRepository.findOne({where:{email}});
-    if(user) {
-      const emailConfirmation = await this.emailService.confirmEmail(user, token, verificationToken,EmailTypeEnum.RESET_PASSWORD);
-      if(emailConfirmation) {
+    const user: User = await this.userRepository.findOne({where: {email}});
+    if (user) {
+      const emailConfirmation = await this.emailService.confirmEmail(
+        user,
+        token,
+        verificationToken,
+        EmailTypeEnum.RESET_PASSWORD,
+      );
+      if (emailConfirmation) {
         user.password = await bcrypt.hash(password, user.salt);
         await this.userRepository.save(user);
       }
       return emailConfirmation;
-    }else{
+    } else {
       throw new NotFoundException(USER_NOT_FOUND_ERROR_MESSAGE);
     }
   }
-
 }
