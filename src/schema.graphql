@@ -109,9 +109,14 @@ type PaginatedNotification {
   meta: Meta!
 }
 
+type Ahmed {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Query {
-  findAll: [User!]!
-  findOne(id: Float!): User!
+  users: [User!]!
+  user(id: Float!): User!
   email(id: Int!): Email!
   findOneCarpool(id: Int!): Carpool!
   paginatedCarpool(where: Where!, paginationInput: PaginationInput!): PaginatedCarpool!
@@ -124,6 +129,7 @@ type Query {
   findOneSubmission(id: Int!): Submission!
   notification(id: Int!): Notification!
   findAllNotificationsByUserId(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
+  ahmed(id: Int!): Ahmed!
 }
 
 input Where {
@@ -167,6 +173,9 @@ type Mutation {
   rejectSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
   acceptSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
   removeSubmission(id: Int!): Submission!
+  createAhmed(createAhmedInput: CreateAhmedInput!): Ahmed!
+  updateAhmed(updateAhmedInput: UpdateAhmedInput!): Ahmed!
+  removeAhmed(id: Int!): Ahmed!
 }
 
 input CreateUserInput {
@@ -270,6 +279,17 @@ input CreateSubmissionInput {
 
 input UpdateSubmissionInput {
   carpoolId: Float
+  id: Int!
+}
+
+input CreateAhmedInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateAhmedInput {
+  """Example field (placeholder)"""
+  exampleField: Int
   id: Int!
 }
 
