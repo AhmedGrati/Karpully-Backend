@@ -58,4 +58,10 @@ describe('UserResolver', () => {
     expect(resolver.findAll()).toEqual(allUsers);
     expect(userMockService.findAll).toHaveBeenCalledWith();
   });
+
+  it('should return list of all users', () => {
+    const allUsers: User[] = [];
+    expect(resolver.findAll()).toEqual(allUsers);
+    expect(userMockService.findAll).toHaveBeenCalledWith();
+  });
 });
