@@ -113,7 +113,6 @@ type Query {
   findAll: [User!]!
   findOne(id: Float!): User!
   email(id: Int!): Email!
-  findAllCarpools: [Carpool!]!
   findOneCarpool(id: Int!): Carpool!
   paginatedCarpool(where: Where!, paginationInput: PaginationInput!): PaginatedCarpool!
   findAllCities: [City!]!
