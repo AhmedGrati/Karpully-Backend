@@ -16,12 +16,12 @@ export class GovResolver {
     return this.govService.create(createGovInput);
   }
   @Auth(UserRoleEnum.ADMIN)
-  @Query(() => [Gov])
+  @Query(() => [Gov], {name: 'govs'})
   findAllGovs(): Promise<Gov[]> {
     return this.govService.findAll();
   }
 
-  @Query(() => Gov)
+  @Query(() => Gov, {name: 'gov'})
   @Auth(UserRoleEnum.ADMIN)
   findOneGov(@Args('id', {type: () => Int}) id: number): Promise<Gov> {
     return this.govService.findOne(id);
