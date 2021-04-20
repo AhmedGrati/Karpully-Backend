@@ -13,7 +13,6 @@ import { EmailModule } from '../email/email.module';
   providers: [UserResolver, UserService, JwtStrategy],
   imports:[
     TypeOrmModule.forFeature([User]),
-    AuthModule,
     EmailModule
   ],
   exports:[UserService]

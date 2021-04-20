@@ -181,10 +181,8 @@ input CreateUserInput {
   localization: String!
   telNumber: String!
   password: String!
-  authorities: [String!]
   roles: [String!]
   gender: Float!
-  resetToken: String
 }
 
 input UpdateUserInput {
@@ -198,10 +196,8 @@ input UpdateUserInput {
   localization: String
   telNumber: String
   password: String
-  authorities: [String!]
   roles: [String!]
   gender: Float
-  resetToken: String
 }
 
 input EmailVerificationInput {
