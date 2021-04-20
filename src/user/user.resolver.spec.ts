@@ -1,8 +1,11 @@
 import {Test, TestingModule} from '@nestjs/testing';
+import {EmailVerificationInput} from 'src/email/dto/email-verification.input';
+import {ResetPasswordEmailInput} from 'src/email/dto/reset-password-email.input';
 import {EmailTypeEnum} from 'src/email/entities/email-type.enum';
 import {Email} from 'src/email/entities/email.entity';
 import {AuthService} from '../auth/auth.service';
 import {CreateUserInput} from './dto/create-user.input';
+import {ResetPasswordInput} from './dto/reset-password.input';
 import {Gender} from './entities/gender';
 import {User} from './entities/user.entity';
 import {UserResolver} from './user.resolver';
@@ -17,6 +20,16 @@ describe('UserResolver', () => {
       };
     }),
     findAll: jest.fn(() => []),
+    findOne: jest.fn((user, id) => {
+      return {
+        ...user,
+        email: 'ahmedgrati1999@gmail.com',
+        id,
+      };
+    }),
+    validUserConfirmation: jest.fn((emailConfirmationInput) => true),
+    sendResetPasswordEmail: jest.fn((resetPasswordEmailInput) => true),
+    resetPassword: jest.fn((resetPasswordInput) => true),
   };
 
   beforeEach(async () => {
@@ -59,9 +72,48 @@ describe('UserResolver', () => {
     expect(userMockService.findAll).toHaveBeenCalledWith();
   });
 
-  it('should return list of all users', () => {
-    const allUsers: User[] = [];
-    expect(resolver.findAll()).toEqual(allUsers);
-    expect(userMockService.findAll).toHaveBeenCalledWith();
+  it('should return a user that match with the specific id', () => {
+    const id: number = 1;
+    const user = {email: 'ahmedgrati1999@gmail.com', id};
+    expect(resolver.findOne(user as User, id)).toMatchObject(user);
+    expect(userMockService.findOne).toHaveBeenCalledTimes(1);
+    expect(userMockService.findOne).toHaveBeenCalledWith(user as User, id);
+  });
+
+  it('should confirm a user account using the sent email', () => {
+    const emailVerificationInput: EmailVerificationInput = {
+      token: 'token',
+      verificationToken: 'verificationToken',
+      userId: 1,
+    };
+    expect(resolver.confirmEmail(emailVerificationInput)).toEqual(true);
+    expect(userMockService.validUserConfirmation).toHaveBeenCalledWith(
+      emailVerificationInput,
+    );
+  });
+
+  it('should send a reset password email', () => {
+    const resetPasswordEmailInput: ResetPasswordEmailInput = {
+      email: 'ahmedgrati1999@gmail.com',
+    };
+    expect(resolver.sendResetPasswordEmail(resetPasswordEmailInput)).toEqual(
+      true,
+    );
+    expect(userMockService.sendResetPasswordEmail).toHaveBeenCalledWith(
+      resetPasswordEmailInput,
+    );
+  });
+
+  it('should reset the password of a given user', () => {
+    const resetPasswordInput: ResetPasswordInput = {
+      email: 'ahmedgrati1999@gmail.com',
+      password: 'pass123',
+      token: 'token',
+      verificationToken: 'verifToken',
+    };
+    expect(resolver.resetPassword(resetPasswordInput)).toEqual(true);
+    expect(userMockService.resetPassword).toHaveBeenCalledWith(
+      resetPasswordInput,
+    );
   });
 });
