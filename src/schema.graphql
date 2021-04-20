@@ -125,8 +125,8 @@ type Query {
   findCitiesByGov(govId: Int!): [City!]!
   findAllGovs: [Gov!]!
   findOneGov(id: Int!): Gov!
-  findAllSubmissions: [Submission!]!
-  findOneSubmission(id: Int!): Submission!
+  submissions: [Submission!]!
+  submission(id: Int!): Submission!
   notification(id: Int!): Notification!
   findAllNotificationsByUserId(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
   ahmed(id: Int!): Ahmed!

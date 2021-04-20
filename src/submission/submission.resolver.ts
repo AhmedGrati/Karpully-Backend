@@ -29,12 +29,12 @@ export class SubmissionResolver {
     return this.submissionService.create(owner, createSubmissionInput);
   }
 
-  @Query(() => [Submission])
+  @Query(() => [Submission], {name: 'submissions'})
   findAllSubmissions() {
     return this.submissionService.findAll();
   }
 
-  @Query(() => Submission)
+  @Query(() => Submission, {name: 'submission'})
   findOneSubmission(@Args('id', {type: () => Int}) id: number) {
     return this.submissionService.findOne(id);
   }
