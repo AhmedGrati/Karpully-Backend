@@ -123,8 +123,8 @@ type Query {
   findAllCities: [City!]!
   findOneCity(id: Int!): City!
   findCitiesByGov(govId: Int!): [City!]!
-  findAllGovs: [Gov!]!
-  findOneGov(id: Int!): Gov!
+  govs: [Gov!]!
+  gov(id: Int!): Gov!
   submissions: [Submission!]!
   submission(id: Int!): Submission!
   notification(id: Int!): Notification!

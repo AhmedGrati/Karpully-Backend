@@ -18,7 +18,7 @@ export class EmailResolver {
     return this.emailService.findAll();
   }
 
-  @Query(() => Email, {name: 'email'})
+  @Query(() => Email, {name: 'emails'})
   findOne(@Args('id', {type: () => Int}) id: number) {
     return this.emailService.findOne(id);
   }
