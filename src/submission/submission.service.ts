@@ -43,7 +43,6 @@ export class SubmissionService {
     @InjectRepository(Submission)
     private readonly submissionRepository: Repository<Submission>,
     private readonly carpoolService: CarpoolService,
-    private readonly userService: UserService,
     private readonly caslAbilityFactory: CaslAbilityFactory<Submission>,
     private readonly notificationService: NotificationService,
   ) {}
