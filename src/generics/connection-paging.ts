@@ -1,5 +1,5 @@
-import { ArgsType, Field, Int, ObjectType } from '@nestjs/graphql';
-import { Type } from '@nestjs/common';
+import {ArgsType, Field, Int, ObjectType} from '@nestjs/graphql';
+import {Type} from '@nestjs/common';
 import * as Relay from 'graphql-relay';
 import {
   Min,
@@ -9,21 +9,21 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { FindManyOptions, Repository, SelectQueryBuilder } from 'typeorm';
+import {FindManyOptions, Repository, SelectQueryBuilder} from 'typeorm';
 
 @ObjectType()
 export class PageInfo implements Relay.PageInfo {
-  @Field((_type) => Boolean, { nullable: true })
+  @Field((_type) => Boolean, {nullable: true})
   hasNextPage?: boolean | null;
-  @Field((_type) => Boolean, { nullable: true })
+  @Field((_type) => Boolean, {nullable: true})
   hasPreviousPage?: boolean | null;
-  @Field((_type) => String, { nullable: true })
+  @Field((_type) => String, {nullable: true})
   startCursor?: Relay.ConnectionCursor | null;
-  @Field((_type) => String, { nullable: true })
+  @Field((_type) => String, {nullable: true})
   endCursor?: Relay.ConnectionCursor | null;
 }
 
-@ValidatorConstraint({ async: false })
+@ValidatorConstraint({async: false})
 class CannotUseWithout implements ValidatorConstraintInterface {
   validate(value: any, args: ValidationArguments) {
     const object = args.object as any;
@@ -36,7 +36,7 @@ class CannotUseWithout implements ValidatorConstraintInterface {
   }
 }
 
-@ValidatorConstraint({ async: false })
+@ValidatorConstraint({async: false})
 class CannotUseWith implements ValidatorConstraintInterface {
   validate(value: any, args: ValidationArguments) {
     const object = args.object as any;
@@ -71,13 +71,13 @@ export class ConnectionArgs implements Relay.ConnectionArguments {
   @Validate(CannotUseWith, ['before', 'last'])
   after?: Relay.ConnectionCursor;
 
-  @Field((_type) => Int, { nullable: true, description: 'Paginate first' })
+  @Field((_type) => Int, {nullable: true, description: 'Paginate first'})
   @ValidateIf((o) => o.first !== undefined)
   @Min(1)
   @Validate(CannotUseWith, ['before', 'last'])
   first?: number;
 
-  @Field((_type) => Int, { nullable: true, description: 'Paginate last' })
+  @Field((_type) => Int, {nullable: true, description: 'Paginate last'})
   @ValidateIf((o) => o.last !== undefined)
   // Required `before`. This is a weird corner case.
   // We'd have to invert the ordering of query to get the last few items then re-invert it when emitting the results.
@@ -89,7 +89,7 @@ export class ConnectionArgs implements Relay.ConnectionArguments {
 }
 
 export function EdgeType<T>(classRef: Type<T>): any {
-  @ObjectType({ isAbstract: true })
+  @ObjectType({isAbstract: true})
   abstract class Edge implements Relay.Edge<T> {
     @Field(() => classRef)
     node: T;
@@ -104,7 +104,7 @@ export function EdgeType<T>(classRef: Type<T>): any {
 }
 
 export function ConnectionType<T>(classRef: Type<T>, Edge: any): any {
-  @ObjectType({ isAbstract: true })
+  @ObjectType({isAbstract: true})
   abstract class Connection implements Relay.Connection<T> {
     @Field()
     pageInfo: PageInfo;
@@ -117,20 +117,20 @@ export function ConnectionType<T>(classRef: Type<T>, Edge: any): any {
 }
 
 type PagingMeta =
-  | { pagingType: 'forward'; after?: string; first: number }
-  | { pagingType: 'backward'; before?: string; last: number }
-  | { pagingType: 'none' };
+  | {pagingType: 'forward'; after?: string; first: number}
+  | {pagingType: 'backward'; before?: string; last: number}
+  | {pagingType: 'none'};
 
 function getMeta(args: ConnectionArgs): PagingMeta {
-  const { first = 0, last = 0, after, before } = args;
+  const {first = 0, last = 0, after, before} = args;
   const isForwardPaging = !!first || !!after;
   const isBackwardPaging = !!last || !!before;
 
   return isForwardPaging
-    ? { pagingType: 'forward', after, first }
+    ? {pagingType: 'forward', after, first}
     : isBackwardPaging
-    ? { pagingType: 'backward', before, last }
-    : { pagingType: 'none' };
+    ? {pagingType: 'backward', before, last}
+    : {pagingType: 'none'};
 }
 
 /**
@@ -148,7 +148,7 @@ export function getPagingParameters(args: ConnectionArgs) {
       };
     }
     case 'backward': {
-      const { last, before } = meta;
+      const {last, before} = meta;
       let limit = last;
       let offset = Relay.cursorToOffset(before!) - last;
 
@@ -159,7 +159,7 @@ export function getPagingParameters(args: ConnectionArgs) {
         offset = 0;
       }
 
-      return { offset, limit };
+      return {offset, limit};
     }
     default:
       return {};
@@ -171,7 +171,7 @@ export async function findAndPaginate<T>(
   connArgs: ConnectionArgs,
   repository: Repository<T>,
 ) {
-  const { limit, offset } = getPagingParameters(connArgs);
+  const {limit, offset} = getPagingParameters(connArgs);
   const [entities, count] = await repository.findAndCount({
     ...condition,
     skip: offset,
@@ -189,7 +189,7 @@ export async function getManyAndPaginate<T>(
   queryBuilder: SelectQueryBuilder<T>,
   connArgs: ConnectionArgs,
 ) {
-  const { limit, offset } = getPagingParameters(connArgs);
+  const {limit, offset} = getPagingParameters(connArgs);
   const [entities, count] = await queryBuilder
     .offset(offset)
     .limit(limit)

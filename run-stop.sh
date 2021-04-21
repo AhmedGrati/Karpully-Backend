@@ -48,8 +48,12 @@ case $TYPE in
 start)
 
     docker build -t karpully/karpully-backend:latest .
-    docker login -u karpully -p $KARPULLY_EMAIL_PASSWORD
-    docker push karpully/karpully-backend:latest 
+    case $MODE in 
+    prod)
+      docker login -u karpully -p $KARPULLY_EMAIL_PASSWORD
+      docker push karpully/karpully-backend:latest
+      ;;
+    esac; 
     docker-compose -f docker-compose.$MODE.yml up
     ;;
 stop)
@@ -58,8 +62,12 @@ stop)
 restart)
 
     docker build -t karpully/karpully-backend:latest .
-    docker login -u karpully -p $KARPULLY_EMAIL_PASSWORD
-    docker push karpully/karpully-backend:latest
+    case $MODE in 
+    prod)
+      docker login -u karpully -p $KARPULLY_EMAIL_PASSWORD
+      docker push karpully/karpully-backend:latest
+      ;;
+    esac;
     docker-compose -f docker-compose.$MODE.yml restart
     ;;
 esac;

@@ -1,6 +1,6 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { SubmissionResolver } from './submission.resolver';
-import { SubmissionService } from './submission.service';
+import {Test, TestingModule} from '@nestjs/testing';
+import {SubmissionResolver} from './submission.resolver';
+import {SubmissionService} from './submission.service';
 
 describe('SubmissionResolver', () => {
   let resolver: SubmissionResolver;

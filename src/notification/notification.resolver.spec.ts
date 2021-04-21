@@ -1,6 +1,6 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { NotificationResolver } from './notification.resolver';
-import { NotificationService } from './notification.service';
+import {Test, TestingModule} from '@nestjs/testing';
+import {NotificationResolver} from './notification.resolver';
+import {NotificationService} from './notification.service';
 
 describe('NotificationResolver', () => {
   let resolver: NotificationResolver;

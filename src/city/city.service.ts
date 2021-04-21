@@ -1,18 +1,22 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CITY_NOT_FOUND_ERROR_MESSAGE, GOV_NOT_FOUND_ERROR_MESSAGE } from '../utils/constants';
-import { Repository } from 'typeorm';
-import { CreateCityInput } from './dto/create-city.input';
-import { UpdateCityInput } from './dto/update-city.input';
-import { City } from './entities/city.entity';
-import { GovService } from '../gov/gov.service';
-import { Gov } from '../gov/entities/gov.entity';
+import {Injectable, Logger, NotFoundException} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {
+  CITY_NOT_FOUND_ERROR_MESSAGE,
+  GOV_NOT_FOUND_ERROR_MESSAGE,
+} from '../utils/constants';
+import {Repository} from 'typeorm';
+import {CreateCityInput} from './dto/create-city.input';
+import {UpdateCityInput} from './dto/update-city.input';
+import {City} from './entities/city.entity';
+import {GovService} from '../gov/gov.service';
+import {Gov} from '../gov/entities/gov.entity';
 
 @Injectable()
 export class CityService {
-  constructor(@InjectRepository(City) private readonly cityRepository: Repository<City>,
-    private readonly govService: GovService
-  ){}
+  constructor(
+    @InjectRepository(City) private readonly cityRepository: Repository<City>,
+    private readonly govService: GovService,
+  ) {}
   async create(createCityInput: CreateCityInput): Promise<City> {
     return this.checkGovAndSave(createCityInput);
   }
@@ -22,18 +26,18 @@ export class CityService {
   }
 
   async findOne(id: number): Promise<City> {
-    const city = await this.cityRepository.findOne({where:{id}});
-    if(city) {
+    const city = await this.cityRepository.findOne({where: {id}});
+    if (city) {
       return city;
     }
     throw new NotFoundException(CITY_NOT_FOUND_ERROR_MESSAGE);
   }
 
-  async update(id: number, updateCityInput: UpdateCityInput):Promise<City> {
+  async update(id: number, updateCityInput: UpdateCityInput): Promise<City> {
     let city = await this.findOne(id);
-    if(!city) {
+    if (!city) {
       throw new NotFoundException(CITY_NOT_FOUND_ERROR_MESSAGE);
-    }else{
+    } else {
       return this.checkGovAndSave(updateCityInput);
     }
   }
@@ -47,23 +51,26 @@ export class CityService {
   // this function checks if the gov of the city exists or not
   // if it does we will save the city normally
   // else we will throw an exception
-  async checkGovAndSave(city: CreateCityInput | UpdateCityInput): Promise<City> {
+  async checkGovAndSave(
+    city: CreateCityInput | UpdateCityInput,
+  ): Promise<City> {
     const gov = await this.govService.findOne(city.govId);
-      if(gov) {
-        const newCity  = await this.cityRepository.create(city);
-        newCity.gov = gov;
-        await this.cityRepository.save(newCity);
-        return newCity;
-      } else {
-        throw new NotFoundException(GOV_NOT_FOUND_ERROR_MESSAGE);
-      }
+    if (gov) {
+      const newCity = await this.cityRepository.create(city);
+      newCity.gov = gov;
+      await this.cityRepository.save(newCity);
+      return newCity;
+    } else {
+      throw new NotFoundException(GOV_NOT_FOUND_ERROR_MESSAGE);
+    }
   }
 
   async findCitiesByGov(govId: number): Promise<City[]> {
-    const cities = await this.cityRepository.createQueryBuilder('city')
-        .leftJoinAndSelect("city.gov","gov")
-        .where("city.gov.id = :govId",{govId})
-        .getMany();
+    const cities = await this.cityRepository
+      .createQueryBuilder('city')
+      .leftJoinAndSelect('city.gov', 'gov')
+      .where('city.gov.id = :govId', {govId})
+      .getMany();
     return cities;
   }
 }

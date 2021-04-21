@@ -1,6 +1,6 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { CarpoolResolver } from './carpool.resolver';
-import { CarpoolService } from './carpool.service';
+import {Test, TestingModule} from '@nestjs/testing';
+import {CarpoolResolver} from './carpool.resolver';
+import {CarpoolService} from './carpool.service';
 
 describe('CarpoolResolver', () => {
   let resolver: CarpoolResolver;

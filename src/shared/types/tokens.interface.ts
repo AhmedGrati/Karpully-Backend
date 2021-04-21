@@ -1,10 +1,10 @@
-import { Field, InputType } from "@nestjs/graphql";
+import {Field, InputType} from '@nestjs/graphql';
 
 @InputType()
 export class TokensInterface {
-    @Field()
-    token: string;
+  @Field()
+  token: string;
 
-    @Field()
-    verificationToken: string;
+  @Field()
+  verificationToken: string;
 }

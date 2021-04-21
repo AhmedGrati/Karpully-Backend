@@ -1,12 +1,10 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import {Field, ObjectType} from '@nestjs/graphql';
 
 @ObjectType()
 export class Meta {
+  @Field()
+  itemCount: number;
 
-    @Field()
-    itemCount: number;
-    
-    @Field()
-    currentPage: number;
-  
+  @Field()
+  currentPage: number;
 }

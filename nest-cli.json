@@ -2,7 +2,7 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "options": {
-      "typeFileNameSuffix": [".input.ts", ".entity.ts",".model.ts"],
-      "introspectComments": true
+    "typeFileNameSuffix": [".input.ts", ".entity.ts", ".model.ts"],
+    "introspectComments": true
   }
 }

@@ -25,13 +25,13 @@ export class UserResolver {
     return this.userService.create(createUserInput);
   }
 
-  @Query((returns) => [User])
+  @Query((returns) => [User], {name: 'users'})
   @Auth(UserRoleEnum.ADMIN)
   findAll() {
     return this.userService.findAll();
   }
 
-  @Query((returns) => User)
+  @Query((returns) => User, {name: 'user'})
   @Auth(UserRoleEnum.USER)
   findOne(@CurrentUser() user: User, @Args('id') id: number) {
     return this.userService.findOne(user, id);

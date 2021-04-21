@@ -92,6 +92,7 @@ enum Gender {
 
 type TokenModel {
   access_token: String!
+  user: User!
 }
 
 type Meta {
@@ -110,21 +111,21 @@ type PaginatedNotification {
 }
 
 type Query {
-  findAll: [User!]!
-  findOne(id: Float!): User!
-  email(id: Int!): Email!
-  findAllCarpools: [Carpool!]!
-  findOneCarpool(id: Int!): Carpool!
-  paginatedCarpool(where: Where!, paginationInput: PaginationInput!): PaginatedCarpool!
-  findAllCities: [City!]!
-  findOneCity(id: Int!): City!
-  findCitiesByGov(govId: Int!): [City!]!
-  findAllGovs: [Gov!]!
-  findOneGov(id: Int!): Gov!
-  findAllSubmissions: [Submission!]!
-  findOneSubmission(id: Int!): Submission!
+  users: [User!]!
+  user(id: Float!): User!
+  email: [Email!]!
+  emails(id: Int!): Email!
+  carpool(id: Int!): Carpool!
+  carpools(where: Where!, paginationInput: PaginationInput!): PaginatedCarpool!
+  cities: [City!]!
+  city(id: Int!): City!
+  citiesByGov(govId: Int!): [City!]!
+  govs: [Gov!]!
+  gov(id: Int!): Gov!
+  submissions: [Submission!]!
+  submission(id: Int!): Submission!
   notification(id: Int!): Notification!
-  findAllNotificationsByUserId(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
+  notifications(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
 }
 
 input Where {
