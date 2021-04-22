@@ -18,8 +18,10 @@ export class FakeUserService {
     const currentUsers: User[] = await this.userRepository.find();
     if (currentUsers.length < seedNumber) {
       await Array.from({length: seedNumber}).map<Promise<User>>(async () => {
+        const randomUsername: string = faker.name.findName();
         const fakerUser: Partial<User> = {
-          username: faker.name.findName() as string,
+          username: randomUsername,
+          lowerCasedUsername: randomUsername.toLowerCase(),
           firstname: faker.name.firstName() as string,
           lastname: faker.name.lastName() as string,
           age: faker.datatype.number({
@@ -50,6 +52,7 @@ export class FakeUserService {
       });
       const choosenUser: Partial<User> = {
         username: 'wadhahmahrouk' as string,
+        lowerCasedUsername: 'wadhahmahrouk',
         firstname: 'wadhah' as string,
         lastname: 'mahrouk' as string,
         age: faker.datatype.number({

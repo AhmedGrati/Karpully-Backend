@@ -2,6 +2,7 @@ import {Logger, ValidationPipe} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app.module';
 import * as helmet from 'helmet';
+import {TrimDataPipe} from './shared/pipes/trim-data.pipe';
 
 const port = process.env.PORT || 3000;
 async function bootstrap() {
@@ -26,7 +27,7 @@ async function bootstrap() {
     }),
   );
   // TODO: Add CORS configuration
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe(), new TrimDataPipe());
   await app.listen(port);
   Logger.log(`Server start on https://localhost:${port}`, 'BOOTSTRAP');
 }

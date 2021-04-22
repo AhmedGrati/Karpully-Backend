@@ -95,6 +95,10 @@ export class User extends TimestampEntites {
   @Field((type) => Gender)
   gender: Gender;
 
+  @Column({unique: true})
+  @Field()
+  lowerCasedUsername: string;
+
   @Column({default: false})
   @Field()
   isConfirmed: boolean;

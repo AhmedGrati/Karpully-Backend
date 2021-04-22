@@ -73,6 +73,7 @@ type User {
   authorities: [String!]
   roles: [UserRoleEnum!]!
   gender: Gender!
+  lowerCasedUsername: String!
   isConfirmed: Boolean!
   sentEmails: [Email!]!
   carpools: [Carpool!]!

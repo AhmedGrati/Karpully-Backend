@@ -15,6 +15,7 @@ import {Auth} from '../shared/decorators/auth.decorator';
 import {EmailVerificationInput} from '../email/dto/email-verification.input';
 import {ResetPasswordEmailInput} from '../email/dto/reset-password-email.input';
 import {ResetPasswordInput} from './dto/reset-password.input';
+import {TrimDataPipe} from '../shared/pipes/trim-data.pipe';
 
 @Resolver((of) => User)
 export class UserResolver {
@@ -70,7 +71,8 @@ export class UserResolver {
 
   @Mutation((returns) => Boolean)
   resetPassword(
-    @Args('ResetPasswordInput') resetPasswordInput: ResetPasswordInput,
+    @Args('ResetPasswordInput')
+    resetPasswordInput: ResetPasswordInput,
   ) {
     return this.userService.resetPassword(resetPasswordInput);
   }

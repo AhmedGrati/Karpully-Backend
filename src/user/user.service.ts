@@ -34,11 +34,16 @@ export class UserService {
   async create(createUserInput: CreateUserInput): Promise<User> {
     // check if the user is unique or not
     let checkUser = await this.userRepository.findOne({
-      username: createUserInput.username,
-      email: createUserInput.email,
+      where: [
+        {
+          lowerCasedUsername: createUserInput.username.toLowerCase(),
+        },
+        {email: createUserInput.email},
+      ],
     });
     if (!checkUser) {
       const user = await this.userRepository.create(createUserInput);
+      user.lowerCasedUsername = user.username.toLowerCase();
       await this.userRepository.save(user);
       // send a confirmation to the user
       const isEmailSent: Boolean = await this.emailService.sendEmail(
