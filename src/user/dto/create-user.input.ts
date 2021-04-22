@@ -57,7 +57,7 @@ export class CreateUserInput {
   password: string;
 
   @Field(() => [String], {nullable: true})
-  roles: string[];
+  roles?: string[];
 
   @Field()
   gender: Gender;
