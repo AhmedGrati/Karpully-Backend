@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -23,6 +24,8 @@ import {
 import {ResetPasswordEmailInput} from 'src/email/dto/reset-password-email.input';
 import {ResetPasswordInput} from './dto/reset-password.input';
 import * as bcrypt from 'bcrypt';
+import {FirstStageDTOInput} from './dto/first-stage-dto.input';
+import {SecondStageDTOInput} from './dto/second-stage-dto.input';
 @Injectable()
 export class UserService {
   constructor(
@@ -31,6 +34,7 @@ export class UserService {
     private readonly emailService: EmailService,
   ) {}
 
+  // THIS FUNCTION IS NOT USED IN RESOLVERS INSTEAD IT IS USED IN TESTS TO CREATE AND POPULATE DATA
   async create(createUserInput: CreateUserInput): Promise<User> {
     // check if the user is unique or not
     let checkUser = await this.userRepository.findOne({
@@ -61,6 +65,66 @@ export class UserService {
         'The User Already Exists',
         HttpStatus.BAD_REQUEST,
       );
+    }
+  }
+
+  async firstStageSignUp(firstStageDTO: FirstStageDTOInput) {
+    // check if the user is unique or not
+    let checkUser = await this.userRepository.findOne({
+      where: [
+        {
+          lowerCasedUsername: firstStageDTO.username.toLowerCase(),
+        },
+        {email: firstStageDTO.email},
+      ],
+    });
+    if (!checkUser) {
+      const user = await this.userRepository.create(firstStageDTO);
+      user.lowerCasedUsername = user.username.toLowerCase();
+      user.completedSignUp = false;
+      await this.userRepository.save(user);
+      // send a confirmation to the user
+      const isEmailSent: Boolean = await this.emailService.sendEmail(
+        user,
+        EmailTypeEnum.CONFIRMATION,
+      );
+      if (isEmailSent) {
+        return user;
+      } else {
+        throw new InternalServerErrorException(SENDING_EMAIL_ERROR_MESSAGE);
+      }
+    } else {
+      // if the user has the same username or email with someone else we throw an exception
+      throw new HttpException(
+        'The User Already Exists',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async secondStageSignUp(secondStageDTO: SecondStageDTOInput): Promise<User> {
+    const {
+      firstname,
+      lastname,
+      age,
+      localization,
+      telNumber,
+      gender,
+      id,
+    } = secondStageDTO;
+    const user = await this.internalFindOne(id);
+    if (user && user.isConfirmed) {
+      user.completedSignUp = true;
+      user.firstname = firstname;
+      user.lastname = lastname;
+      user.age = age;
+      user.localization = localization;
+      user.telNumber = telNumber;
+      user.gender = gender;
+
+      return await this.userRepository.save(user);
+    } else {
+      throw new BadRequestException();
     }
   }
 

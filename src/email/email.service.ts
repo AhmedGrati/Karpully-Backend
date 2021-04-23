@@ -82,6 +82,7 @@ export class EmailService {
         template: join(process.cwd(), 'src/templates/' + templateName),
       })
       .then(() => {
+        Logger.log('EMAIL SENT', 'EMAIL SERVICE');
         return true;
       })
       .catch((err) => {

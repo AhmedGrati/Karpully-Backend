@@ -37,19 +37,19 @@ export class User extends TimestampEntites {
   @Field()
   username: string;
 
-  @Column()
+  @Column({nullable: true})
   @Field()
   firstname: string;
 
-  @Column()
+  @Column({nullable: true})
   @Field()
   lastname: string;
 
-  @Field()
+  @Field({defaultValue: false})
   @Column()
   completedSignUp: boolean;
 
-  @Column()
+  @Column({nullable: true})
   @Field()
   age: number;
 
@@ -68,11 +68,11 @@ export class User extends TimestampEntites {
   @HideField()
   salt: string;
 
-  @Column()
+  @Column({nullable: true})
   @Field()
   localization: string;
 
-  @Column()
+  @Column({nullable: true})
   @Field()
   @IsPhoneNumber()
   telNumber: string;
@@ -81,7 +81,7 @@ export class User extends TimestampEntites {
   @HideField()
   password: string;
 
-  @Column('text', {array: true, default: null})
+  @Column('text', {array: true, default: null, nullable: true})
   @Field(() => [String], {nullable: true})
   authorities: string[];
 
@@ -95,7 +95,7 @@ export class User extends TimestampEntites {
   @Field((type) => [UserRoleEnum])
   roles: string[];
 
-  @Column()
+  @Column({nullable: true})
   @Field((type) => Gender)
   gender: Gender;
 

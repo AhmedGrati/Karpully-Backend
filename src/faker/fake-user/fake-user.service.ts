@@ -45,6 +45,7 @@ export class FakeUserService {
             Gender.MALE,
           ]) as Gender,
           isConfirmed: true,
+          completedSignUp: true,
         };
         const user = await this.userRepository.create(fakerUser);
         const savedUser = await this.userRepository.save(user);
@@ -63,6 +64,7 @@ export class FakeUserService {
           min: 0,
           max: 5,
         }) as number,
+        completedSignUp: true,
         email: 'wadhah.mahrouk@gmail.com' as string,
         localization: 'Tunis',
         telNumber: faker.phone.phoneNumber('+216 ########') as string,

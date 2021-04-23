@@ -16,14 +16,30 @@ import {EmailVerificationInput} from '../email/dto/email-verification.input';
 import {ResetPasswordEmailInput} from '../email/dto/reset-password-email.input';
 import {ResetPasswordInput} from './dto/reset-password.input';
 import {TrimDataPipe} from '../shared/pipes/trim-data.pipe';
+import {FirstStageDTOInput} from './dto/first-stage-dto.input';
+import {SecondStageDTOInput} from './dto/second-stage-dto.input';
 
 @Resolver((of) => User)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
+  // @Mutation((returns) => User)
+  // createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
+  //   return this.userService.create(createUserInput);
+  // }
+
   @Mutation((returns) => User)
-  createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
-    return this.userService.create(createUserInput);
+  firstStageSignUp(
+    @Args('firstStageDTOInput') firstStageDTOInput: FirstStageDTOInput,
+  ) {
+    return this.userService.firstStageSignUp(firstStageDTOInput);
+  }
+
+  @Mutation((returns) => User)
+  secondStageSignUp(
+    @Args('secondStageDTOInput') secondStageDTOInput: SecondStageDTOInput,
+  ) {
+    return this.userService.secondStageSignUp(secondStageDTOInput);
   }
 
   @Query((returns) => [User], {name: 'users'})

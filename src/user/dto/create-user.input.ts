@@ -1,4 +1,12 @@
-import {Field, ID, InputType, ObjectType, Int} from '@nestjs/graphql';
+import {
+  Field,
+  ID,
+  InputType,
+  ObjectType,
+  Int,
+  OmitType,
+  PartialType,
+} from '@nestjs/graphql';
 import {
   IsEmail,
   IsNotEmpty,
@@ -8,7 +16,9 @@ import {
   MinLength,
 } from 'class-validator';
 import {Gender} from '../entities/gender';
-
+import {FirstStageDTOInput} from './first-stage-dto.input';
+import {SecondStageDTOInput} from './second-stage-dto.input';
+type a = FirstStageDTOInput | SecondStageDTOInput;
 @InputType()
 export class CreateUserInput {
   @Field((type) => Int, {nullable: true})

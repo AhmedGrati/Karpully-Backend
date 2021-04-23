@@ -65,6 +65,7 @@ type User {
   username: String!
   firstname: String!
   lastname: String!
+  completedSignUp: Boolean!
   age: Float!
   rate: Float!
   email: String!
@@ -149,7 +150,8 @@ enum OrderBy {
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
+  firstStageSignUp(firstStageDTOInput: FirstStageDTOInput!): User!
+  secondStageSignUp(secondStageDTOInput: SecondStageDTOInput!): User!
   update(updateUserInput: UpdateUserInput!): User!
   remove(id: Float!): User!
   confirmEmail(emailVerificationInput: EmailVerificationInput!): Boolean!
@@ -172,18 +174,19 @@ type Mutation {
   removeSubmission(id: Int!): Submission!
 }
 
-input CreateUserInput {
-  id: Int
+input FirstStageDTOInput {
   username: String!
+  email: String!
+  password: String!
+}
+
+input SecondStageDTOInput {
+  id: Float!
+  localization: String!
+  telNumber: String!
   firstname: String!
   lastname: String!
   age: Float!
-  rate: Float
-  email: String!
-  localization: String!
-  telNumber: String!
-  password: String!
-  roles: [String!]
   gender: Float!
 }
 

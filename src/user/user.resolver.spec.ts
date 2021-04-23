@@ -47,24 +47,24 @@ describe('UserResolver', () => {
     expect(resolver).toBeDefined();
   });
 
-  it('should return a user after creating it', () => {
-    const dto: CreateUserInput = {
-      firstname: 'ahmed',
-      lastname: 'grati',
-      age: 25,
-      email: 'ahmedgrati1999@gmail.com',
-      username: 'ahmed grati',
-      roles: ['admin'],
-      password: 'ahmed',
-      localization: 'Tunis',
-      telNumber: '+216 25042021',
-      rate: 5,
-      gender: Gender.MALE,
-      id: 1,
-    };
-    expect(resolver.createUser(dto)).toMatchObject(dto);
-    expect(userMockService.create).toHaveBeenCalledWith(dto);
-  });
+  // it('should return a user after creating it', () => {
+  //   const dto: CreateUserInput = {
+  //     firstname: 'ahmed',
+  //     lastname: 'grati',
+  //     age: 25,
+  //     email: 'ahmedgrati1999@gmail.com',
+  //     username: 'ahmed grati',
+  //     roles: ['admin'],
+  //     password: 'ahmed',
+  //     localization: 'Tunis',
+  //     telNumber: '+216 25042021',
+  //     rate: 5,
+  //     gender: Gender.MALE,
+  //     id: 1,
+  //   };
+  //   expect(resolver.createUser(dto)).toMatchObject(dto);
+  //   expect(userMockService.create).toHaveBeenCalledWith(dto);
+  // });
 
   it('should return list of all users', () => {
     const allUsers: User[] = [];
