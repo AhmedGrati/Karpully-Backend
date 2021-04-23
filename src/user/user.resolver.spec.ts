@@ -5,7 +5,9 @@ import {EmailTypeEnum} from 'src/email/entities/email-type.enum';
 import {Email} from 'src/email/entities/email.entity';
 import {AuthService} from '../auth/auth.service';
 import {CreateUserInput} from './dto/create-user.input';
+import {FirstStageDTOInput} from './dto/first-stage-dto.input';
 import {ResetPasswordInput} from './dto/reset-password.input';
+import {SecondStageDTOInput} from './dto/second-stage-dto.input';
 import {Gender} from './entities/gender';
 import {User} from './entities/user.entity';
 import {UserResolver} from './user.resolver';
@@ -13,6 +15,15 @@ import {UserService} from './user.service';
 
 describe('UserResolver', () => {
   let resolver: UserResolver;
+  const firstStageUser = new User();
+  firstStageUser.username = 'ahmed';
+  firstStageUser.password = 'pass123';
+  firstStageUser.email = 'ahmed@gmail.com';
+
+  const secondStageUser = new User();
+  secondStageUser.isConfirmed = true;
+  secondStageUser.completedSignUp = true;
+
   const userMockService = {
     create: jest.fn((dto) => {
       return {
@@ -30,6 +41,8 @@ describe('UserResolver', () => {
     validUserConfirmation: jest.fn((emailConfirmationInput) => true),
     sendResetPasswordEmail: jest.fn((resetPasswordEmailInput) => true),
     resetPassword: jest.fn((resetPasswordInput) => true),
+    firstStageSignUp: jest.fn().mockReturnValue(firstStageUser),
+    secondStageSignUp: jest.fn().mockReturnValue(secondStageUser),
   };
 
   beforeEach(async () => {
@@ -45,6 +58,50 @@ describe('UserResolver', () => {
 
   it('should be defined', () => {
     expect(resolver).toBeDefined();
+  });
+
+  it('should perform the first stage of the sign up', async () => {
+    const firstStageInputDTO: FirstStageDTOInput = {
+      email: 'ahmed@gmail.com',
+      username: 'ahmed',
+      password: 'pass123',
+    };
+    expect(resolver.firstStageSignUp).toBeDefined();
+    expect(resolver.firstStageSignUp(firstStageInputDTO)).toMatchObject(
+      firstStageUser,
+    );
+    expect(
+      await (await resolver.firstStageSignUp(firstStageUser)).isConfirmed,
+    ).toBeFalsy();
+    expect(
+      await (await resolver.firstStageSignUp(firstStageUser)).completedSignUp,
+    ).toBeFalsy();
+    expect(userMockService.firstStageSignUp).toBeCalledWith(firstStageInputDTO);
+  });
+
+  it('should perform the second stage of the sign up', async () => {
+    const secondStageDTOInput: SecondStageDTOInput = {
+      firstname: 'ahmed',
+      lastname: 'grati',
+      age: 20,
+      id: 1,
+      localization: 'Tunis',
+      telNumber: '+216 25042021',
+      gender: Gender.MALE,
+    };
+    expect(resolver.secondStageSignUp).toBeDefined();
+    expect(resolver.secondStageSignUp(secondStageDTOInput)).toMatchObject(
+      secondStageUser,
+    );
+    expect(
+      await (await resolver.secondStageSignUp(firstStageUser)).isConfirmed,
+    ).toBeTruthy();
+    expect(
+      await (await resolver.secondStageSignUp(firstStageUser)).completedSignUp,
+    ).toBeTruthy();
+    expect(userMockService.secondStageSignUp).toBeCalledWith(
+      secondStageDTOInput,
+    );
   });
 
   // it('should return a user after creating it', () => {
