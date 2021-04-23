@@ -45,6 +45,10 @@ export class User extends TimestampEntites {
   @Field()
   lastname: string;
 
+  @Field()
+  @Column()
+  completedSignUp: boolean;
+
   @Column()
   @Field()
   age: number;
