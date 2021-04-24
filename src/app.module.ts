@@ -20,6 +20,7 @@ import {FakerGovModule} from './faker/faker-gov/faker-gov.module';
 import {FakerModule} from './faker/faker.module';
 import {SubmissionModule} from './submission/submission.module';
 import {NotificationModule} from './notification/notification.module';
+import { LocationModule } from './location/location.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import {NotificationModule} from './notification/notification.module';
     FakerModule,
     SubmissionModule,
     NotificationModule,
+    LocationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

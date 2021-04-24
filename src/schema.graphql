@@ -112,6 +112,11 @@ type PaginatedNotification {
   meta: Meta!
 }
 
+type Location {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Query {
   users: [User!]!
   user(id: Float!): User!
@@ -128,6 +133,7 @@ type Query {
   submission(id: Int!): Submission!
   notification(id: Int!): Notification!
   notifications(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
+  location(id: Int!): Location!
 }
 
 input Where {
@@ -172,6 +178,9 @@ type Mutation {
   rejectSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
   acceptSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
   removeSubmission(id: Int!): Submission!
+  createLocation(createLocationInput: CreateLocationInput!): Location!
+  updateLocation(updateLocationInput: UpdateLocationInput!): Location!
+  removeLocation(id: Int!): Location!
 }
 
 input FirstStageDTOInput {
@@ -272,6 +281,17 @@ input CreateSubmissionInput {
 
 input UpdateSubmissionInput {
   carpoolId: Float
+  id: Int!
+}
+
+input CreateLocationInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateLocationInput {
+  """Example field (placeholder)"""
+  exampleField: Int
   id: Int!
 }
 
