@@ -71,18 +71,21 @@ export class EmailService {
       .setToken(uuidv4())
       .setVerificationToken(uuidv4());
 
-    const createdEmail = await this.create(email);
+    await this.create(email);
 
     // build the email and send it
     this.mailerService
       .sendMail({
         to: user.email,
         subject: subject,
-        // text: `Hello ${user.username}`,
         template: join(process.cwd(), 'src/templates/' + templateName),
+        context: {
+          userId: user.id,
+          token: email.token,
+          verificationToken: email.verificationToken,
+        },
       })
       .then(() => {
-        Logger.log('EMAIL SENT', 'EMAIL SERVICE');
         return true;
       })
       .catch((err) => {
