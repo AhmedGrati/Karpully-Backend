@@ -92,4 +92,9 @@ export class UserResolver {
   ) {
     return this.userService.resetPassword(resetPasswordInput);
   }
+
+  @Query((returns) => Boolean)
+  existByEmailOrUsername(@Args('username') usernameOrEmail: string) {
+    return this.userService.userExistByEmailOrUsername(usernameOrEmail);
+  }
 }
