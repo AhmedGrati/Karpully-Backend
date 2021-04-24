@@ -1,4 +1,6 @@
 import {
+  CACHE_MANAGER,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
@@ -9,7 +11,6 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {CredentialsInput} from 'src/auth/dto/credentials.input';
 import {User} from '../user/entities/user.entity';
 import {Repository} from 'typeorm';
-import {UserService} from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import {PayloadInterface} from './dto/payload.interface';
 import {TokenModel} from './dto/token.model';
@@ -19,12 +20,14 @@ import {
 } from '../utils/constants';
 import * as dotenv from 'dotenv';
 import {TokenTypeEnum} from './dto/token-type.enum';
+import {RedisCacheService} from '../redis-cache/redis-cache.service';
 dotenv.config();
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private jwtService: JwtService,
+    private readonly redisCacheService: RedisCacheService,
   ) {}
 
   async validateUser(username: string, pass: string) {
@@ -63,22 +66,29 @@ export class AuthService {
   async refreshToken(refreshToken: string): Promise<TokenModel> {
     const payload = await this.verifyRefreshToken(refreshToken);
     if (payload) {
-      const newAccessToken = await this.generateJwtToken(
-        payload,
-        TokenTypeEnum.ACCESS,
-      );
-      const newRefreshToken = await this.generateJwtToken(
-        payload,
-        TokenTypeEnum.REFRESH,
-      );
-      const user = await this.userRepository.findOne({
-        where: {username: payload.username},
-      });
-      return {
-        access_token: newAccessToken,
-        refresh_token: newRefreshToken,
-        user,
-      };
+      const {username} = payload;
+      const storedRefreshToken = await this.redisCacheService.get(username);
+      if (storedRefreshToken === refreshToken) {
+        const newAccessToken = await this.generateJwtToken(
+          payload,
+          TokenTypeEnum.ACCESS,
+        );
+        const newRefreshToken = await this.generateJwtToken(
+          payload,
+          TokenTypeEnum.REFRESH,
+        );
+        const user = await this.userRepository.findOne({
+          where: {username},
+        });
+        await this.redisCacheService.set(username, newRefreshToken);
+        return {
+          access_token: newAccessToken,
+          refresh_token: newRefreshToken,
+          user,
+        };
+      } else {
+        throw new UnauthorizedException();
+      }
     } else {
       throw new UnauthorizedException();
     }
@@ -116,6 +126,7 @@ export class AuthService {
           payload,
           TokenTypeEnum.REFRESH,
         );
+        await this.redisCacheService.set(user.username, refreshToken);
         return {
           access_token: accessToken,
           refresh_token: refreshToken,

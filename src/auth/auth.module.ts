@@ -1,16 +1,13 @@
 import {Module} from '@nestjs/common';
-import {ConfigService} from '@nestjs/config';
-import {GraphQLModule} from '@nestjs/graphql';
 import {JwtModule, JwtService} from '@nestjs/jwt';
 import {PassportModule} from '@nestjs/passport';
 import {TypeOrmModule} from '@nestjs/typeorm';
-import {join} from 'path';
-import {EnvironmentVariables} from 'src/common/EnvironmentVariables';
 import {User} from '../user/entities/user.entity';
 import {AuthService} from './auth.service';
 import {JwtStrategy} from './strategies/jwt.strategy';
 import {AuthResolver} from './auth.resolver';
 import * as dotenv from 'dotenv';
+import {RedisCacheModule} from '../redis-cache/redis-cache.module';
 
 dotenv.config();
 @Module({
@@ -24,6 +21,7 @@ dotenv.config();
       defaultStrategy: 'jwt',
     }),
     TypeOrmModule.forFeature([User]),
+    RedisCacheModule,
   ],
   exports: [AuthService],
 })

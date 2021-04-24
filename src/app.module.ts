@@ -1,4 +1,4 @@
-import {Module} from '@nestjs/common';
+import {CacheModule, Module} from '@nestjs/common';
 import {AppController} from './app.controller';
 import {AppService} from './app.service';
 import {UserModule} from './user/user.module';
@@ -20,7 +20,7 @@ import {FakerGovModule} from './faker/faker-gov/faker-gov.module';
 import {FakerModule} from './faker/faker.module';
 import {SubmissionModule} from './submission/submission.module';
 import {NotificationModule} from './notification/notification.module';
-
+import {RedisCacheModule} from './redis-cache/redis-cache.module';
 @Module({
   imports: [
     UserModule,
@@ -46,6 +46,7 @@ import {NotificationModule} from './notification/notification.module';
     FakerModule,
     SubmissionModule,
     NotificationModule,
+    RedisCacheModule,
   ],
   controllers: [AppController],
   providers: [AppService],
