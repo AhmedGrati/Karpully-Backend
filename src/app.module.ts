@@ -21,6 +21,7 @@ import {FakerModule} from './faker/faker.module';
 import {SubmissionModule} from './submission/submission.module';
 import {NotificationModule} from './notification/notification.module';
 import {RedisCacheModule} from './redis-cache/redis-cache.module';
+import { ConnectionHistoricModule } from './connection-historic/connection-historic.module';
 @Module({
   imports: [
     UserModule,
@@ -47,6 +48,7 @@ import {RedisCacheModule} from './redis-cache/redis-cache.module';
     SubmissionModule,
     NotificationModule,
     RedisCacheModule,
+    ConnectionHistoricModule,
   ],
   controllers: [AppController],
   providers: [AppService],
