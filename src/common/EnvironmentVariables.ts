@@ -8,6 +8,8 @@ export interface EnvironmentVariables {
   JWT_ACCESS_TOKEN_SECRET: string;
   JWT_REFRESH_TOKEN_SECRET: string;
   KARPULLY_EMAIL_LOGIN: string;
+  REDIS_HOST: string;
+  REDIS_PORT: string;
   KARPULLY_EMAIL_PASSWORD: string;
   SEED_NUMBER: number;
 }
