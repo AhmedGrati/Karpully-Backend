@@ -67,8 +67,7 @@ export class AuthService {
     const payload = await this.verifyRefreshToken(refreshToken);
     if (payload) {
       const {username} = payload;
-      // const storedRefreshToken = await this.redisCacheService.get(username);
-      const storedRefreshToken = refreshToken;
+      const storedRefreshToken = await this.redisCacheService.get(username);
       if (storedRefreshToken === refreshToken) {
         const newAccessToken = await this.generateJwtToken(
           payload,
@@ -81,7 +80,7 @@ export class AuthService {
         const user = await this.userRepository.findOne({
           where: {username},
         });
-        // await this.redisCacheService.set(username, newRefreshToken);
+        await this.redisCacheService.set(username, newRefreshToken);
         return {
           access_token: newAccessToken,
           refresh_token: newRefreshToken,
@@ -127,7 +126,7 @@ export class AuthService {
           payload,
           TokenTypeEnum.REFRESH,
         );
-        // await this.redisCacheService.set(user.username, refreshToken);
+        await this.redisCacheService.set(user.username, refreshToken);
         return {
           access_token: accessToken,
           refresh_token: refreshToken,
