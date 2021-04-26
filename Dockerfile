@@ -1,4 +1,4 @@
-FROM node:15.12.0-alpine3.10 As development
+FROM node:14.16.1-alpine3.11 As development
 
 LABEL maintainer="ahmedgrati1999@gmail.com"
 
@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install --only=development
+RUN npm install 
 
 COPY . .
 
@@ -14,7 +14,7 @@ RUN npm run build
 
 
 
-FROM node:15.12.0-alpine3.10 as production
+FROM node:14.16.1-alpine3.11 as production
 
 LABEL maintainer="ahmedgrati1999@gmail.com"
 ARG NODE_ENV=production

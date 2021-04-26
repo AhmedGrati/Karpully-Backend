@@ -1,15 +1,16 @@
 import {
+  CACHE_MANAGER,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import {JwtService} from '@nestjs/jwt';
+import {JwtService, JwtSignOptions} from '@nestjs/jwt';
 import {InjectRepository} from '@nestjs/typeorm';
 import {CredentialsInput} from 'src/auth/dto/credentials.input';
 import {User} from '../user/entities/user.entity';
 import {Repository} from 'typeorm';
-import {UserService} from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import {PayloadInterface} from './dto/payload.interface';
 import {TokenModel} from './dto/token.model';
@@ -17,11 +18,16 @@ import {
   PASSWORD_LOGIN_MISSMATCH_ERROR_MESSAGE,
   ACCOUNT_NOT_ACTIVATED_ERROR_MESSAGE,
 } from '../utils/constants';
+import * as dotenv from 'dotenv';
+import {TokenTypeEnum} from './dto/token-type.enum';
+import {RedisCacheService} from '../redis-cache/redis-cache.service';
+dotenv.config();
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private jwtService: JwtService,
+    private readonly redisCacheService: RedisCacheService,
   ) {}
 
   async validateUser(username: string, pass: string) {
@@ -31,6 +37,61 @@ export class AuthService {
       return result;
     }
     return null;
+  }
+
+  async generateJwtToken(payload: PayloadInterface, tokenType: TokenTypeEnum) {
+    switch (tokenType) {
+      case TokenTypeEnum.ACCESS:
+        return await this.jwtService.sign(payload);
+      case TokenTypeEnum.REFRESH:
+        return await this.jwtService.sign(payload, {
+          secret: process.env.JWT_REFRESH_TOKEN_SECRET,
+          expiresIn: '1y',
+        });
+    }
+  }
+
+  async verifyRefreshToken(refreshToken: string) {
+    const payload = await this.jwtService.verify(refreshToken, {
+      secret: process.env.JWT_REFRESH_TOKEN_SECRET,
+    });
+    if (payload) {
+      const {iat, exp, ...data} = payload;
+      return data;
+    } else {
+      throw new UnauthorizedException();
+    }
+  }
+
+  async refreshToken(refreshToken: string): Promise<TokenModel> {
+    const payload = await this.verifyRefreshToken(refreshToken);
+    if (payload) {
+      const {username} = payload;
+      const storedRefreshToken = await this.redisCacheService.get(username);
+      if (storedRefreshToken === refreshToken) {
+        const newAccessToken = await this.generateJwtToken(
+          payload,
+          TokenTypeEnum.ACCESS,
+        );
+        const newRefreshToken = await this.generateJwtToken(
+          payload,
+          TokenTypeEnum.REFRESH,
+        );
+        const user = await this.userRepository.findOne({
+          where: {username},
+        });
+        await this.redisCacheService.set(username, newRefreshToken);
+        return {
+          access_token: newAccessToken,
+          refresh_token: newRefreshToken,
+          user,
+        };
+      } else {
+        throw new UnauthorizedException();
+      }
+    } else {
+      throw new UnauthorizedException();
+    }
   }
 
   async login(credentials: CredentialsInput): Promise<TokenModel> {
@@ -57,9 +118,18 @@ export class AuthService {
           lastname: user.lastname,
           email: user.email,
         };
-        const jwt = await this.jwtService.sign(payload);
+        const accessToken = await this.generateJwtToken(
+          payload,
+          TokenTypeEnum.ACCESS,
+        );
+        const refreshToken = await this.generateJwtToken(
+          payload,
+          TokenTypeEnum.REFRESH,
+        );
+        await this.redisCacheService.set(user.username, refreshToken);
         return {
-          access_token: jwt,
+          access_token: accessToken,
+          refresh_token: refreshToken,
           user,
         };
       } else {

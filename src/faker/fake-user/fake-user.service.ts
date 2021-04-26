@@ -21,7 +21,7 @@ export class FakeUserService {
         const randomUsername: string = faker.name.findName();
         const fakerUser: Partial<User> = {
           username: randomUsername,
-          lowerCasedUsername: randomUsername.toLowerCase(),
+          lowerCasedUsername: randomUsername,
           firstname: faker.name.firstName() as string,
           lastname: faker.name.lastName() as string,
           age: faker.datatype.number({

@@ -45,8 +45,8 @@ export class User extends TimestampEntites {
   @Field()
   lastname: string;
 
-  @Field({defaultValue: false})
-  @Column()
+  @Field()
+  @Column({default: false})
   completedSignUp: boolean;
 
   @Column({nullable: true})

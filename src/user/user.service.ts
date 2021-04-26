@@ -34,6 +34,16 @@ export class UserService {
     private readonly emailService: EmailService,
   ) {}
 
+  async userExistByEmailOrUsername(emailOrUsername: string): Promise<Boolean> {
+    const user = await this.userRepository.findOne({
+      where: [{email: emailOrUsername}, {username: emailOrUsername}],
+    });
+    if (user) {
+      return true;
+    }
+    return false;
+  }
+
   // THIS FUNCTION IS NOT USED IN RESOLVERS INSTEAD IT IS USED IN TESTS TO CREATE AND POPULATE DATA
   async create(createUserInput: CreateUserInput): Promise<User> {
     // check if the user is unique or not

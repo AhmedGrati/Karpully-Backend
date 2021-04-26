@@ -94,6 +94,7 @@ enum Gender {
 
 type TokenModel {
   access_token: String!
+  refresh_token: String!
   user: User!
 }
 
@@ -120,8 +121,10 @@ type Location {
 type Query {
   users: [User!]!
   user(id: Float!): User!
+  existByEmailOrUsername(username: String!): Boolean!
   email: [Email!]!
   emails(id: Int!): Email!
+  refreshToken(refreshToken: String!): TokenModel!
   carpool(id: Int!): Carpool!
   carpools(where: Where!, paginationInput: PaginationInput!): PaginatedCarpool!
   cities: [City!]!
