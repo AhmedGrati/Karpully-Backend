@@ -113,6 +113,28 @@ type PaginatedNotification {
   meta: Meta!
 }
 
+type Address {
+  ID: Float!
+  house_number: Float
+  road: String
+  neighbourhood: String
+  hamlet: String
+  suburb: String
+  village: String
+  town: String
+  city_district: String
+  city: String
+  region: String
+  county: String
+  state_district: String
+  state: String
+  state_code: String
+  postcode: String
+  country: String
+  country_code: String
+  name: String
+}
+
 type Location {
   place_id: Int!
   licence: String!
@@ -126,6 +148,7 @@ type Location {
   type: String!
   importance: Float!
   icon: String!
+  address: Address!
 }
 
 type Query {
@@ -146,7 +169,8 @@ type Query {
   submission(id: Int!): Submission!
   notification(id: Int!): Notification!
   notifications(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
-  findLocationByText(loc: FindLocationByTextInput!): [Location!]!
+  geoEncoding(loc: FindLocationByTextInput!): [Location!]!
+  geoDecoding(xy: ReverseLocationSearchInput!): [Location!]!
 }
 
 input Where {
@@ -172,6 +196,11 @@ input FindLocationByTextInput {
   text: String!
 }
 
+input ReverseLocationSearchInput {
+  lat: Float!
+  lon: Float!
+}
+
 type Mutation {
   firstStageSignUp(firstStageDTOInput: FirstStageDTOInput!): User!
   secondStageSignUp(secondStageDTOInput: SecondStageDTOInput!): User!
@@ -195,7 +224,6 @@ type Mutation {
   rejectSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
   acceptSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
   removeSubmission(id: Int!): Submission!
-  createLocation(createLocationInput: CreateLocationInput!): Location!
 }
 
 input FirstStageDTOInput {
@@ -297,11 +325,6 @@ input CreateSubmissionInput {
 input UpdateSubmissionInput {
   carpoolId: Float
   id: Int!
-}
-
-input CreateLocationInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
 }
 
 type Subscription {

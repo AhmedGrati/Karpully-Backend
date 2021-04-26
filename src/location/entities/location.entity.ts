@@ -1,5 +1,6 @@
+import { Address } from './address.entity';
 import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 
 export enum OSM {
   WAY = "way",
@@ -51,18 +52,23 @@ export class Location {
 
   @Field()
   @Column()
-  class: string;
+  class?: string;
 
   @Field()
   @Column()
-  type: string;
+  type?: string;
 
   @Field()
   @Column()
-  importance: number;
+  importance?: number;
 
   @Field()
   @Column()
-  icon: string;
+  icon?: string;
+
+  @Field(type => Address)
+  @OneToOne(() => Address)
+  @JoinColumn()
+  address?: Address;
 
 }
