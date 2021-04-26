@@ -114,8 +114,18 @@ type PaginatedNotification {
 }
 
 type Location {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  place_id: Int!
+  licence: String!
+  osm_type: String!
+  osm_id: String!
+  boundingbox: [String!]!
+  lat: String!
+  lon: String!
+  display_name: String!
+  class: String!
+  type: String!
+  importance: Float!
+  icon: String!
 }
 
 type Query {
@@ -136,7 +146,7 @@ type Query {
   submission(id: Int!): Submission!
   notification(id: Int!): Notification!
   notifications(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
-  location(id: Int!): Location!
+  findLocationByText(loc: FindLocationByTextInput!): [Location!]!
 }
 
 input Where {
@@ -156,6 +166,10 @@ input PaginationInput {
 enum OrderBy {
   ASC
   DESC
+}
+
+input FindLocationByTextInput {
+  text: String!
 }
 
 type Mutation {
@@ -182,8 +196,6 @@ type Mutation {
   acceptSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
   removeSubmission(id: Int!): Submission!
   createLocation(createLocationInput: CreateLocationInput!): Location!
-  updateLocation(updateLocationInput: UpdateLocationInput!): Location!
-  removeLocation(id: Int!): Location!
 }
 
 input FirstStageDTOInput {
@@ -290,12 +302,6 @@ input UpdateSubmissionInput {
 input CreateLocationInput {
   """Example field (placeholder)"""
   exampleField: Int!
-}
-
-input UpdateLocationInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
 }
 
 type Subscription {

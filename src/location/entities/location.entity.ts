@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 export enum OSM {
@@ -6,6 +6,10 @@ export enum OSM {
   NODE = "node",
   RELATION = "relation"
 }
+registerEnumType(OSM, {
+  name: 'OSM',
+});
+
 @ObjectType()
 @Entity()
 export class Location {
@@ -14,7 +18,7 @@ export class Location {
   place_id: string;
 
   @Field()
-  @Column({ nullable: false })
+  @Column()
   licence: string;
 
   @Field()
@@ -26,39 +30,39 @@ export class Location {
   osm_type: OSM;
 
   @Field()
-  @Column({ nullable: false })
+  @Column()
   osm_id: string;
 
-  @Field()
-  @Column("string", { array: true })
-  boundingbox?: (string)[] | null;
+  @Field(type => [String])
+  @Column({ array: true })
+  boundingbox?: string | null;
 
   @Field()
-  @Column({ nullable: false })
+  @Column()
   lat: string;
 
   @Field()
-  @Column({ nullable: false })
+  @Column()
   lon: string;
 
   @Field()
-  @Column({ nullable: false })
+  @Column()
   display_name: string;
 
   @Field()
-  @Column({ nullable: false })
+  @Column()
   class: string;
 
   @Field()
-  @Column({ nullable: false })
+  @Column()
   type: string;
 
   @Field()
-  @Column({ nullable: false })
+  @Column()
   importance: number;
 
   @Field()
-  @Column({ nullable: false })
+  @Column()
   icon: string;
 
 }
