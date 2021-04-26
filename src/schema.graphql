@@ -3,6 +3,9 @@
 # ------------------------------------------------------
 
 type Email {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
   id: Int
   sentDate: DateTime!
   emailType: EmailTypeEnum!
@@ -23,12 +26,18 @@ enum EmailTypeEnum {
 }
 
 type Gov {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
   id: Int
   govName: String!
   cities: [City!]!
 }
 
 type City {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
   id: Int!
   cityName: String!
   gov: Gov!
@@ -36,6 +45,9 @@ type City {
 }
 
 type Submission {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
   id: Float!
   status: String!
   owner: User!
@@ -43,6 +55,9 @@ type Submission {
 }
 
 type Carpool {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
   id: Float!
   departureDate: DateTime!
   nbrOfAvailablePlaces: Float!
@@ -55,12 +70,35 @@ type Carpool {
 }
 
 type Notification {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
   id: Float!
   receiver: User!
   content: String!
 }
 
+type Connection {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  id: Float!
+  historic: ConnectionHistoric!
+}
+
+type ConnectionHistoric {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  id: Float!
+  connections: [Connection!]!
+  owner: User!
+}
+
 type User {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
   id: Int
   username: String!
   firstname: String!
@@ -80,6 +118,7 @@ type User {
   carpools: [Carpool!]!
   submissions: [Submission!]!
   notifications: [Notification!]!
+  historic: ConnectionHistoric!
 }
 
 enum UserRoleEnum {
@@ -120,6 +159,7 @@ type Query {
   email: [Email!]!
   emails(id: Int!): Email!
   refreshToken(refreshToken: String!): TokenModel!
+  connectionHistoric(userId: Float!): ConnectionHistoric!
   carpool(id: Int!): Carpool!
   carpools(where: Where!, paginationInput: PaginationInput!): PaginatedCarpool!
   cities: [City!]!

@@ -22,6 +22,7 @@ import {SubmissionModule} from './submission/submission.module';
 import {NotificationModule} from './notification/notification.module';
 import {RedisCacheModule} from './redis-cache/redis-cache.module';
 import { ConnectionHistoricModule } from './connection-historic/connection-historic.module';
+import { ConnectionModule } from './connection/connection.module';
 @Module({
   imports: [
     UserModule,
@@ -49,6 +50,7 @@ import { ConnectionHistoricModule } from './connection-historic/connection-histo
     NotificationModule,
     RedisCacheModule,
     ConnectionHistoricModule,
+    ConnectionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

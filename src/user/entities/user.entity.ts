@@ -3,7 +3,9 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -25,6 +27,7 @@ import {Carpool} from '../../carpool/entities/carpool.entity';
 import {TimestampEntites} from '../../generics/timestamp.entity';
 import {Submission} from '../../submission/entities/submission.entity';
 import {Notification} from '../../notification/entities/notification.entity';
+import {ConnectionHistoric} from '../../connection-historic/entities/connection-historic.entity';
 
 @Entity()
 @ObjectType()
@@ -122,6 +125,12 @@ export class User extends TimestampEntites {
   @Field((type) => [Notification])
   @OneToMany((type) => Notification, (notification) => notification.receiver)
   notifications: Notification[];
+
+  @Field((type) => ConnectionHistoric)
+  @OneToOne((type) => ConnectionHistoric, (historic) => historic.owner, {
+    cascade: true,
+  })
+  historic: ConnectionHistoric;
 
   @BeforeInsert()
   async hashPassword() {

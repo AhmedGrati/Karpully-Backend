@@ -21,6 +21,9 @@ import {
 import * as dotenv from 'dotenv';
 import {TokenTypeEnum} from './dto/token-type.enum';
 import {RedisCacheService} from '../redis-cache/redis-cache.service';
+import {ConnectionService} from '../connection/connection.service';
+import {ConnectionHistoricService} from '../connection-historic/connection-historic.service';
+import {ConnectionHistoric} from 'src/connection-historic/entities/connection-historic.entity';
 dotenv.config();
 @Injectable()
 export class AuthService {
@@ -28,6 +31,8 @@ export class AuthService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private jwtService: JwtService,
     private readonly redisCacheService: RedisCacheService,
+    private readonly connectionService: ConnectionService,
+    private readonly connectionHistoricService: ConnectionHistoricService,
   ) {}
 
   async validateUser(username: string, pass: string) {
@@ -67,8 +72,7 @@ export class AuthService {
     const payload = await this.verifyRefreshToken(refreshToken);
     if (payload) {
       const {username} = payload;
-      // const storedRefreshToken = await this.redisCacheService.get(username);
-      const storedRefreshToken = refreshToken;
+      const storedRefreshToken = await this.redisCacheService.get(username);
       if (storedRefreshToken === refreshToken) {
         const newAccessToken = await this.generateJwtToken(
           payload,
@@ -81,7 +85,7 @@ export class AuthService {
         const user = await this.userRepository.findOne({
           where: {username},
         });
-        // await this.redisCacheService.set(username, newRefreshToken);
+        await this.redisCacheService.set(username, newRefreshToken);
         return {
           access_token: newAccessToken,
           refresh_token: newRefreshToken,
@@ -127,7 +131,11 @@ export class AuthService {
           payload,
           TokenTypeEnum.REFRESH,
         );
-        // await this.redisCacheService.set(user.username, refreshToken);
+        // add the new refresh token to the cache
+        await this.redisCacheService.set(user.username, refreshToken);
+        // register the connection
+        this.registerConnection(user);
+        // return result
         return {
           access_token: accessToken,
           refresh_token: refreshToken,
@@ -138,5 +146,25 @@ export class AuthService {
         throw new NotFoundException(PASSWORD_LOGIN_MISSMATCH_ERROR_MESSAGE);
       }
     }
+  }
+
+  async registerConnection(user: User) {
+    const {id} = user;
+    // fetch the connection historic of the user (by user id)
+
+    let connectionHistoric: ConnectionHistoric = await this.connectionHistoricService.findOneByUserId(
+      id,
+    );
+    if (!connectionHistoric) {
+      connectionHistoric = await this.connectionHistoricService.create(user);
+    }
+
+    // create new connection entity
+    const connection = await this.connectionService.create(connectionHistoric);
+
+    // save the historic
+    await this.connectionHistoricService.updateConnectionHistoric(
+      connectionHistoric,
+    );
   }
 }
