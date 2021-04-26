@@ -171,6 +171,7 @@ type Query {
   notifications(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
   geoEncoding(loc: FindLocationByTextInput!): [Location!]!
   geoDecoding(xy: ReverseLocationSearchInput!): [Location!]!
+  autocomplete(textInput: AutocompleteInput!): [Location!]!
 }
 
 input Where {
@@ -199,6 +200,10 @@ input FindLocationByTextInput {
 input ReverseLocationSearchInput {
   lat: Float!
   lon: Float!
+}
+
+input AutocompleteInput {
+  place: String!
 }
 
 type Mutation {
