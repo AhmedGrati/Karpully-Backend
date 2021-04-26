@@ -46,6 +46,7 @@ export class LocationService {
         format: "json",
         q: input.place,
         countrycodes: "tn",
+        limit: input.limit
       }
     }).toPromise().then(e => {
       console.log(e.data);

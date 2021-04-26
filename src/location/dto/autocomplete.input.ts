@@ -4,4 +4,6 @@ import { InputType, Int, Field } from '@nestjs/graphql';
 export class AutocompleteInput {
     @Field(() => String)
     place: string;
+    @Field({ defaultValue: 10 })
+    limit: number;
 }

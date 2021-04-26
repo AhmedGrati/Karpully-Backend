@@ -204,6 +204,7 @@ input ReverseLocationSearchInput {
 
 input AutocompleteInput {
   place: String!
+  limit: Float = 10
 }
 
 type Mutation {
