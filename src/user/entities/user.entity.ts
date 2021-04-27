@@ -41,11 +41,11 @@ export class User extends TimestampEntites {
   username: string;
 
   @Column({nullable: true})
-  @Field()
+  @Field({nullable: true})
   firstname: string;
 
   @Column({nullable: true})
-  @Field()
+  @Field({nullable: true})
   lastname: string;
 
   @Field()
@@ -53,11 +53,11 @@ export class User extends TimestampEntites {
   completedSignUp: boolean;
 
   @Column({nullable: true})
-  @Field()
+  @Field({nullable: true})
   age: number;
 
   @Column({default: 0.0})
-  @Field()
+  @Field({nullable: true})
   @Min(0)
   @Max(5)
   rate: number;
@@ -72,11 +72,11 @@ export class User extends TimestampEntites {
   salt: string;
 
   @Column({nullable: true})
-  @Field()
+  @Field({nullable: true})
   localization: string;
 
   @Column({nullable: true})
-  @Field()
+  @Field({nullable: true})
   @IsPhoneNumber()
   telNumber: string;
 
@@ -111,22 +111,22 @@ export class User extends TimestampEntites {
   isConfirmed: boolean;
 
   @OneToMany(() => Email, (email) => email.sender)
-  @Field((type) => [Email])
+  @Field((type) => [Email], {nullable: true})
   sentEmails: [Email];
 
   @OneToMany(() => Carpool, (carpool) => carpool.owner)
-  @Field((type) => [Carpool])
+  @Field((type) => [Carpool], {nullable: true})
   carpools: Carpool[];
 
-  @Field((type) => [Submission])
+  @Field((type) => [Submission], {nullable: true})
   @OneToMany((type) => Submission, (submission) => submission.owner)
   submissions: Submission[];
 
-  @Field((type) => [Notification])
+  @Field((type) => [Notification], {nullable: true})
   @OneToMany((type) => Notification, (notification) => notification.receiver)
   notifications: Notification[];
 
-  @Field((type) => ConnectionHistoric)
+  @Field((type) => ConnectionHistoric, {nullable: true})
   @OneToOne((type) => ConnectionHistoric, (historic) => historic.owner, {
     cascade: true,
   })
