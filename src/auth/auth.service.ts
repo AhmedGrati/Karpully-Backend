@@ -118,9 +118,6 @@ export class AuthService {
       if (hashedPassword === user.password) {
         const payload: PayloadInterface = {
           username: user.username,
-          roles: user.roles,
-          firstname: user.firstname,
-          lastname: user.lastname,
           email: user.email,
         };
         const accessToken = await this.generateJwtToken(

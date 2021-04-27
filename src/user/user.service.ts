@@ -26,12 +26,18 @@ import {ResetPasswordInput} from './dto/reset-password.input';
 import * as bcrypt from 'bcrypt';
 import {FirstStageDTOInput} from './dto/first-stage-dto.input';
 import {SecondStageDTOInput} from './dto/second-stage-dto.input';
+import {RedisCacheService} from '../redis-cache/redis-cache.service';
+import {AuthService} from '../auth/auth.service';
+import {TokenTypeEnum} from '../auth/dto/token-type.enum';
+import {PayloadInterface} from '../auth/dto/payload.interface';
+import {TokenModel} from 'src/auth/dto/token.model';
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-
+    private readonly redisCacheService: RedisCacheService,
     private readonly emailService: EmailService,
+    private readonly authService: AuthService,
   ) {}
 
   async userExistByEmail(email: string): Promise<Boolean> {
@@ -213,7 +219,7 @@ export class UserService {
   */
   async validUserConfirmation(
     emailVerificationInput: EmailVerificationInput,
-  ): Promise<Boolean> {
+  ): Promise<TokenModel> {
     const {userId, token, verificationToken} = emailVerificationInput;
     const user: User = await this.userRepository.findOne({where: {id: userId}});
     if (user) {
@@ -226,13 +232,13 @@ export class UserService {
       if (emailConfirmation) {
         user.isConfirmed = true;
         await this.userRepository.save(user);
+        return this.generateTokenModel(user);
       } else {
         // if the user account is not confirmed we should delete his account so he can try another registration
         if (user.isConfirmed === false) {
           await this.userRepository.delete(userId);
         }
       }
-      return emailConfirmation;
     } else {
       throw new NotFoundException(USER_NOT_FOUND_ERROR_MESSAGE);
     }
@@ -276,5 +282,23 @@ export class UserService {
     } else {
       throw new NotFoundException(USER_NOT_FOUND_ERROR_MESSAGE);
     }
+  }
+
+  async generateTokenModel(user: User): Promise<TokenModel> {
+    const payload: PayloadInterface = {
+      username: user.username,
+      email: user.email,
+    };
+    const accessToken = await this.authService.generateJwtToken(
+      payload,
+      TokenTypeEnum.ACCESS,
+    );
+    const refreshToken = await this.authService.generateJwtToken(
+      payload,
+      TokenTypeEnum.REFRESH,
+    );
+    // add the new refresh token to the cache
+    await this.redisCacheService.set(user.username, refreshToken);
+    return {user, access_token: accessToken, refresh_token: refreshToken};
   }
 }

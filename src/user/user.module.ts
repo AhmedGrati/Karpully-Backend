@@ -9,9 +9,15 @@ import {JwtStrategy} from '../auth/strategies/jwt.strategy';
 import {AuthModule} from '../auth/auth.module';
 import {EmailService} from '../email/email.service';
 import {EmailModule} from '../email/email.module';
+import {RedisCacheModule} from '../redis-cache/redis-cache.module';
 @Module({
   providers: [UserResolver, UserService, JwtStrategy],
-  imports: [TypeOrmModule.forFeature([User]), EmailModule],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    EmailModule,
+    RedisCacheModule,
+    AuthModule,
+  ],
   exports: [UserService],
 })
 export class UserModule {}

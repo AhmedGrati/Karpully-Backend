@@ -24,3 +24,5 @@ export const DEPARTURE_DATE_ERROR_MESSAGE: String =
 export const UNAUTHORIZED_SUBMISSION_ERROR_MESSAGE: String =
   'A User cannot submit to a carpool twice!';
 export const BASE_TOPIC_NAME: string = 'User_';
+export const EMAIL_NOT_FOUND_ERROR_MESSAGE: String = 'Invalid Email!';
+export const EMAIL_EXPIRED_ERROR_MESSAGE: String = 'Email Expired!';

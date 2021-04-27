@@ -1,5 +1,6 @@
 import {MailerService} from '@nestjs-modules/mailer';
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -17,6 +18,8 @@ import {DatesOperations} from '../utils/dates-operation';
 import {
   CONFIRMATION_EMAIL_SUBJECT,
   CONFIRMATION_EMAIL_TEMPLATE_NAME,
+  EMAIL_EXPIRED_ERROR_MESSAGE,
+  EMAIL_NOT_FOUND_ERROR_MESSAGE,
   RESET_PASSWORD_EMAIL_SUBJECT,
   RESET_PASSWORD_EMAIL_TEMPLATE_NAME,
   SENDING_EMAIL_ERROR_MESSAGE,
@@ -134,7 +137,7 @@ export class EmailService {
     if (email) {
       const {isExpired, sentDate} = email;
       if (isExpired) {
-        return false;
+        throw new BadRequestException(EMAIL_EXPIRED_ERROR_MESSAGE);
       } else {
         const emailSendingDate: Date = sentDate;
         const confirmationDate: Date = new Date();
@@ -146,13 +149,13 @@ export class EmailService {
         const expiredEmail = email.setExpired(true);
         await this.emailRepository.save(expiredEmail);
         if (duration > 2) {
-          return false;
+          throw new BadRequestException(EMAIL_EXPIRED_ERROR_MESSAGE);
         } else {
           return true;
         }
       }
     }
 
-    return false;
+    throw new BadRequestException(EMAIL_NOT_FOUND_ERROR_MESSAGE);
   }
 }

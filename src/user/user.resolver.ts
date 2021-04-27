@@ -18,6 +18,7 @@ import {ResetPasswordInput} from './dto/reset-password.input';
 import {TrimDataPipe} from '../shared/pipes/trim-data.pipe';
 import {FirstStageDTOInput} from './dto/first-stage-dto.input';
 import {SecondStageDTOInput} from './dto/second-stage-dto.input';
+import {TokenModel} from '../auth/dto/token.model';
 
 @Resolver((of) => User)
 export class UserResolver {
@@ -69,7 +70,7 @@ export class UserResolver {
     return this.userService.remove(user, id);
   }
 
-  @Mutation((returns) => Boolean)
+  @Mutation((returns) => TokenModel)
   confirmEmail(
     @Args('emailVerificationInput')
     emailVerificationInput: EmailVerificationInput,
