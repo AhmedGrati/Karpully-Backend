@@ -12,6 +12,7 @@ import {Email} from './entities/email.entity';
 import {EmailTypeEnum} from './entities/email-type.enum';
 import {join} from 'path';
 import {v4 as uuidv4} from 'uuid';
+import * as dotenv from 'dotenv';
 import {DatesOperations} from '../utils/dates-operation';
 import {
   CONFIRMATION_EMAIL_SUBJECT,
@@ -20,6 +21,7 @@ import {
   RESET_PASSWORD_EMAIL_TEMPLATE_NAME,
   SENDING_EMAIL_ERROR_MESSAGE,
 } from '../utils/constants';
+dotenv.config();
 @Injectable()
 export class EmailService {
   constructor(
@@ -72,7 +74,15 @@ export class EmailService {
       .setVerificationToken(uuidv4());
 
     await this.create(email);
-
+    const {token, verificationToken} = email;
+    const url =
+      process.env.FRONT_END_BASE_URL +
+      '?sign_up_token=' +
+      token +
+      '&sign_up_verification_token=' +
+      verificationToken +
+      '&sign_up_user_id=' +
+      user.id;
     // build the email and send it
     this.mailerService
       .sendMail({
@@ -81,8 +91,9 @@ export class EmailService {
         template: join(process.cwd(), 'src/templates/' + templateName),
         context: {
           userId: user.id,
-          token: email.token,
-          verificationToken: email.verificationToken,
+          token: token,
+          verificationToken: verificationToken,
+          url,
         },
       })
       .then(() => {
@@ -120,9 +131,8 @@ export class EmailService {
       )
       .getOne();
 
-    const {isExpired, sentDate} = email;
-
     if (email) {
+      const {isExpired, sentDate} = email;
       if (isExpired) {
         return false;
       } else {
