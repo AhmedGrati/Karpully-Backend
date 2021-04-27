@@ -213,6 +213,12 @@ type Route {
   legs: [Leg!]
 }
 
+type Direction {
+  code: String
+  routes: [Route!]
+  waypoints: [Waypoint!]
+}
+
 type Query {
   users: [User!]!
   user(id: Float!): User!
@@ -236,6 +242,7 @@ type Query {
   geoEncoding(loc: FindLocationByTextInput!): [Location!]!
   geoDecoding(xy: ReverseLocationSearchInput!): [Location!]!
   autocomplete(textInput: AutocompleteInput!): [Location!]!
+  multiPointsDirection(pointsArray: MultiPointsDirectionInput!): Direction!
 }
 
 input Where {
@@ -269,6 +276,15 @@ input ReverseLocationSearchInput {
 input AutocompleteInput {
   place: String!
   limit: Float = 10
+}
+
+input MultiPointsDirectionInput {
+  points: [XYLocation!]!
+}
+
+input XYLocation {
+  lon: Float!
+  lat: Float!
 }
 
 type Mutation {
