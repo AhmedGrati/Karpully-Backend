@@ -190,6 +190,29 @@ type Location {
   address: Address!
 }
 
+type Waypoint {
+  hint: String
+  distance: Float
+  name: String
+  location: [Float!]
+}
+
+type Leg {
+  distance: Float
+  duration: Float
+  summary: String
+  weight: Float
+}
+
+type Route {
+  geometry: String
+  distance: Float
+  duration: Float
+  weight_name: String
+  weight: Float
+  legs: [Leg!]
+}
+
 type Query {
   users: [User!]!
   user(id: Float!): User!

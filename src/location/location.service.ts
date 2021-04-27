@@ -2,7 +2,6 @@ import { AutocompleteInput } from './dto/autocomplete.input';
 import { ReverseLocationSearchInput } from './dto/reverse-location-search-input';
 import { FindLocationByTextInput } from './dto/find-location-by-text.input';
 import { HttpService, Injectable } from '@nestjs/common';
-import { CreateLocationInput } from './dto/create-location.input';
 
 @Injectable()
 export class LocationService {
@@ -53,4 +52,5 @@ export class LocationService {
     })
     return data;
   }
+
 }
