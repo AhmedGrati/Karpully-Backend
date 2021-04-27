@@ -193,7 +193,8 @@ type Location {
 type Query {
   users: [User!]!
   user(id: Float!): User!
-  existByEmailOrUsername(username: String!): Boolean!
+  existByEmail(email: String!): Boolean!
+  existByUsername(username: String!): Boolean!
   email: [Email!]!
   emails(id: Int!): Email!
   refreshToken(refreshToken: String!): TokenModel!

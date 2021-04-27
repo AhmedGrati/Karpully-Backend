@@ -34,9 +34,19 @@ export class UserService {
     private readonly emailService: EmailService,
   ) {}
 
-  async userExistByEmailOrUsername(emailOrUsername: string): Promise<Boolean> {
+  async userExistByEmail(email: string): Promise<Boolean> {
     const user = await this.userRepository.findOne({
-      where: [{email: emailOrUsername}, {username: emailOrUsername}],
+      where: {email},
+    });
+    if (user) {
+      return true;
+    }
+    return false;
+  }
+
+  async userExistByUsernam(username: string): Promise<Boolean> {
+    const user = await this.userRepository.findOne({
+      where: {username},
     });
     if (user) {
       return true;

@@ -94,7 +94,12 @@ export class UserResolver {
   }
 
   @Query((returns) => Boolean)
-  existByEmailOrUsername(@Args('username') usernameOrEmail: string) {
-    return this.userService.userExistByEmailOrUsername(usernameOrEmail);
+  existByEmail(@Args('email') email: string) {
+    return this.userService.userExistByEmail(email);
+  }
+
+  @Query((returns) => Boolean)
+  existByUsername(@Args('username') username: string) {
+    return this.userService.userExistByUsernam(username);
   }
 }
