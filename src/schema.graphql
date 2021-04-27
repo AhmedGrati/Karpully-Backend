@@ -152,6 +152,44 @@ type PaginatedNotification {
   meta: Meta!
 }
 
+type Address {
+  ID: Float!
+  house_number: Float
+  road: String
+  neighbourhood: String
+  hamlet: String
+  suburb: String
+  village: String
+  town: String
+  city_district: String
+  city: String
+  region: String
+  county: String
+  state_district: String
+  state: String
+  state_code: String
+  postcode: String
+  country: String
+  country_code: String
+  name: String
+}
+
+type Location {
+  place_id: Int!
+  licence: String!
+  osm_type: String!
+  osm_id: String!
+  boundingbox: [String!]!
+  lat: String!
+  lon: String!
+  display_name: String!
+  class: String!
+  type: String!
+  importance: Float!
+  icon: String!
+  address: Address!
+}
+
 type Query {
   users: [User!]!
   user(id: Float!): User!
@@ -171,6 +209,9 @@ type Query {
   submission(id: Int!): Submission!
   notification(id: Int!): Notification!
   notifications(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
+  geoEncoding(loc: FindLocationByTextInput!): [Location!]!
+  geoDecoding(xy: ReverseLocationSearchInput!): [Location!]!
+  autocomplete(textInput: AutocompleteInput!): [Location!]!
 }
 
 input Where {
@@ -190,6 +231,20 @@ input PaginationInput {
 enum OrderBy {
   ASC
   DESC
+}
+
+input FindLocationByTextInput {
+  text: String!
+}
+
+input ReverseLocationSearchInput {
+  lat: Float!
+  lon: Float!
+}
+
+input AutocompleteInput {
+  place: String!
+  limit: Float = 10
 }
 
 type Mutation {

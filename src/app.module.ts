@@ -20,9 +20,11 @@ import {FakerGovModule} from './faker/faker-gov/faker-gov.module';
 import {FakerModule} from './faker/faker.module';
 import {SubmissionModule} from './submission/submission.module';
 import {NotificationModule} from './notification/notification.module';
+import {LocationModule} from './location/location.module';
+
 import {RedisCacheModule} from './redis-cache/redis-cache.module';
-import { ConnectionHistoricModule } from './connection-historic/connection-historic.module';
-import { ConnectionModule } from './connection/connection.module';
+import {ConnectionHistoricModule} from './connection-historic/connection-historic.module';
+import {ConnectionModule} from './connection/connection.module';
 @Module({
   imports: [
     UserModule,
@@ -48,6 +50,7 @@ import { ConnectionModule } from './connection/connection.module';
     FakerModule,
     SubmissionModule,
     NotificationModule,
+    LocationModule,
     RedisCacheModule,
     ConnectionHistoricModule,
     ConnectionModule,
