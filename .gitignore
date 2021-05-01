@@ -39,3 +39,7 @@ lerna-debug.log*
 /terraform/terraform.tfstate.backup
 /terraform/tfplan
 terraform/tfplan.json
+
+id_rsa
+id_rsa.pub
+k8s/get_helm.sh
