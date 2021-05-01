@@ -1,22 +1,25 @@
-import {ObjectType, Field, Int} from '@nestjs/graphql';
-import {Gov} from '../../gov/entities/gov.entity';
+import { Location } from './../../location/entities/location.entity';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Gov } from '../../gov/entities/gov.entity';
 import {
   BeforeInsert,
   Check,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import {City} from '../../city/entities/city.entity';
-import {User} from '../../user/entities/user.entity';
-import {Max, Min} from 'class-validator';
-import {TimestampEntites} from '../../generics/timestamp.entity';
-import {Submission} from '../../submission/entities/submission.entity';
-import {DatesOperations} from '../../utils/dates-operation';
-import {BadRequestException} from '@nestjs/common';
-import {DEPARTURE_DATE_ERROR_MESSAGE} from '../../utils/constants';
+import { City } from '../../city/entities/city.entity';
+import { User } from '../../user/entities/user.entity';
+import { Max, Min } from 'class-validator';
+import { TimestampEntites } from '../../generics/timestamp.entity';
+import { Submission } from '../../submission/entities/submission.entity';
+import { DatesOperations } from '../../utils/dates-operation';
+import { BadRequestException } from '@nestjs/common';
+import { DEPARTURE_DATE_ERROR_MESSAGE } from '../../utils/constants';
 
 /*
   constraints:
@@ -25,7 +28,7 @@ import {DEPARTURE_DATE_ERROR_MESSAGE} from '../../utils/constants';
 */
 @ObjectType()
 @Entity()
-@Check(`"departureCityId" != "destinationCityId"`)
+// @Check(`"departureLocation" != "destinationLocation"`)
 @Check(`"departureDate" >= current_timestamp`)
 export class Carpool extends TimestampEntites {
   @Field()
@@ -33,7 +36,7 @@ export class Carpool extends TimestampEntites {
   id: number;
 
   @Field((type) => Date)
-  @Column({type: 'timestamptz'})
+  @Column({ type: 'timestamptz' })
   departureDate: Date;
 
   @Field()
@@ -50,19 +53,16 @@ export class Carpool extends TimestampEntites {
   @Column()
   hasSmokePermission: boolean;
 
-  @Field((type) => City)
-  @ManyToOne(() => City, (city) => city.carpools, {
-    eager: true,
-    nullable: false,
-  })
-  departureCity: City;
+  @Field((type) => Location)
+  @OneToOne((type) => Location)
+  @JoinColumn()
+  departureLocation: Location;
 
-  @Field((type) => City)
-  @ManyToOne(() => City, (city) => city.carpools, {
-    eager: true,
-    nullable: false,
-  })
-  destinationCity: City;
+  @Field((type) => Location)
+
+  @OneToOne((type) => Location)
+  @JoinColumn()
+  destinationLocation: Location;
 
   @Field((type) => User)
   @ManyToOne(() => User, (user) => user.carpools, {

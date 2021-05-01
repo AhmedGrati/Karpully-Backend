@@ -12,6 +12,7 @@ export const SENDING_EMAIL_ERROR_MESSAGE: string =
   'Error While Sending The Email! Please Try Again Later!';
 export const GOV_NOT_FOUND_ERROR_MESSAGE: String = 'Governorate Not Found!';
 export const CITY_NOT_FOUND_ERROR_MESSAGE: String = 'City Not Found!';
+export const LOCATION_NOT_FOUND_ERROR_MESSAGE: String = 'Location Not Found!';
 export const CARPOOL_NOT_FOUND_ERROR_MESSAGE: String = 'Carpool Not Found!';
 export const CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE: string =
   "The User Who's Trying To Access This Resource Is not The Owner.";
@@ -26,3 +27,4 @@ export const UNAUTHORIZED_SUBMISSION_ERROR_MESSAGE: String =
 export const BASE_TOPIC_NAME: string = 'User_';
 export const EMAIL_NOT_FOUND_ERROR_MESSAGE: String = 'Invalid Email!';
 export const EMAIL_EXPIRED_ERROR_MESSAGE: String = 'Email Expired!';
+export const LOCATION_SAVE_ISSUE_ERROR_MESSAGE: string = 'Location can not be saved'
