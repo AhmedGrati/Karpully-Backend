@@ -1,20 +1,44 @@
+import { Address } from './entities/address.entity';
 import { Carpool } from 'src/carpool/entities/carpool.entity';
 import { AutocompleteInput } from './dto/autocomplete.input';
 import { ReverseLocationSearchInput } from './dto/reverse-location-search-input';
 import { FindLocationByTextInput } from './dto/find-location-by-text.input';
-import { HttpService, Injectable, NotFoundException } from '@nestjs/common';
+import { Dependencies, HttpService, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { LOCATION_NOT_FOUND_ERROR_MESSAGE } from '../utils/constants';
+import { ADDRESS_SAVE_ISSUE_ERROR_MESSAGE, LOCATION_NOT_FOUND_ERROR_MESSAGE, LOCATION_SAVE_ISSUE_ERROR_MESSAGE } from '../utils/constants';
 import { Location } from './entities/location.entity'
+import { Exception } from 'handlebars';
+import { AddressCreationInput } from './dto/address-creation.input';
+import { LocationCreationInput } from './dto/location-creation.input';
 @Injectable()
 export class LocationService {
   LOCIQ_URL_SEARCH = "https://us1.locationiq.com/v1/search.php";
   LOCIQ_URL_REVERSE = "https://us1.locationiq.com/v1/reverse.php"
   LOCIQ_URL_AUTOCOMP = "https://api.locationiq.com/v1/autocomplete.php"
-  constructor(private httpService: HttpService, @InjectRepository(Location) private readonly locationRepository: Repository<Location>) {
+  constructor(
+    @InjectRepository(Location) private readonly locationRepository: Repository<Location>,
+    @InjectRepository(Address) private readonly addressRepository: Repository<Address>,
+    private httpService: HttpService) {
   }
 
+  async create(loc: Location | LocationCreationInput): Promise<Location | void> {
+    return await this.locationRepository.save(loc).then(e => {
+      if (!e) {
+        throw new Exception(LOCATION_SAVE_ISSUE_ERROR_MESSAGE)
+      }
+    })
+  }
+  async createAddress(ad: AddressCreationInput): Promise<Address | void> {
+    return await this.addressRepository.save(ad).then(e => {
+      if (!e) {
+        throw new Exception(ADDRESS_SAVE_ISSUE_ERROR_MESSAGE)
+      }
+    })
+  }
+  async findAllAddress(): Promise<Address[]> {
+    return await this.addressRepository.find();
+  }
   async findAll(): Promise<Location[]> {
     return await this.locationRepository.find();
   }

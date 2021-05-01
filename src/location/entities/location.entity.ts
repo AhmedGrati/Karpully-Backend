@@ -59,7 +59,7 @@ export class Location {
   type?: string;
 
   @Field()
-  @Column()
+  @Column('float', { nullable: true })
   importance?: number;
 
   @Field()

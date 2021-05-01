@@ -25,23 +25,42 @@ enum EmailTypeEnum {
   RESET_PASSWORD
 }
 
-type Gov {
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  id: Int
-  govName: String!
-  cities: [City!]!
+type Address {
+  ID: Float!
+  house_number: Float
+  road: String
+  neighbourhood: String
+  hamlet: String
+  suburb: String
+  village: String
+  town: String
+  city_district: String
+  city: String
+  region: String
+  county: String
+  state_district: String
+  state: String
+  state_code: String
+  postcode: String
+  country: String
+  country_code: String
+  name: String
 }
 
-type City {
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime!
-  id: Int!
-  cityName: String!
-  gov: Gov!
-  carpools: [Carpool!]!
+type Location {
+  place_id: Int!
+  licence: String!
+  osm_type: String!
+  osm_id: String!
+  boundingbox: [String!]!
+  lat: String!
+  lon: String!
+  display_name: String!
+  class: String!
+  type: String!
+  importance: Float!
+  icon: String!
+  address: Address!
 }
 
 type Submission {
@@ -63,8 +82,8 @@ type Carpool {
   nbrOfAvailablePlaces: Float!
   description: String!
   hasSmokePermission: Boolean!
-  departureCity: City!
-  destinationCity: City!
+  departureLocation: Location!
+  destinationLocation: Location!
   owner: User!
   submissions: Submission!
 }
@@ -147,47 +166,27 @@ type PaginatedCarpool {
   meta: Meta!
 }
 
+type Gov {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  id: Int
+  govName: String!
+  cities: [City!]!
+}
+
+type City {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  id: Int!
+  cityName: String!
+  gov: Gov!
+}
+
 type PaginatedNotification {
   items: [Notification!]!
   meta: Meta!
-}
-
-type Address {
-  ID: Float!
-  house_number: Float
-  road: String
-  neighbourhood: String
-  hamlet: String
-  suburb: String
-  village: String
-  town: String
-  city_district: String
-  city: String
-  region: String
-  county: String
-  state_district: String
-  state: String
-  state_code: String
-  postcode: String
-  country: String
-  country_code: String
-  name: String
-}
-
-type Location {
-  place_id: Int!
-  licence: String!
-  osm_type: String!
-  osm_id: String!
-  boundingbox: [String!]!
-  lat: String!
-  lon: String!
-  display_name: String!
-  class: String!
-  type: String!
-  importance: Float!
-  icon: String!
-  address: Address!
 }
 
 type Waypoint {
@@ -235,13 +234,13 @@ type Query {
   citiesByGov(govId: Int!): [City!]!
   govs: [Gov!]!
   gov(id: Int!): Gov!
+  geoEncoding(loc: FindLocationByTextInput!): [Location!]!
+  geoDecoding(xy: ReverseLocationSearchInput!): [Location!]!
+  autocomplete(textInput: AutocompleteInput!): [Location!]!
   submissions: [Submission!]!
   submission(id: Int!): Submission!
   notification(id: Int!): Notification!
   notifications(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
-  geoEncoding(loc: FindLocationByTextInput!): [Location!]!
-  geoDecoding(xy: ReverseLocationSearchInput!): [Location!]!
-  autocomplete(textInput: AutocompleteInput!): [Location!]!
   multiPointsDirection(pointsArray: MultiPointsDirectionInput!): Direction!
 }
 
@@ -370,8 +369,10 @@ input CreateCarpoolInput {
   nbrOfAvailablePlaces: Float!
   description: String!
   hasSmokePermission: Boolean!
-  departureCityId: Float!
-  destinationCityId: Float!
+  departureLocationLongitude: Float!
+  departureLocationLatitude: Float!
+  destinationLocationLongitude: Float!
+  destinationLocationLatitude: Float!
 }
 
 input UpdateCarpoolInput {
@@ -379,8 +380,10 @@ input UpdateCarpoolInput {
   nbrOfAvailablePlaces: Float
   description: String
   hasSmokePermission: Boolean
-  departureCityId: Float
-  destinationCityId: Float
+  departureLocationLongitude: Float
+  departureLocationLatitude: Float
+  destinationLocationLongitude: Float
+  destinationLocationLatitude: Float
   id: Int!
 }
 

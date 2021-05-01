@@ -43,18 +43,8 @@ export class CarpoolService {
     const departureLocation = await this.locationService.reverseSearchLocation(new ReverseLocationSearchInput(departureLocationLongitude, departureLocationLatitude))
     const destinationLocation = await this.locationService.reverseSearchLocation(new ReverseLocationSearchInput(destinationLocationLongitude, destinationLocationLatitude))
     // Save location into the DB for future stats
-    await this.locationRepository.save(departureLocation).then((e: Location) => {
-      console.log('departure location object: ', e)
-      if (!e) {
-        throw new Exception(LOCATION_SAVE_ISSUE_ERROR_MESSAGE)
-      }
-    })
-    await this.locationRepository.save(destinationLocation).then((e: Location) => {
-      console.log('destination location object: ', e)
-      if (!e) {
-        throw new Exception(LOCATION_SAVE_ISSUE_ERROR_MESSAGE)
-      }
-    })
+    await this.locationService.create(departureLocation);
+    await this.locationService.create(destinationLocation)
 
     if (owner && departureLocation && destinationLocation) {
       // create a new carpool
@@ -75,7 +65,7 @@ export class CarpoolService {
       if (!owner) {
         throw new NotFoundException(USER_NOT_FOUND_ERROR_MESSAGE);
       } else {
-        throw new NotFoundException(CITY_NOT_FOUND_ERROR_MESSAGE);
+        throw new NotFoundException(LOCATION_NOT_FOUND_ERROR_MESSAGE);
       }
     }
   }
