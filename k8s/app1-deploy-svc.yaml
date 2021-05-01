@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webapp1-deploy
+  name: nginx-deploy
   namespace: app
 spec:
   selector:
     matchLabels:
-      app: webapp1
+      app: nginx-pod
   replicas: 1
   template:
     metadata:
       labels:
-        app: webapp1
+        app: nginx-pod
     spec:
       containers:
-        - name: webapp1
-          image: houssemdocker/angularapp-docker-ci-npm-nginx:546
+        - name: nginx-container
+          image: nginx
           ports:
             - containerPort: 80
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: webapp1-svc
+  name: nginx-svc
   namespace: app
 spec:
   selector:
-    app: webapp1
+    app: nginx-pod
   ports:
     - port: 80
   type: ClusterIP # LoadBalancer # NodePort #

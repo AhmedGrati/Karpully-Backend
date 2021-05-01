@@ -13,21 +13,7 @@ spec:
     - http:
         paths:
           - backend:
-              serviceName: webapp1-svc
+              serviceName: nginx-svc
               servicePort: 80
-            path: /webapp1(/|$)(.*)
-          - backend:
-              serviceName: webapp2-svc
-              servicePort: 80
-            path: /webapp2(/|$)(.*)
+            path: /*
     - host: karpully-backend.20.62.213.228.nip.io # change the IP address here
-      http:
-        paths:
-          - backend:
-              serviceName: webapp1-svc
-              servicePort: 80
-            path: /webapp1
-          - backend:
-              serviceName: webapp2-svc
-              servicePort: 80
-            path: /webapp2
