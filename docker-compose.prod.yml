@@ -3,29 +3,50 @@ version: '3.7'
 services:
   main:
     container_name: karpully-backend
-    image: karpully/karpully-backend
+    image: karpully/karpully-backend:latest
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - ${PORT}:${PORT}
+      - '4000:4000'
+    restart: always
+    command: npm run start:dev
     env_file:
       - .env
     networks:
       - webnet
     depends_on:
       - postgres
+      - redis
   postgres:
+    restart: always
     container_name: postgres
-    image: postgres:12-alpine
+    image: postgres:12
     networks:
       - webnet
     env_file:
       - .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PG_DATA=${PG_DATA}
     ports:
-      - 5432:5432
+      - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
+  redis:
+    restart: always
+    container_name: ${REDIS_HOST}
+    image: 'redis:alpine'
+    command:
+      - redis-server
+    networks:
+      - webnet
+    ports:
+      - '6379:6379'
+    volumes:
+      - $PWD/redis-data:/var/lib/redis
+      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+
 networks:
   webnet:
 volumes:

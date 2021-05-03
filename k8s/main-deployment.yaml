@@ -1,0 +1,129 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose.prod.yml
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: main
+  name: main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: main
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f ../docker-compose.prod.yml
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/webnet: 'true'
+        io.kompose.service: main
+    spec:
+      containers:
+        - args:
+            - npm
+            - run
+            - start:dev
+          env:
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_PORT
+                  name: env
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: HOST
+                  name: env
+            - name: PG_DATA
+              valueFrom:
+                configMapKeyRef:
+                  key: PG_DATA
+                  name: env
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: PORT
+                  name: env
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  key: POSTGRES_DB
+                  name: env
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: REDIS_HOST
+                  name: env
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: REDIS_PORT
+                  name: env
+            - name: SEED_NUMBER
+              valueFrom:
+                configMapKeyRef:
+                  key: SEED_NUMBER
+                  name: env
+            - name: JWT_REFRESH_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: JWT_REFRESH_TOKEN_SECRET
+                  name: backend-secret
+            - name: JWT_ACCESS_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: JWT_ACCESS_TOKEN_SECRET
+                  name: backend-secret
+            - name: KARPULLY_EMAIL_LOGIN
+              valueFrom:
+                secretKeyRef:
+                  key: KARPULLY_EMAIL_LOGIN
+                  name: backend-secret
+            - name: KARPULLY_EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: KARPULLY_EMAIL_PASSWORD
+                  name: backend-secret
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: postgres-secret
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_USER
+                  name: postgres-secret
+          image: karpully/karpully-backend:latest
+          name: karpully-backend
+          ports:
+            - containerPort: 4000
+          resources: {}
+      initContainers:
+        - name: init-db
+          image: busybox:1.28
+          command: ['sh', '-c', 'sleep 1000']
+        - name: init-redis
+          image: busybox:1.28
+          command: ['sh', '-c', 'sleep 1000']
+          volumeMounts:
+            - mountPath: /usr/src/app
+              name: main-claim0
+            - mountPath: /usr/src/app/node_modules
+              name: main-claim1
+      restartPolicy: Always
+      volumes:
+        - name: main-claim0
+          persistentVolumeClaim:
+            claimName: main-claim0
+        - name: main-claim1
+          persistentVolumeClaim:
+            claimName: main-claim1
+status: {}
