@@ -43,7 +43,6 @@ export class CarpoolService {
     this.CARPOOL_REPO = carpoolRepository;
   }
   async createFake(createCarpoolInput: Carpool): Promise<void | Carpool> {
-    console.log('object ot be created: ', createCarpoolInput)
     return await this.carpoolRepository.save(createCarpoolInput)
   }
   async create(createCarpoolInput: CreateCarpoolInput) {

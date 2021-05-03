@@ -81,7 +81,7 @@ export class Location {
   visited: number;
 
   @OneToMany(() => Carpool, carpool => carpool.departureLocation)
-  departureLocations: Location[];
+  departureCarpools: Carpool[];
   @OneToMany(() => Carpool, carpool => carpool.destinationLocation)
-  destinationLocations: Location[];
+  destinationCarpools: Location[];
 }

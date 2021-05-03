@@ -54,12 +54,12 @@ export class Carpool extends TimestampEntites {
   hasSmokePermission: boolean;
 
   @Field((type) => Location)
-  @ManyToOne(() => Location, (location) => location.departureLocations)
+  @ManyToOne(() => Location, (location) => location.departureCarpools)
   departureLocation: Location;
 
   @Field((type) => Location)
 
-  @ManyToOne(() => Location, (location) => location.destinationLocations)
+  @ManyToOne(() => Location, (location) => location.destinationCarpools)
   destinationLocation: Location;
 
   @Field((type) => User)

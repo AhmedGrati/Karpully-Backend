@@ -26,7 +26,6 @@ export class DirectionService {
       }
 
     }).toPromise().then(e => {
-      console.log(e.data)
       data = e.data;
     })
     return data;
