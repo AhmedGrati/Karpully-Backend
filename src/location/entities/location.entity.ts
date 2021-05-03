@@ -16,10 +16,14 @@ registerEnumType(OSM, {
 export class Location {
   @Field(() => Int)
   @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ nullable: true })
+  @Field({ nullable: true })
   place_id: number;
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   licence: string;
 
   @Field()
@@ -31,7 +35,7 @@ export class Location {
   osm_type: OSM;
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   osm_id: string;
 
   @Field(type => [String])
@@ -46,29 +50,32 @@ export class Location {
   @Column()
   lon: string;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   display_name: string;
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   class?: string;
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   type?: string;
 
   @Field()
   @Column('float', { nullable: true })
   importance?: number;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   icon?: string;
 
   @Field(type => Address)
-  @OneToOne(() => Address)
+  @OneToOne(() => Address, { cascade: true })
   @JoinColumn()
   address?: Address;
 
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  visited: number;
 }

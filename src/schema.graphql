@@ -48,19 +48,21 @@ type Address {
 }
 
 type Location {
-  place_id: Int!
+  id: Int!
+  place_id: Float
   licence: String!
   osm_type: String!
   osm_id: String!
   boundingbox: [String!]!
   lat: String!
   lon: String!
-  display_name: String!
+  display_name: String
   class: String!
   type: String!
   importance: Float!
-  icon: String!
+  icon: String
   address: Address!
+  visited: Float
 }
 
 type Submission {

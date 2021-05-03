@@ -11,6 +11,7 @@ import { Location } from './entities/location.entity'
 import { Exception } from 'handlebars';
 import { AddressCreationInput } from './dto/address-creation.input';
 import { LocationCreationInput } from './dto/location-creation.input';
+import e from 'express';
 @Injectable()
 export class LocationService {
   LOCIQ_URL_SEARCH = "https://us1.locationiq.com/v1/search.php";
@@ -23,7 +24,7 @@ export class LocationService {
   }
 
   async create(loc: Location | LocationCreationInput): Promise<Location | void> {
-    return await this.locationRepository.save(loc).then(e => {
+    return this.locationRepository.save(loc).then(e => {
       if (!e) {
         throw new Exception(LOCATION_SAVE_ISSUE_ERROR_MESSAGE)
       }
@@ -64,7 +65,7 @@ export class LocationService {
     })
     return data;
   }
-  async reverseSearchLocation(xy: ReverseLocationSearchInput): Promise<Location> {
+  async reverseSearchLocation(xy: ReverseLocationSearchInput): Promise<Location[]> {
     var data: any;
     await this.httpService.get(this.LOCIQ_URL_REVERSE, {
       params: {
@@ -75,6 +76,13 @@ export class LocationService {
       }
     }).toPromise().then(e => {
       data = [e.data]
+    })
+    const dataToStore = this.locationRepository.create(data)
+    console.log(dataToStore);
+    this.locationRepository.merge(dataToStore[0])
+    await this.locationRepository.save(dataToStore).then(e => {
+      console.log('after save', e);
+      data = e;
     })
     return data;
   }
@@ -90,6 +98,7 @@ export class LocationService {
       }
     }).toPromise().then(e => {
       data = e.data;
+
     })
     return data;
   }

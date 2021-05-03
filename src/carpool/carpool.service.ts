@@ -1,6 +1,7 @@
 import { LOCATION_NOT_FOUND_ERROR_MESSAGE, LOCATION_SAVE_ISSUE_ERROR_MESSAGE } from './../utils/constants';
 import { LocationService } from './../location/location.service';
 import {
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -37,7 +38,9 @@ export class CarpoolService {
     private caslAbilityFactory: CaslAbilityFactory<Carpool>,
     private locationService: LocationService,
     @InjectRepository(Location)
-    private readonly locationRepository: Repository<Location>
+    private readonly locationRepository: Repository<Location>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>
   ) {
     this.CARPOOL_REPO = carpoolRepository;
   }
@@ -45,15 +48,14 @@ export class CarpoolService {
     console.log('object ot be created: ', createCarpoolInput)
     return await this.carpoolRepository.save(createCarpoolInput)
   }
-  async create(owner: User, createCarpoolInput: CreateCarpoolInput | FakerCreateCarpoolInput) {
+  async create(createCarpoolInput: CreateCarpoolInput) {
 
     const { departureLocationLongitude, departureLocationLatitude, destinationLocationLongitude, destinationLocationLatitude } = createCarpoolInput as CreateCarpoolInput;
     // fetch locations from locationIQ
     const departureLocation = await this.locationService.reverseSearchLocation(new ReverseLocationSearchInput(departureLocationLongitude, departureLocationLatitude))
     const destinationLocation = await this.locationService.reverseSearchLocation(new ReverseLocationSearchInput(destinationLocationLongitude, destinationLocationLatitude))
-    // Save location into the DB for future stats;
-    await this.locationService.create(departureLocation);
-    await this.locationService.create(destinationLocation)
+
+    const owner = await this.userRepository.findOne({ id: createCarpoolInput.ownerId })
 
     if (owner && departureLocation && destinationLocation) {
       // create a new carpool
@@ -64,8 +66,8 @@ export class CarpoolService {
       this.carpoolRepository.merge(
         createdCarpool,
         { owner },
-        { departureLocation },
-        { destinationLocation },
+        { departureLocation: departureLocation[0] },
+        { destinationLocation: destinationLocation[0] },
       );
 
       // save the created carpool

@@ -18,23 +18,23 @@ import { FakerCreateCarpoolInput } from './dto/faker-create-carpool.input';
 @Resolver(() => Carpool)
 export class CarpoolResolver {
   constructor(private readonly carpoolService: CarpoolService) { }
-
+  // TODO: return current user arg after dev phase is done
+  // @Mutation(() => Carpool)
+  // // @Auth(UserRoleEnum.USER)
+  // createCarpool(
+  //   @CurrentUser() owner: User,
+  //   @Args('createCarpoolInput') createCarpoolInput: CreateCarpoolInput
+  // ): Promise<Carpool> {
+  //   return this.carpoolService.create(owner, createCarpoolInput);
+  // }
   @Mutation(() => Carpool)
   // @Auth(UserRoleEnum.USER)
   createCarpool(
-    @CurrentUser() owner: User,
     @Args('createCarpoolInput') createCarpoolInput: CreateCarpoolInput
   ): Promise<Carpool> {
-    return this.carpoolService.create(owner, createCarpoolInput);
+    return this.carpoolService.create(createCarpoolInput);
   }
 
-  // @Mutation(() => Carpool)
-  // // @Auth(UserRoleEnum.USER)
-  // createFakeCarpool(
-  //   @Args('createCarpoolInput') createCarpoolInput: FakerCreateCarpoolInput
-  // ): Promise<Carpool | void> {
-  //   return this.carpoolService.createFake(createCarpoolInput);
-  // }
 
   @Query(() => Carpool, { name: 'carpool' })
   @Auth(UserRoleEnum.USER)

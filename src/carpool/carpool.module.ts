@@ -8,11 +8,12 @@ import { Carpool } from './entities/carpool.entity';
 import { UserModule } from '../user/user.module';
 import { CityModule } from '../city/city.module';
 import { CaslModule } from '../casl/casl.module';
+import { User } from '../user/entities/user.entity';
 
 @Module({
   providers: [CarpoolResolver, CarpoolService],
   imports: [
-    TypeOrmModule.forFeature([Carpool, Location]),
+    TypeOrmModule.forFeature([Carpool, Location, User]),
     UserModule,
     CityModule,
     CaslModule,
