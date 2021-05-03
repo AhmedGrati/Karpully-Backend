@@ -17,16 +17,16 @@ export class CreateCarpoolInput {
   hasSmokePermission: boolean;
 
   @Field()
-  departureLocationLongitude: number;
+  departureLocationLongitude: string;
 
   @Field()
-  departureLocationLatitude: number
+  departureLocationLatitude: string
 
   @Field()
-  destinationLocationLongitude: number;
+  destinationLocationLongitude: string
 
   @Field()
-  destinationLocationLatitude: number;
+  destinationLocationLatitude: string
 
   @Field()
   ownerId: number;

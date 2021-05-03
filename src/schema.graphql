@@ -271,8 +271,8 @@ input FindLocationByTextInput {
 }
 
 input ReverseLocationSearchInput {
-  lat: Float!
-  lon: Float!
+  lat: String!
+  lon: String!
 }
 
 input AutocompleteInput {
@@ -373,10 +373,10 @@ input CreateCarpoolInput {
   nbrOfAvailablePlaces: Float!
   description: String!
   hasSmokePermission: Boolean!
-  departureLocationLongitude: Float!
-  departureLocationLatitude: Float!
-  destinationLocationLongitude: Float!
-  destinationLocationLatitude: Float!
+  departureLocationLongitude: String!
+  departureLocationLatitude: String!
+  destinationLocationLongitude: String!
+  destinationLocationLatitude: String!
   ownerId: Float!
 }
 
@@ -385,10 +385,10 @@ input UpdateCarpoolInput {
   nbrOfAvailablePlaces: Float
   description: String
   hasSmokePermission: Boolean
-  departureLocationLongitude: Float
-  departureLocationLatitude: Float
-  destinationLocationLongitude: Float
-  destinationLocationLatitude: Float
+  departureLocationLongitude: String
+  departureLocationLatitude: String
+  destinationLocationLongitude: String
+  destinationLocationLatitude: String
   ownerId: Float
   id: Int!
 }

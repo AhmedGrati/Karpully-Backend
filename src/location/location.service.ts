@@ -11,7 +11,6 @@ import { Location } from './entities/location.entity'
 import { Exception } from 'handlebars';
 import { AddressCreationInput } from './dto/address-creation.input';
 import { LocationCreationInput } from './dto/location-creation.input';
-import e from 'express';
 @Injectable()
 export class LocationService {
   LOCIQ_URL_SEARCH = "https://us1.locationiq.com/v1/search.php";
@@ -66,7 +65,8 @@ export class LocationService {
     return data;
   }
   async reverseSearchLocation(xy: ReverseLocationSearchInput): Promise<Location[]> {
-    var data: any;
+    var data: Location[];
+
     await this.httpService.get(this.LOCIQ_URL_REVERSE, {
       params: {
         lon: xy.lon,
@@ -77,14 +77,28 @@ export class LocationService {
     }).toPromise().then(e => {
       data = [e.data]
     })
-    const dataToStore = this.locationRepository.create(data)
-    console.log(dataToStore);
-    this.locationRepository.merge(dataToStore[0])
-    await this.locationRepository.save(dataToStore).then(e => {
-      console.log('after save', e);
-      data = e;
-    })
-    return data;
+    const preExistingLoc = await this.locationRepository.findOne({ where: { lon: data[0].lon, lat: data[0].lat } });
+
+    console.log(preExistingLoc, 'pre existing location')
+    if (!preExistingLoc) {
+      const dataToStore = this.locationRepository.create(data)
+      console.log(dataToStore);
+      this.locationRepository.merge(dataToStore[0])
+      await this.locationRepository.save(dataToStore).then(e => {
+        console.log('after save', e);
+        data = e;
+      })
+      return data;
+    }
+
+    else {
+      console.log('entered else clause')
+      await this.locationRepository.save({
+        id: preExistingLoc.id,
+        visited: preExistingLoc.visited + 1
+      })
+      return [preExistingLoc];
+    }
   }
   async autocomplete(input: AutocompleteInput) {
     var data: any;

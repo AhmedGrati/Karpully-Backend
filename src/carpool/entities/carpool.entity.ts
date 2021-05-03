@@ -54,14 +54,12 @@ export class Carpool extends TimestampEntites {
   hasSmokePermission: boolean;
 
   @Field((type) => Location)
-  @OneToOne((type) => Location)
-  @JoinColumn()
+  @ManyToOne(() => Location, (location) => location.departureLocations)
   departureLocation: Location;
 
   @Field((type) => Location)
 
-  @OneToOne((type) => Location)
-  @JoinColumn()
+  @ManyToOne(() => Location, (location) => location.destinationLocations)
   destinationLocation: Location;
 
   @Field((type) => User)
@@ -74,6 +72,7 @@ export class Carpool extends TimestampEntites {
   @Field((type) => Submission)
   @OneToMany((type) => Submission, (submission) => submission.carpool)
   submissions: Submission[];
+
 
   @BeforeInsert()
   checkDepartureDateValidity() {

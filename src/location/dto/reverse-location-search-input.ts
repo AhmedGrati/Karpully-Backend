@@ -2,12 +2,12 @@ import { InputType, Int, Field } from '@nestjs/graphql';
 
 @InputType()
 export class ReverseLocationSearchInput {
-    constructor(lon: number, lat: number) {
+    constructor(lon: string, lat: string) {
         this.lat = lat;
         this.lon = lon;
     }
-    @Field(() => Number)
-    lat: number;
-    @Field(() => Number)
-    lon: number;
+    @Field()
+    lat: string;
+    @Field()
+    lon: string;
 }

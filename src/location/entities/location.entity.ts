@@ -1,6 +1,7 @@
+import { Carpool } from '../../carpool/entities/carpool.entity';
 import { Address } from './address.entity';
-import { ObjectType, Field, Int, registerEnumType, InputType } from '@nestjs/graphql';
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { ObjectType, Field, Int, registerEnumType, InputType, Float } from '@nestjs/graphql';
+import { AfterInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum OSM {
   WAY = "way",
@@ -43,11 +44,11 @@ export class Location {
   boundingbox?: string | null;
 
   @Field()
-  @Column()
+  @Column({ length: 200 })
   lat: string;
 
   @Field()
-  @Column()
+  @Column({ length: 200 })
   lon: string;
 
   @Field({ nullable: true })
@@ -71,11 +72,16 @@ export class Location {
   icon?: string;
 
   @Field(type => Address)
-  @OneToOne(() => Address, { cascade: true })
+  @OneToOne(() => Address, { cascade: true, eager: true })
   @JoinColumn()
   address?: Address;
 
   @Field({ nullable: true })
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: 0 })
   visited: number;
+
+  @OneToMany(() => Carpool, carpool => carpool.departureLocation)
+  departureLocations: Location[];
+  @OneToMany(() => Carpool, carpool => carpool.destinationLocation)
+  destinationLocations: Location[];
 }
