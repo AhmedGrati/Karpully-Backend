@@ -21,7 +21,6 @@ export class FakerCarpoolService {
     const allLocations = await this.locationService.findAll()
     const allCarpools = await this.carpoolService.findAll();
     const allUsers = await this.userService.findAll();
-    console.log(allUsers[0].id, '______________');
     if (allCarpools.length < seedNumber) {
       return await Array.from({ length: seedNumber }).map<Promise<Carpool | void>>(
         async (_, i) => {

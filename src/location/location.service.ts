@@ -79,13 +79,11 @@ export class LocationService {
     })
     const preExistingLoc = await this.locationRepository.findOne({ where: { lon: data[0].lon, lat: data[0].lat } });
 
-    console.log(preExistingLoc, 'pre existing location')
     if (!preExistingLoc) {
       const dataToStore = this.locationRepository.create(data)
       console.log(dataToStore);
       this.locationRepository.merge(dataToStore[0])
       await this.locationRepository.save(dataToStore).then(e => {
-        console.log('after save', e);
         data = e;
       })
       return data;

@@ -1,4 +1,4 @@
-import { LOCATION_NOT_FOUND_ERROR_MESSAGE, LOCATION_SAVE_ISSUE_ERROR_MESSAGE } from './../utils/constants';
+import { LOCATION_API_RESPONSE_ERROR, LOCATION_NOT_FOUND_ERROR_MESSAGE, LOCATION_SAVE_ISSUE_ERROR_MESSAGE } from './../utils/constants';
 import { LocationService } from './../location/location.service';
 import {
   Inject,
@@ -8,7 +8,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   CARPOOL_NOT_FOUND_ERROR_MESSAGE,
-  CITY_NOT_FOUND_ERROR_MESSAGE,
   USER_NOT_FOUND_ERROR_MESSAGE,
 } from '../utils/constants';
 import {
@@ -38,7 +37,6 @@ export class CarpoolService {
     private caslAbilityFactory: CaslAbilityFactory<Carpool>,
     private locationService: LocationService,
     @InjectRepository(Location)
-    private readonly locationRepository: Repository<Location>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>
   ) {
@@ -54,7 +52,9 @@ export class CarpoolService {
     // fetch locations from locationIQ
     const departureLocation = await this.locationService.reverseSearchLocation(new ReverseLocationSearchInput(departureLocationLongitude, departureLocationLatitude))
     const destinationLocation = await this.locationService.reverseSearchLocation(new ReverseLocationSearchInput(destinationLocationLongitude, destinationLocationLatitude))
-
+    if (departureLocation.length == 0 || destinationLocation.length == 0) {
+      throw new NotFoundException(LOCATION_API_RESPONSE_ERROR)
+    }
     const owner = await this.userRepository.findOne({ id: createCarpoolInput.ownerId })
 
     if (owner && departureLocation && destinationLocation) {

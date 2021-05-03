@@ -29,3 +29,4 @@ export const EMAIL_NOT_FOUND_ERROR_MESSAGE: String = 'Invalid Email!';
 export const EMAIL_EXPIRED_ERROR_MESSAGE: String = 'Email Expired!';
 export const LOCATION_SAVE_ISSUE_ERROR_MESSAGE: string = 'Location can not be saved'
 export const ADDRESS_SAVE_ISSUE_ERROR_MESSAGE: string = 'Address can not be saved'
+export const LOCATION_API_RESPONSE_ERROR: string = "LocationIQ API has issues or might be down, Please check their status"
