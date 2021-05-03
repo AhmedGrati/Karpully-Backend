@@ -1,6 +1,7 @@
+import { Carpool } from '../../carpool/entities/carpool.entity';
 import { Address } from './address.entity';
-import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+import { ObjectType, Field, Int, registerEnumType, InputType, Float } from '@nestjs/graphql';
+import { AfterInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum OSM {
   WAY = "way",
@@ -15,11 +16,15 @@ registerEnumType(OSM, {
 @Entity()
 export class Location {
   @Field(() => Int)
-  @PrimaryColumn()
-  place_id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  place_id: number;
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   licence: string;
 
   @Field()
@@ -31,7 +36,7 @@ export class Location {
   osm_type: OSM;
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   osm_id: string;
 
   @Field(type => [String])
@@ -39,36 +44,44 @@ export class Location {
   boundingbox?: string | null;
 
   @Field()
-  @Column()
+  @Column({ length: 200 })
   lat: string;
 
   @Field()
-  @Column()
+  @Column({ length: 200 })
   lon: string;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   display_name: string;
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   class?: string;
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   type?: string;
 
   @Field()
-  @Column()
+  @Column('float', { nullable: true })
   importance?: number;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   icon?: string;
 
   @Field(type => Address)
-  @OneToOne(() => Address)
+  @OneToOne(() => Address, { cascade: true, eager: true })
   @JoinColumn()
   address?: Address;
 
+  @Field({ nullable: true })
+  @Column({ nullable: true, default: 0 })
+  visited: number;
+
+  @OneToMany(() => Carpool, carpool => carpool.departureLocation)
+  departureLocations: Location[];
+  @OneToMany(() => Carpool, carpool => carpool.destinationLocation)
+  destinationLocations: Location[];
 }

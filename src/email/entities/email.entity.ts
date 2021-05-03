@@ -1,18 +1,18 @@
-import {ObjectType, Field, Int} from '@nestjs/graphql';
-import {User} from '../../user/entities/user.entity';
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
-import {EmailTypeEnum} from './email-type.enum';
-import {EmailBuilder} from './email.builder';
-import {TimestampEntites} from '../../generics/timestamp.entity';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { User } from '../../user/entities/user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { EmailTypeEnum } from './email-type.enum';
+import { EmailBuilder } from './email.builder';
+import { TimestampEntites } from '../../generics/timestamp.entity';
 
 @ObjectType()
 @Entity()
 export class Email extends TimestampEntites implements EmailBuilder {
   @PrimaryGeneratedColumn()
-  @Field((type) => Int, {nullable: true})
+  @Field((type) => Int, { nullable: true })
   id: number;
 
-  @Column({type: 'timestamptz'})
+  @Column({ type: 'timestamptz' })
   @Field()
   sentDate: Date;
 
@@ -25,15 +25,15 @@ export class Email extends TimestampEntites implements EmailBuilder {
   sender: User;
 
   @Field()
-  @Column({type: 'uuid'})
+  @Column({ type: 'uuid' })
   token: string;
 
   @Field()
-  @Column({type: 'uuid'})
+  @Column({ type: 'uuid' })
   verificationToken: string;
 
-  @Field((type) => Boolean, {nullable: true})
-  @Column({type: 'boolean', default: false})
+  @Field((type) => Boolean, { nullable: true })
+  @Column({ type: 'boolean', default: false })
   isExpired: Boolean;
 
   setSender(user: User): Email {

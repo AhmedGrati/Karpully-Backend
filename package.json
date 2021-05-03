@@ -32,6 +32,7 @@
     "@nestjs/passport": "^7.1.5",
     "@nestjs/platform-express": "^7.6.13",
     "@nestjs/typeorm": "^7.1.5",
+    "@types/faker": "^5.5.3",
     "@types/uuid": "^8.3.0",
     "apollo-server-express": "^2.21.1",
     "bcrypt": "^5.0.1",

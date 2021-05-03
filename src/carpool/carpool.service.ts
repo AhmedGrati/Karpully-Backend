@@ -1,52 +1,63 @@
+import { LOCATION_API_RESPONSE_ERROR, LOCATION_NOT_FOUND_ERROR_MESSAGE, LOCATION_SAVE_ISSUE_ERROR_MESSAGE } from './../utils/constants';
+import { LocationService } from './../location/location.service';
 import {
+  Inject,
   Injectable,
-  Logger,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import {
   CARPOOL_NOT_FOUND_ERROR_MESSAGE,
-  CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE,
-  CITY_NOT_FOUND_ERROR_MESSAGE,
   USER_NOT_FOUND_ERROR_MESSAGE,
 } from '../utils/constants';
 import {
-  FindConditions,
-  QueryBuilder,
   Repository,
-  SelectQueryBuilder,
 } from 'typeorm';
-import {CreateCarpoolInput} from './dto/create-carpool.input';
-import {UpdateCarpoolInput} from './dto/update-carpool.input';
-import {Carpool} from './entities/carpool.entity';
-import {UserService} from '../user/user.service';
-import {CityService} from '../city/city.service';
-import {User} from '../user/entities/user.entity';
-import {City} from '../city/entities/city.entity';
-import {CaslAbilityFactory} from '../casl/casl-ability.factory';
-import {Action} from '../casl/enums/action.enum';
-import {PaginationInput} from '../generics/pagination.input';
-import {Meta} from '../generics/meta';
-import {PaginatedCarpool} from './entities/paginatedCarpool.entity';
-import {Pagination} from '../utils/pagination';
-import {OrderByDirection} from '../generics/ordery-by-direction';
-import {Where} from './dto/where.input';
-import {checkCASLAndExecute} from '../utils/casl-authority-check';
+import { CreateCarpoolInput } from './dto/create-carpool.input';
+import { UpdateCarpoolInput } from './dto/update-carpool.input';
+import { Carpool } from './entities/carpool.entity';
+import { User } from '../user/entities/user.entity';
+import { CaslAbilityFactory } from '../casl/casl-ability.factory';
+import { Action } from '../casl/enums/action.enum';
+import { PaginationInput } from '../generics/pagination.input';
+import { PaginatedCarpool } from './entities/paginatedCarpool.entity';
+import { Pagination } from '../utils/pagination';
+import { Where } from './dto/where.input';
+import { checkCASLAndExecute } from '../utils/casl-authority-check';
+import { ReverseLocationSearchInput } from '../location/dto/reverse-location-search-input';
+import { Location } from '../location/entities/location.entity'
+import { Exception } from 'handlebars';
+import { FakerCreateCarpoolInput } from './dto/faker-create-carpool.input';
 @Injectable()
 export class CarpoolService {
+  CARPOOL_REPO: Repository<Carpool>;
   constructor(
     @InjectRepository(Carpool)
     private readonly carpoolRepository: Repository<Carpool>,
-    private readonly cityService: CityService,
     private caslAbilityFactory: CaslAbilityFactory<Carpool>,
-  ) {}
-  async create(owner: User, createCarpoolInput: CreateCarpoolInput) {
-    const {departureCityId, destinationCityId} = createCarpoolInput;
-    const departureCity = await this.cityService.findOne(departureCityId);
-    const destinationCity = await this.cityService.findOne(destinationCityId);
+    private locationService: LocationService,
+    @InjectRepository(Location)
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>
+  ) {
+    this.CARPOOL_REPO = carpoolRepository;
+  }
+  async createFake(createCarpoolInput: Carpool): Promise<void | Carpool> {
+    console.log('object ot be created: ', createCarpoolInput)
+    return await this.carpoolRepository.save(createCarpoolInput)
+  }
+  async create(createCarpoolInput: CreateCarpoolInput) {
 
-    if (owner && departureCity && destinationCity) {
+    const { departureLocationLongitude, departureLocationLatitude, destinationLocationLongitude, destinationLocationLatitude } = createCarpoolInput as CreateCarpoolInput;
+    // fetch locations from locationIQ
+    const departureLocation = await this.locationService.reverseSearchLocation(new ReverseLocationSearchInput(departureLocationLongitude, departureLocationLatitude))
+    const destinationLocation = await this.locationService.reverseSearchLocation(new ReverseLocationSearchInput(destinationLocationLongitude, destinationLocationLatitude))
+    if (departureLocation.length == 0 || destinationLocation.length == 0) {
+      throw new NotFoundException(LOCATION_API_RESPONSE_ERROR)
+    }
+    const owner = await this.userRepository.findOne({ id: createCarpoolInput.ownerId })
+
+    if (owner && departureLocation && destinationLocation) {
       // create a new carpool
       const createdCarpool = await this.carpoolRepository.create(
         createCarpoolInput,
@@ -54,9 +65,9 @@ export class CarpoolService {
       // assign the properties
       this.carpoolRepository.merge(
         createdCarpool,
-        {owner},
-        {departureCity},
-        {destinationCity},
+        { owner },
+        { departureLocation: departureLocation[0] },
+        { destinationLocation: destinationLocation[0] },
       );
 
       // save the created carpool
@@ -65,7 +76,7 @@ export class CarpoolService {
       if (!owner) {
         throw new NotFoundException(USER_NOT_FOUND_ERROR_MESSAGE);
       } else {
-        throw new NotFoundException(CITY_NOT_FOUND_ERROR_MESSAGE);
+        throw new NotFoundException(LOCATION_NOT_FOUND_ERROR_MESSAGE);
       }
     }
   }
@@ -75,7 +86,7 @@ export class CarpoolService {
   }
 
   async findOne(id: number): Promise<Carpool> {
-    const carpool = await this.carpoolRepository.findOne({where: {id}});
+    const carpool = await this.carpoolRepository.findOne({ where: { id } });
     if (!carpool) {
       throw new NotFoundException(CARPOOL_NOT_FOUND_ERROR_MESSAGE);
     }
@@ -102,7 +113,7 @@ export class CarpoolService {
       this.carpoolRepository,
       async () => {
         await this.carpoolRepository.restore(id);
-        return await this.carpoolRepository.findOne({where: {id}});
+        return await this.carpoolRepository.findOne({ where: { id } });
       },
     );
 
@@ -121,7 +132,7 @@ export class CarpoolService {
       carpoolId,
       this.carpoolRepository,
       async () => {
-        const {id, ...data} = updateCarpoolInput;
+        const { id, ...data } = updateCarpoolInput;
         await this.carpoolRepository
           .update(carpoolId, data)
           .then((updatedCarpool) => updatedCarpool.raw[0]);
