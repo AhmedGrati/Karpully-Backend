@@ -1,5 +1,5 @@
 import { Address } from './address.entity';
-import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
+import { ObjectType, Field, Int, registerEnumType, InputType } from '@nestjs/graphql';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum OSM {

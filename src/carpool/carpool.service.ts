@@ -27,8 +27,10 @@ import { checkCASLAndExecute } from '../utils/casl-authority-check';
 import { ReverseLocationSearchInput } from '../location/dto/reverse-location-search-input';
 import { Location } from '../location/entities/location.entity'
 import { Exception } from 'handlebars';
+import { FakerCreateCarpoolInput } from './dto/faker-create-carpool.input';
 @Injectable()
 export class CarpoolService {
+  CARPOOL_REPO: Repository<Carpool>;
   constructor(
     @InjectRepository(Carpool)
     private readonly carpoolRepository: Repository<Carpool>,
@@ -36,13 +38,20 @@ export class CarpoolService {
     private locationService: LocationService,
     @InjectRepository(Location)
     private readonly locationRepository: Repository<Location>
-  ) { }
-  async create(owner: User, createCarpoolInput: CreateCarpoolInput) {
-    const { departureLocationLongitude, departureLocationLatitude, destinationLocationLongitude, destinationLocationLatitude } = createCarpoolInput;
+  ) {
+    this.CARPOOL_REPO = carpoolRepository;
+  }
+  async createFake(createCarpoolInput: Carpool): Promise<void | Carpool> {
+    console.log('object ot be created: ', createCarpoolInput)
+    return await this.carpoolRepository.save(createCarpoolInput)
+  }
+  async create(owner: User, createCarpoolInput: CreateCarpoolInput | FakerCreateCarpoolInput) {
+
+    const { departureLocationLongitude, departureLocationLatitude, destinationLocationLongitude, destinationLocationLatitude } = createCarpoolInput as CreateCarpoolInput;
     // fetch locations from locationIQ
     const departureLocation = await this.locationService.reverseSearchLocation(new ReverseLocationSearchInput(departureLocationLongitude, departureLocationLatitude))
     const destinationLocation = await this.locationService.reverseSearchLocation(new ReverseLocationSearchInput(destinationLocationLongitude, destinationLocationLatitude))
-    // Save location into the DB for future stats
+    // Save location into the DB for future stats;
     await this.locationService.create(departureLocation);
     await this.locationService.create(destinationLocation)
 

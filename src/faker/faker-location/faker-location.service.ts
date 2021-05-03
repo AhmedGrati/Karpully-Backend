@@ -30,9 +30,9 @@ export class FakerLocationService {
                     const type = faker.lorem.word();
                     const importance = faker.datatype.number({ max: 50 }) / 50;
                     const icon = faker.image.image();
-                    const __randomSelector = faker.random.number({ max: seedNumber - 1 });
+                    const __randomSelector = faker.datatype.number({ max: seedNumber - 1 });
                     const address = allAddress[i];
-                    console.log('******** Linking new faker location to address number ', i)
+                    // console.log('******** Linking new faker location to address number ', i)
                     const loc: LocationCreationInput = {
                         licence,
                         osm_type,

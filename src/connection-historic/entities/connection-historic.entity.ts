@@ -1,6 +1,6 @@
-import {ObjectType, Field, Int} from '@nestjs/graphql';
-import {Connection} from '../../connection/entities/connection.entity';
-import {TimestampEntites} from '../../generics/timestamp.entity';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Connection } from '../../connection/entities/connection.entity';
+import { TimestampEntites } from '../../generics/timestamp.entity';
 import {
   Entity,
   JoinColumn,
@@ -9,7 +9,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import {User} from '../../user/entities/user.entity';
+import { User } from '../../user/entities/user.entity';
 
 @ObjectType()
 @Entity()

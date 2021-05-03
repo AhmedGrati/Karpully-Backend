@@ -1,9 +1,9 @@
-import {ObjectType, Field, Int} from '@nestjs/graphql';
-import {User} from '../../user/entities/user.entity';
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
-import {Status} from './status.enum';
-import {Carpool} from '../../carpool/entities/carpool.entity';
-import {TimestampEntites} from '../../generics/timestamp.entity';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { User } from '../../user/entities/user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Status } from './status.enum';
+import { Carpool } from '../../carpool/entities/carpool.entity';
+import { TimestampEntites } from '../../generics/timestamp.entity';
 
 @ObjectType()
 @Entity()

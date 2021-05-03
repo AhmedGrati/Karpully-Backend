@@ -249,6 +249,7 @@ input Where {
   nbrOfAvailablePlaces: Float
   description: String
   hasSmokePermission: Boolean
+  ownerId: Float
   id: Int
 }
 
@@ -305,6 +306,7 @@ type Mutation {
   createGov(createGovInput: CreateGovInput!): Gov!
   updateGov(updateGovInput: UpdateGovInput!): Gov!
   removeGov(id: Int!): Gov!
+  createAddress(address: AddressCreationInput!): Address!
   createSubmission(createSubmissionInput: CreateSubmissionInput!): Submission!
   rejectSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
   acceptSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
@@ -373,6 +375,7 @@ input CreateCarpoolInput {
   departureLocationLatitude: Float!
   destinationLocationLongitude: Float!
   destinationLocationLatitude: Float!
+  ownerId: Float!
 }
 
 input UpdateCarpoolInput {
@@ -384,6 +387,7 @@ input UpdateCarpoolInput {
   departureLocationLatitude: Float
   destinationLocationLongitude: Float
   destinationLocationLatitude: Float
+  ownerId: Float
   id: Int!
 }
 
@@ -405,6 +409,10 @@ input CreateGovInput {
 input UpdateGovInput {
   govName: String
   id: Int!
+}
+
+input AddressCreationInput {
+  createdAt: Float!
 }
 
 input CreateSubmissionInput {

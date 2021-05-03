@@ -1,5 +1,5 @@
 import { Location } from './../../location/entities/location.entity';
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field, Int, InputType } from '@nestjs/graphql';
 import { Gov } from '../../gov/entities/gov.entity';
 import {
   BeforeInsert,

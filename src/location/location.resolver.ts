@@ -1,3 +1,5 @@
+import { AddressCreationInput } from '../location/dto/address-creation.input';
+import { Address } from './entities/address.entity';
 import { ReverseLocationSearchInput } from './dto/reverse-location-search-input';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { LocationService } from './location.service';
@@ -27,6 +29,10 @@ export class LocationResolver {
   @Query(() => [Location], { name: 'autocomplete' })
   autocomplete(@Args('textInput') autocompleteInput: AutocompleteInput) {
     return this.locationService.autocomplete(autocompleteInput);
+  }
+  @Mutation(() => Address)
+  createAddress(@Args('address') addressCreationInput: AddressCreationInput) {
+    return this.locationService.createAddress(addressCreationInput)
   }
 
 
