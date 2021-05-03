@@ -81,7 +81,6 @@ export class LocationService {
 
     if (!preExistingLoc) {
       const dataToStore = this.locationRepository.create(data)
-      console.log(dataToStore);
       this.locationRepository.merge(dataToStore[0])
       await this.locationRepository.save(dataToStore).then(e => {
         data = e;
@@ -90,7 +89,6 @@ export class LocationService {
     }
 
     else {
-      console.log('entered else clause')
       await this.locationRepository.save({
         id: preExistingLoc.id,
         visited: preExistingLoc.visited + 1
