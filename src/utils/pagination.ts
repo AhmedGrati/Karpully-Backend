@@ -39,7 +39,8 @@ export class Pagination {
         take: limit,
       });
     }
-    const itemCount = items.length;
+    const allItems = await repository.find();
+    const itemCount = allItems.length;
     const currentPage = page;
     const meta: Meta = {
       itemCount,
