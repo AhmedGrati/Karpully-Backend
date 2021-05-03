@@ -49,6 +49,7 @@ export class NotificationService {
       .leftJoinAndSelect('notification.receiver', 'user');
     return await Pagination.paginateQueryBuilder<Notification>(
       queryBuilder,
+      this.notificationRepository,
       paginationInput,
     );
   }

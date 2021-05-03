@@ -18,14 +18,14 @@ class DatabaseConfigService {
     }
     const path = __dirname.split(delimiter);
     const entitiesPath = path.splice(0, path.length - 1).join(delimiter);
+    const host = this.configService.get<string>('HOST');
+    const port = this.configService.get<number>('DB_PORT');
+    const username = this.configService.get<string>('POSTGRES_USER');
+    const password = this.configService.get<string>('POSTGRES_PASSWORD');
+    const database = this.configService.get<string>('POSTGRES_DB');
     return {
       type: 'postgres',
-      host: this.configService.get<string>('HOST'),
-      port: this.configService.get<number>('DB_PORT'),
-      username: this.configService.get<string>('POSTGRES_USER'),
-      password: this.configService.get<string>('POSTGRES_PASSWORD'),
-      database: this.configService.get<string>('POSTGRES_DB'),
-
+      url: `postgres://${username}:${password}@${host}:${port}/${database}`,
       entities: [entitiesPath + '/**/*.entity{.ts,.js}'],
       // logging:true,
       synchronize: true,
