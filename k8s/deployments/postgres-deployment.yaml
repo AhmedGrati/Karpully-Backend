@@ -8,6 +8,7 @@ metadata:
   labels:
     io.kompose.service: postgres
   name: postgres
+  namespace: app
 spec:
   replicas: 1
   selector:
@@ -54,12 +55,11 @@ spec:
                   name: postgres-secret
           image: postgres:12
           name: postgres
-          command: ['/bin/sh', '-c', 'sleep 500']
           ports:
             - containerPort: 5432
           resources: {}
           volumeMounts:
-            - mountPath: /var/lib/postgresql/data/db-files
+            - mountPath: /var/lib/postgresql/db-files
               name: pgdata
       restartPolicy: Always
       volumes:

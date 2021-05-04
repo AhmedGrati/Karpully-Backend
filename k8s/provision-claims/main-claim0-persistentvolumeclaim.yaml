@@ -5,6 +5,7 @@ metadata:
   labels:
     io.kompose.service: main-claim0
   name: main-claim0
+  namespace: app
 spec:
   accessModes:
     - ReadWriteOnce

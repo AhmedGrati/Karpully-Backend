@@ -8,6 +8,7 @@ metadata:
   labels:
     io.kompose.service: redis
   name: redis
+  namespace: app
 spec:
   replicas: 1
   selector:
@@ -22,7 +23,7 @@ spec:
         kompose.version: 1.22.0 (955b78124)
       creationTimestamp: null
       labels:
-        io.kompose.network/webnet: "true"
+        io.kompose.network/webnet: 'true'
         io.kompose.service: redis
     spec:
       containers:

@@ -3,8 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: redis-claim0
-  name: redis-claim0
+    io.kompose.service: pgdata
+  name: pgdata
+  namespace: app
 spec:
   accessModes:
     - ReadWriteOnce

@@ -8,6 +8,7 @@ metadata:
   labels:
     io.kompose.service: main
   name: main
+  namespace: app
 spec:
   replicas: 1
   selector:

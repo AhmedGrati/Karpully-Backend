@@ -6,14 +6,15 @@ metadata:
     kompose.version: 1.22.0 (955b78124)
   creationTimestamp: null
   labels:
-    io.kompose.service: redis
-  name: redis
+    io.kompose.service: postgres
+  name: postgres
+  namespace: app
 spec:
   ports:
-    - name: '6379'
-      port: 6379
-      targetPort: 6379
+    - name: '5432'
+      port: 5432
+      targetPort: 5432
   selector:
-    io.kompose.service: redis
+    io.kompose.service: postgres
 status:
   loadBalancer: {}

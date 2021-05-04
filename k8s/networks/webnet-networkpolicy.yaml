@@ -3,12 +3,13 @@ kind: NetworkPolicy
 metadata:
   creationTimestamp: null
   name: webnet
+  namespace: app
 spec:
   ingress:
     - from:
         - podSelector:
             matchLabels:
-              io.kompose.network/webnet: "true"
+              io.kompose.network/webnet: 'true'
   podSelector:
     matchLabels:
-      io.kompose.network/webnet: "true"
+      io.kompose.network/webnet: 'true'
