@@ -4,6 +4,7 @@ import {TypeOrmModuleOptions} from '@nestjs/typeorm';
 import {EnvironmentVariables} from '../common/EnvironmentVariables';
 require('dotenv').config();
 const os = require('os');
+var parse = require('pg-connection-string').parse;
 class DatabaseConfigService {
   constructor(
     private readonly configService: ConfigService<EnvironmentVariables>,
@@ -23,9 +24,16 @@ class DatabaseConfigService {
     const username = this.configService.get<string>('POSTGRES_USER');
     const password = this.configService.get<string>('POSTGRES_PASSWORD');
     const database = this.configService.get<string>('POSTGRES_DB');
+    const url = `postgres://${username}:${password}@${host}:${port}/${database}`;
+    const config = parse(url);
     return {
       type: 'postgres',
-      url: `postgres://${username}:${password}@${host}:${port}/${database}`,
+      url,
+      username: config.user,
+      password: config.password,
+      database: config.database,
+      host: config.host,
+      port: config.port,
       entities: [entitiesPath + '/**/*.entity{.ts,.js}'],
       // logging:true,
       synchronize: true,
