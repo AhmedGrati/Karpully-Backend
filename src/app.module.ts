@@ -25,6 +25,7 @@ import {LocationModule} from './location/location.module';
 import {RedisCacheModule} from './redis-cache/redis-cache.module';
 import {ConnectionHistoricModule} from './connection-historic/connection-historic.module';
 import {ConnectionModule} from './connection/connection.module';
+import { DirectionModule } from './direction/direction.module';
 @Module({
   imports: [
     UserModule,
@@ -54,6 +55,7 @@ import {ConnectionModule} from './connection/connection.module';
     RedisCacheModule,
     ConnectionHistoricModule,
     ConnectionModule,
+    DirectionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

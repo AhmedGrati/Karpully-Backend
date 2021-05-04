@@ -1,5 +1,5 @@
-import {ObjectType, Field, Int} from '@nestjs/graphql';
-import {Gov} from '../../gov/entities/gov.entity';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Gov } from '../../gov/entities/gov.entity';
 import {
   Column,
   Entity,
@@ -7,8 +7,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import {Carpool} from '../../carpool/entities/carpool.entity';
-import {TimestampEntites} from '../../generics/timestamp.entity';
+import { Carpool } from '../../carpool/entities/carpool.entity';
+import { TimestampEntites } from '../../generics/timestamp.entity';
 
 @ObjectType()
 @Entity()
@@ -18,14 +18,14 @@ export class City extends TimestampEntites {
   id: number;
 
   @Field()
-  @Column({nullable: false})
+  @Column({ nullable: false })
   cityName: string;
 
-  @ManyToOne(() => Gov, (gov) => gov.cities, {eager: true})
-  @Field((type) => Gov, {nullable: false})
+  @ManyToOne(() => Gov, (gov) => gov.cities, { eager: true })
+  @Field((type) => Gov, { nullable: false })
   gov: Gov;
 
-  @OneToMany(() => Carpool, (carpool) => carpool.departureCity)
-  @Field((type) => [Carpool])
-  carpools: Carpool[];
+  // @OneToMany(() => Carpool, (carpool) => carpool.departureCity)
+  // @Field((type) => [Carpool])
+  // carpools: Carpool[];
 }
