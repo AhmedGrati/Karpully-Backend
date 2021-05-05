@@ -43,4 +43,4 @@ terraform/tfplan.json
 id_rsa
 id_rsa.pub
 k8s/get_helm.sh
-k8s/secret.yaml
+k8s/secrets
