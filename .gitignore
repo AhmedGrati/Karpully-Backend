@@ -33,14 +33,4 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# terraform
-/terraform/.terraform
-/terraform/terraform.tfstate
-/terraform/terraform.tfstate.backup
-/terraform/tfplan
-terraform/tfplan.json
-
-id_rsa
-id_rsa.pub
-k8s/get_helm.sh
 k8s/secrets
