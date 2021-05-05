@@ -35,3 +35,4 @@ lerna-debug.log*
 
 .env
 start.script.txt
+k8s/secrets
