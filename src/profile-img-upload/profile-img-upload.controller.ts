@@ -41,11 +41,11 @@ export class ProfileImgUploadController {
   }
 
 
-  // @Get()
-  // findOne(@Query('imgId') image: number, @Res() res) {
-  //   // return this.profileImgUploadService.findOne(image)
-  //   return res.sendFile(image, { root: './files' });
+  @Get()
+  findOne(@Query('imgId') image: number, @Res() res) {
+    // return this.profileImgUploadService.findOne(image)
+    return this.profileImgUploadService.findOne(image, res)
 
-  // }
+  }
 
 }

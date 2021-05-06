@@ -26,12 +26,9 @@ export class ProfileImgUploadService {
     await this.userService.updateImage(user, savedImage).catch(e => {
       throw new Error(FAILURE_UPON_PROFULE_IMAGE_UPDATE)
     })
-    res.body = {
-      filename: file.filename,
-      id: savedImage.id
-    }
-    console.log(process.cwd())
-    return res.sendFile(savedImage.name, { root: './src/images' })
+
+    return res.set({ 'filename': file.filename, 'imageId': savedImage.id })
+      .sendFile(savedImage.name, { root: './src/images' })
 
   }
 
@@ -39,9 +36,10 @@ export class ProfileImgUploadService {
     return `This action returns all profileImgUpload`;
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, res: any) {
     const img = await this.imageRepository.findOne(id)
-    return `This action returns a #${id} profileImgUpload`;
+    return res.set({ 'filename': img.name, 'imageId': img.id })
+      .sendFile(img.name, { root: './src/images' })
   }
 
   update(id: number, updateProfileImgUploadDto: UpdateProfileImgUploadDto) {
