@@ -31,7 +31,7 @@ export class ProfileImgUploadService {
       id: savedImage.id
     }
     console.log(process.cwd())
-    return res.sendFile(savedImage.name, { root: './images' })
+    return res.sendFile(savedImage.name, { root: './src/images' })
 
   }
 
