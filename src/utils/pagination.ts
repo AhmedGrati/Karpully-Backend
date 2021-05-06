@@ -39,7 +39,8 @@ export class Pagination {
         take: limit,
       });
     }
-    const itemCount = items.length;
+    const allItems = await repository.find();
+    const itemCount = allItems.length;
     const currentPage = page;
     const meta: Meta = {
       itemCount,
@@ -50,12 +51,14 @@ export class Pagination {
 
   static async paginateQueryBuilder<T>(
     queryBuilder: SelectQueryBuilder<T>,
+    repository: Repository<T>,
     paginationInput: PaginationInput,
   ): Promise<any> {
     const {page, limit} = paginationInput;
     const skip = limit * page - limit;
     const items = await queryBuilder.take(limit).skip(skip).getMany();
-    const itemCount = items.length;
+    const allItems = await repository.find();
+    const itemCount = allItems.length;
     const currentPage = page;
     const meta: Meta = {
       itemCount,

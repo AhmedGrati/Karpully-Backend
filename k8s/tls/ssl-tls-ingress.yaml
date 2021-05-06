@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ssl-tls-ingress
+  namespace: app
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  tls:
+    - hosts:
+        - karpully.20.62.213.228.nip.io # update IP address here
+      secretName: app-web-cert
+  rules:
+    - host: karpully.20.62.213.228.nip.io # update IP address here
+      http:
+        paths:
+          - backend:
+              serviceName: main
+              servicePort: 4000
+            path: /
