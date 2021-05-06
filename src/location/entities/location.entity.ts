@@ -1,7 +1,9 @@
+import { BadRequestException } from '@nestjs/common';
 import { Carpool } from '../../carpool/entities/carpool.entity';
 import { Address } from './address.entity';
 import { ObjectType, Field, Int, registerEnumType, InputType, Float } from '@nestjs/graphql';
-import { AfterInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { AfterInsert, BeforeInsert, Check, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { LATITUDE_OUT_OF_BORDER_MESSAGE, LONGITUDE_OUT_OF_BORDER_MESSAGE } from '../../utils/constants';
 
 export enum OSM {
   WAY = "way",
@@ -11,7 +13,6 @@ export enum OSM {
 registerEnumType(OSM, {
   name: 'OSM',
 });
-
 @ObjectType()
 @Entity()
 export class Location {
@@ -84,4 +85,18 @@ export class Location {
   departureCarpools: Carpool[];
   @OneToMany(() => Carpool, carpool => carpool.destinationLocation)
   destinationCarpools: Location[];
+
+  @BeforeInsert()
+  checkInformationRelativityToTunisia() {
+    const limits = {
+      lat_min: 30.230236,
+      lat_max: 37.7612052,
+      lon_min: 7.5219807,
+      lon_max: 11.8801133
+    }
+    const lat = parseInt(this.lat, 10)
+    const lon = parseInt(this.lon, 10)
+    if (lat < limits.lat_min || lat > limits.lat_max) throw new BadRequestException(LATITUDE_OUT_OF_BORDER_MESSAGE)
+    if (lon < limits.lon_min || lon > limits.lon_max) throw new BadRequestException(LONGITUDE_OUT_OF_BORDER_MESSAGE)
+  }
 }

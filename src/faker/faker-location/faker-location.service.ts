@@ -23,8 +23,8 @@ export class FakerLocationService {
                     const osm_type = faker.random.arrayElement(['node', 'way', 'relation'])
                     const osm_id = faker.datatype.number();
                     const boundingbox = `{${faker.address.longitude()}, ${faker.address.longitude()} , ${faker.address.latitude()}, ${faker.address.latitude()} }`;
-                    const lat = faker.address.latitude();
-                    const lon = faker.address.longitude();
+                    const lat = faker.datatype.float({ min: 30.230236, max: 37.7612052 })
+                    const lon = faker.datatype.float({ min: 7.5219807, max: 11.8801133 });
                     const display_name = faker.address.streetAddress(true);
                     const __class = faker.random.arrayElement(['tourism', 'industrial']);
                     const type = faker.lorem.word();
