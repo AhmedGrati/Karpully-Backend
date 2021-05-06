@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ProfileImgUpload {
+  id: Float!
+  name: String!
+}
+
 type Email {
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -140,6 +145,7 @@ type User {
   submissions: [Submission!]
   notifications: [Notification!]
   historic: ConnectionHistoric
+  profileImage: ProfileImgUpload
 }
 
 enum UserRoleEnum {

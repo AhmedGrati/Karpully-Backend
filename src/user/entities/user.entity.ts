@@ -1,3 +1,4 @@
+import { ProfileImgUpload } from './../../profile-img-upload/entities/profile-img-upload.entity';
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -132,6 +133,10 @@ export class User extends TimestampEntites {
   })
   historic: ConnectionHistoric;
 
+  @Field({ nullable: true })
+  @OneToOne(type => ProfileImgUpload, { eager: true })
+  @JoinColumn()
+  profileImage: ProfileImgUpload;
   @BeforeInsert()
   async hashPassword() {
     this.salt = await bcrypt.genSalt();
