@@ -251,7 +251,6 @@ input Where {
   nbrOfAvailablePlaces: Float
   description: String
   hasSmokePermission: Boolean
-  ownerId: Float
   id: Int
 }
 
@@ -385,11 +384,6 @@ input UpdateCarpoolInput {
   nbrOfAvailablePlaces: Float
   description: String
   hasSmokePermission: Boolean
-  departureLocationLongitude: String
-  departureLocationLatitude: String
-  destinationLocationLongitude: String
-  destinationLocationLatitude: String
-  ownerId: Float
   id: Int!
 }
 

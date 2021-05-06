@@ -4,5 +4,5 @@ import { UpdateCarpoolInput } from './update-carpool.input';
 
 @InputType()
 export class Where extends PartialType(
-  OmitType(UpdateCarpoolInput, ['departureLocationLongitude', 'departureLocationLatitude', 'destinationLocationLongitude', 'destinationLocationLatitude']),
+  UpdateCarpoolInput
 ) { }
