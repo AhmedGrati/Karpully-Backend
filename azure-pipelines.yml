@@ -11,6 +11,7 @@ resources:
 variables:
   tag: '$(Build.BuildId)'
   repositoryName: 'karpully/karpully-backend'
+  dockerId: 'karpully'
 
 
 stages:
@@ -29,10 +30,18 @@ stages:
         tags: |
           $(tag)
     - task: Docker@2
+      displayName: Login To Docker Hub
+      inputs:
+          command: login
+          arguments: -u $(dockerId) -p $(dockerPassword)
+          containerRegistry: |
+            Docker Hub
+          
+    - task: Docker@2
       displayName: Push The Image To Docker Hub
       inputs:
           command: push
           containerRegistry: |
-            $(dockerHub)
+            'Docker Hub'
           repository: $(repositoryName)
           tags: $(tag)
