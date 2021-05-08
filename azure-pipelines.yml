@@ -10,7 +10,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-  repositoryName: 'karpully'
+  repositoryName: 'karpully/karpully-backend'
 
 
 stages:
@@ -25,6 +25,7 @@ stages:
       inputs:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+        repository: $(repositoryName)
         tags: |
           $(tag)
     - task: Docker@2
