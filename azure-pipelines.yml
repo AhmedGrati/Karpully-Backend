@@ -21,32 +21,15 @@ stages:
     displayName: Build
     steps:
     - task: Docker@2
-      displayName: Build an image
+      displayName: Build The Image From Context
       inputs:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
           $(tag)
-  # - job: Login
-  #   displayName: Login
-  #   dependsOn: Build
-  #   pool:
-  #     vmImage: ubuntu-latest
-  #   steps:
-  #     - task: Docker@2
-  #       displayName: Login To Docker Hub Account
-  #       inputs:
-  #         command: login
-  #         containerRegistry: |
-  #           $(dockerHub)
-  #         tags: $(tag)
-  - job: Push
-    displayName: Push
-    dependsOn: Build
-    steps:
-      - task: Docker@2
-        displayName: Push The Image To Docker Hub
-        inputs:
+    - task: Docker@2
+      displayName: Push The Image To Docker Hub
+      inputs:
           command: push
           containerRegistry: |
             $(dockerHub)
