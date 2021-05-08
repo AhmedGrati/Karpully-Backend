@@ -16,7 +16,7 @@ variables:
 
 
 stages:
-- stage: Build And Push
+- stage: Build_And_Push
   displayName: Build And Push The Image
   jobs:
   - job: Build
