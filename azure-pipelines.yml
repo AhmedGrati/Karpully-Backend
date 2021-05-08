@@ -35,13 +35,13 @@ stages:
           command: login
           arguments: -u $(dockerId) -p $(dockerPassword)
           containerRegistry: |
-            Docker Hub
+            $(dockerHub)
           
     - task: Docker@2
       displayName: Push The Image To Docker Hub
       inputs:
           command: push
           containerRegistry: |
-            'Docker Hub'
+            $(dockerHub)
           repository: $(repositoryName)
           tags: $(tag)
