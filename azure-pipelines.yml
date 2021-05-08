@@ -16,33 +16,18 @@ variables:
 
 
 stages:
-- stage: Build
-  displayName: Build image
+- stage: Build And Push
+  displayName: Build And Push The Image
   jobs:
   - job: Build
-    displayName: Build
+    displayName: Build And Push
     steps:
     - task: Docker@2
-      displayName: Build The Image From Context
+      displayName: Build The Image From Context And Push It To Docker Hub
       inputs:
-        command: build
+        command: buildAndPush
+        containerRegistry: KarpullyDockerHubServiceConnection
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         repository: $(repositoryName)
         tags: |
           $(tag)
-    - task: Docker@2
-      displayName: Login To Docker Hub
-      inputs:
-          command: login
-          arguments: -u $(dockerId) -p $(dockerPassword)
-          containerRegistry: |
-            $(dockerHub)
-          
-    - task: Docker@2
-      displayName: Push The Image To Docker Hub
-      inputs:
-          command: push
-          containerRegistry: |
-            $(dockerHub)
-          repository: $(repositoryName)
-          tags: $(tag)
