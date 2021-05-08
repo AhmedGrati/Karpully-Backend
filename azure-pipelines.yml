@@ -41,7 +41,7 @@ stages:
         artifactName: KarpullyBackendK8sObject
 - stage: Test
   displayName: Test
-  dependsOn: Build
+  dependsOn: Build_And_Push
   jobs:
     - job: UnitTest
       displayName: Perform Unit Tests
