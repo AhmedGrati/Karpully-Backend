@@ -31,3 +31,11 @@ stages:
         repository: $(repositoryName)
         tags: |
           $(tag)
+    - task: CopyFiles@2
+      inputs:
+        Contents: k8s/**
+        targetFolder: $(Build.ArtifactStagingDirectory)
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathToPublish: $(Build.ArtifactStagingDirectory)
+        artifactName: KarpullyBackendK8sObjects
