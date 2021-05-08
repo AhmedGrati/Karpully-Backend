@@ -16,26 +16,53 @@ variables:
 
 
 stages:
-- stage: Build_And_Push
-  displayName: Build And Push The Image
+- stage: Build
+  displayName: Build image
   jobs:
   - job: Build
-    displayName: Build And Push
+    displayName: Build
     steps:
     - task: Docker@2
-      displayName: Build The Image From Context And Push It To Docker Hub
+      displayName: Build The Image From Context
       inputs:
-        command: buildAndPush
-        containerRegistry: KarpullyDockerHubServiceConnection
+        command: build
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         repository: $(repositoryName)
         tags: |
           $(tag)
-    - task: CopyFiles@2
+    - task: Docker@2
+      displayName: Login To Docker Hub
       inputs:
-        Contents: k8s/**
-        targetFolder: $(Build.ArtifactStagingDirectory)
-    - task: PublishBuildArtifacts@1
+          command: login
+          arguments: -u $(dockerId) -p $(dockerPassword)
+          containerRegistry: |
+            $(dockerHub)
+          
+    - task: Docker@2
+      displayName: Push The Image To Docker Hub
       inputs:
-        pathToPublish: $(Build.ArtifactStagingDirectory)
-        artifactName: KarpullyBackendK8sObjects
+          command: push
+          containerRegistry: |
+            $(dockerHub)
+          repository: $(repositoryName)
+          tags: $(tag)
+- stage: Test
+  displayName: Test
+  dependsOn: Build
+  jobs:
+    - job: UnitTest
+      displayName: Perform Unit Tests
+      steps:
+      - task: NodeTool@0
+        inputs: 
+          versionSpec: '14.x'
+        displayName: 'Install NodeJS'
+      - script: npm install && npm run test
+        displayName: 'Install Dependencies And Run Unit Tests'
+      - task: PublishTestResults@2
+        displayName: 'Publish Unit Tests Result'
+        condition: succeededOrFailed()
+        inputs:
+          testRunner: JUnit
+          testResultsFiles: '**/TEST-RESULTS.xml'
+      
