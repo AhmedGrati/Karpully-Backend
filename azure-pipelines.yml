@@ -12,6 +12,7 @@ variables:
   tag: '$(Build.BuildId)'
   repositoryName: 'karpully/karpully-backend'
   dockerId: 'karpully'
+  dockerHub: 'Docker Hub'
 
 
 stages:
