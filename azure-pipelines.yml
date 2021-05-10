@@ -51,9 +51,10 @@ stages:
             displayName: 'Install NodeJS'
           - script: npm install && npm run test:cov
             displayName: 'Install Dependencies And Run Unit Tests'
-          - task: PublishTestResults@2
+          - task: PublishCodeCoverageResults@1
             displayName: 'Publish Unit Tests Result'
             condition: succeededOrFailed()
             inputs:
-              testRunner: JUnit
-              testResultsFiles: '**/coverage/clover.xml'
+              codeCoverageTool: Cobertura
+              reportDirectory: '$(System.DefaultWorkingDirectory)/**/coverage'
+              summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/*coverage.xml'
