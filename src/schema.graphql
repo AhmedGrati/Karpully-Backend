@@ -59,8 +59,8 @@ type Location {
   osm_type: String
   osm_id: String
   boundingbox: [String!]
-  lat: String
-  lon: String
+  lat: Float
+  lon: Float
   display_name: String
   class: String
   type: String
@@ -235,6 +235,7 @@ type Query {
   emails(id: Int!): Email!
   refreshToken(refreshToken: String!): TokenModel!
   connectionHistoric(userId: Float!): ConnectionHistoric!
+  carpoolsByProximity(carpoolsProximityInput: CarpoolsProximityInput!): [Carpool!]!
   carpool(id: Int!): Carpool!
   carpools(where: Where!, paginationInput: PaginationInput!): PaginatedCarpool!
   cities: [City!]!
@@ -250,6 +251,17 @@ type Query {
   notification(id: Int!): Notification!
   notifications(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
   multiPointsDirection(pointsArray: MultiPointsDirectionInput!): Direction!
+}
+
+input CarpoolsProximityInput {
+  departureLoc: CarpoolBasicProximityInput
+  destinationLoc: CarpoolBasicProximityInput
+}
+
+input CarpoolBasicProximityInput {
+  lat: Float!
+  lon: Float!
+  radius: Float!
 }
 
 input Where {

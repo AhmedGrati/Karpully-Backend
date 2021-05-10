@@ -45,12 +45,12 @@ export class Location {
   boundingbox?: string | null;
 
   @Field({ nullable: true })
-  @Column({ length: 200 })
-  lat: string;
+  @Column({ type: "double precision" })
+  lat: number;
 
   @Field({ nullable: true })
-  @Column({ length: 200 })
-  lon: string;
+  @Column({ type: "double precision" })
+  lon: number;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
@@ -87,8 +87,8 @@ export class Location {
   destinationCarpools: Location[];
   @BeforeInsert()
   checkInformationRelativityToTunisia() {
-    const lat = parseInt(this.lat, 10)
-    const lon = parseInt(this.lon, 10)
+    const lat = this.lat
+    const lon = this.lon
     if (lat < xy_limits.lat_min || lat > xy_limits.lat_max) throw new BadRequestException(LATITUDE_OUT_OF_BORDER_MESSAGE)
     if (lon < xy_limits.lon_min || lon > xy_limits.lon_max) throw new BadRequestException(LONGITUDE_OUT_OF_BORDER_MESSAGE)
   }

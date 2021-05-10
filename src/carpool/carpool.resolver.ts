@@ -14,6 +14,7 @@ import { Where } from './dto/where.input';
 import { Arg } from 'type-graphql';
 import { OrderByDirection } from '../generics/ordery-by-direction';
 import { FakerCreateCarpoolInput } from './dto/faker-create-carpool.input';
+import { CarpoolsProximityInput } from './dto/proximity/carpools-proximity.input';
 
 @Resolver(() => Carpool)
 export class CarpoolResolver {
@@ -35,10 +36,13 @@ export class CarpoolResolver {
     return this.carpoolService.create(createCarpoolInput);
   }
 
-
+  @Query(() => [Carpool], { name: 'carpoolsByProximity' })
+  async findCarpoolsByProximity(@Args('carpoolsProximityInput') carpsProxInput: CarpoolsProximityInput): Promise<Carpool[]> {
+    return this.carpoolService.findApproximateCarpools(carpsProxInput);
+  }
   @Query(() => Carpool, { name: 'carpool' })
   @Auth(UserRoleEnum.USER)
-  findOneCarpool(@Args('id', { type: () => Int }) id: number): Promise<Carpool> {
+  async findOneCarpool(@Args('id', { type: () => Int }) id: number): Promise<Carpool> {
     return this.carpoolService.findOne(id);
   }
 

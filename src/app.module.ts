@@ -27,7 +27,6 @@ import { ConnectionHistoricModule } from './connection-historic/connection-histo
 import { ConnectionModule } from './connection/connection.module';
 import { DirectionModule } from './direction/direction.module';
 import { ProfileImgUploadModule } from './profile-img-upload/profile-img-upload.module';
-
 @Module({
   imports: [
     UserModule,
