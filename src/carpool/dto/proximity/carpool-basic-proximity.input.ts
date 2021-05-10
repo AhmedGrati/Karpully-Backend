@@ -1,4 +1,5 @@
 import { InputType, Field } from "@nestjs/graphql";
+import { Min } from "class-validator";
 
 @InputType()
 export class CarpoolBasicProximityInput {
@@ -7,6 +8,5 @@ export class CarpoolBasicProximityInput {
     @Field()
     lon: number;
     @Field()
-
     radius: number;
 }
