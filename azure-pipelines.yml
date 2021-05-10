@@ -3,10 +3,10 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
-- master
+  - master
 
 resources:
-- repo: self
+  - repo: self
 
 variables:
   tag: '$(Build.BuildId)'
@@ -14,48 +14,46 @@ variables:
   dockerId: 'karpully'
   dockerHub: 'Docker Hub'
 
-
 stages:
-- stage: Build_And_Push
-  displayName: Build And Push The Image
-  jobs:
-  - job: Build
-    displayName: Build And Push
-    steps:
-    - task: Docker@2
-      displayName: Build The Image From Context And Push It To Docker Hub
-      inputs:
-        command: buildAndPush
-        containerRegistry: KarpullyDockerHubServiceConnection
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        repository: $(repositoryName)
-        tags: |
-          $(tag)
-    - task: CopyFiles@2
-      inputs:
-        Contents: k8s/**
-        targetFolder: $(Build.ArtifactStagingDirectory)
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathToPublish: $(Build.ArtifactStagingDirectory)
-        artifactName: KarpullyBackendK8sObject
-- stage: Test
-  displayName: Test
-  dependsOn: Build_And_Push
-  jobs:
-    - job: UnitTest
-      displayName: Perform Unit Tests
-      steps:
-      - task: NodeTool@0
-        inputs: 
-          versionSpec: '14.x'
-        displayName: 'Install NodeJS'
-      - script: npm install && npm run test:cov
-        displayName: 'Install Dependencies And Run Unit Tests'
-      - task: PublishTestResults@2
-        displayName: 'Publish Unit Tests Result'
-        condition: succeededOrFailed()
-        inputs:
-          testRunner: JUnit
-          testResultsFiles: '**/jest-coverage.xml'
-      
+  - stage: Build_And_Push
+    displayName: Build And Push The Image
+    jobs:
+      - job: Build
+        displayName: Build And Push
+        steps:
+          - task: Docker@2
+            displayName: Build The Image From Context And Push It To Docker Hub
+            inputs:
+              command: buildAndPush
+              containerRegistry: KarpullyDockerHubServiceConnection
+              dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+              repository: $(repositoryName)
+              tags: |
+                $(tag)
+          - task: CopyFiles@2
+            inputs:
+              Contents: k8s/**
+              targetFolder: $(Build.ArtifactStagingDirectory)
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathToPublish: $(Build.ArtifactStagingDirectory)
+              artifactName: KarpullyBackendK8sObject
+  - stage: Test
+    displayName: Test
+    dependsOn: Build_And_Push
+    jobs:
+      - job: UnitTest
+        displayName: Perform Unit Tests
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '14.x'
+            displayName: 'Install NodeJS'
+          - script: npm install && npm run test:cov
+            displayName: 'Install Dependencies And Run Unit Tests'
+          - task: PublishTestResults@2
+            displayName: 'Publish Unit Tests Result'
+            condition: succeededOrFailed()
+            inputs:
+              testRunner: JUnit
+              testResultsFiles: '**/coverage/clover.xml'
