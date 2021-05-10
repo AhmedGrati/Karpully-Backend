@@ -1,14 +1,16 @@
 import {BadRequestException} from '@nestjs/common';
 import {Test, TestingModule} from '@nestjs/testing';
 import {getRepositoryToken} from '@nestjs/typeorm';
-import {EmailVerificationInput} from 'src/email/dto/email-verification.input';
-import {ResetPasswordEmailInput} from 'src/email/dto/reset-password-email.input';
+import {EmailVerificationInput} from '../email/dto/email-verification.input';
+import {ResetPasswordEmailInput} from '../email/dto/reset-password-email.input';
+import {RedisCacheService} from '../redis-cache/redis-cache.service';
 import {EmailModule} from '../email/email.module';
 import {EmailService} from '../email/email.service';
 import {CreateUserInput} from './dto/create-user.input';
 import {ResetPasswordInput} from './dto/reset-password.input';
 import {User} from './entities/user.entity';
 import {UserService} from './user.service';
+import {AuthService} from '../auth/auth.service';
 
 describe('UserService', () => {
   let service: UserService;
@@ -41,19 +43,32 @@ describe('UserService', () => {
         return Promise.resolve(true);
       }),
   };
+  const mockRedisCacheService = {
+    set: jest.fn().mockImplementation((username, refreshToken) => {}),
+  };
+  const mockAuthService = {
+    generateJwtToken: jest.fn().mockResolvedValue('accessToken'),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserService,
+        RedisCacheService,
         {
           provide: getRepositoryToken(User),
           useValue: mockUserRepository,
         },
         EmailService,
+        AuthService,
       ],
     })
       .overrideProvider(EmailService)
       .useValue(mockEmailService)
+      .overrideProvider(RedisCacheService)
+      .useValue(mockRedisCacheService)
+      .overrideProvider(AuthService)
+      .useValue(mockAuthService)
       .compile();
 
     service = module.get<UserService>(UserService);
