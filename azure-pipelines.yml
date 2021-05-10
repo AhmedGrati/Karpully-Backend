@@ -50,7 +50,7 @@ stages:
         inputs: 
           versionSpec: '14.x'
         displayName: 'Install NodeJS'
-      - script: npm install && npm run test
+      - script: npm install && npm run test:cov
         displayName: 'Install Dependencies And Run Unit Tests'
       - task: PublishTestResults@2
         displayName: 'Publish Unit Tests Result'
