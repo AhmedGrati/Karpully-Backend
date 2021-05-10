@@ -1,3 +1,4 @@
+import { ProfileImgUpload } from './../profile-img-upload/entities/profile-img-upload.entity';
 import {
   BadRequestException,
   HttpException,
@@ -8,29 +9,29 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
-import {CreateUserInput} from './dto/create-user.input';
-import {UpdateUserInput} from './dto/update-user.input';
-import {User} from './entities/user.entity';
-import {UserRoleEnum} from './entities/user-role.enum';
-import {EmailService} from '../email/email.service';
-import {EmailTypeEnum} from '../email/entities/email-type.enum';
-import {EmailVerificationInput} from '../email/dto/email-verification.input';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, UpdateResult } from 'typeorm';
+import { CreateUserInput } from './dto/create-user.input';
+import { UpdateUserInput } from './dto/update-user.input';
+import { User } from './entities/user.entity';
+import { UserRoleEnum } from './entities/user-role.enum';
+import { EmailService } from '../email/email.service';
+import { EmailTypeEnum } from '../email/entities/email-type.enum';
+import { EmailVerificationInput } from '../email/dto/email-verification.input';
 import {
   SENDING_EMAIL_ERROR_MESSAGE,
   USER_NOT_FOUND_ERROR_MESSAGE,
 } from '../utils/constants';
-import {ResetPasswordEmailInput} from 'src/email/dto/reset-password-email.input';
-import {ResetPasswordInput} from './dto/reset-password.input';
+import { ResetPasswordEmailInput } from 'src/email/dto/reset-password-email.input';
+import { ResetPasswordInput } from './dto/reset-password.input';
 import * as bcrypt from 'bcrypt';
-import {FirstStageDTOInput} from './dto/first-stage-dto.input';
-import {SecondStageDTOInput} from './dto/second-stage-dto.input';
-import {RedisCacheService} from '../redis-cache/redis-cache.service';
-import {AuthService} from '../auth/auth.service';
-import {TokenTypeEnum} from '../auth/dto/token-type.enum';
-import {PayloadInterface} from '../auth/dto/payload.interface';
-import {TokenModel} from 'src/auth/dto/token.model';
+import { FirstStageDTOInput } from './dto/first-stage-dto.input';
+import { SecondStageDTOInput } from './dto/second-stage-dto.input';
+import { RedisCacheService } from '../redis-cache/redis-cache.service';
+import { AuthService } from '../auth/auth.service';
+import { TokenTypeEnum } from '../auth/dto/token-type.enum';
+import { PayloadInterface } from '../auth/dto/payload.interface';
+import { TokenModel } from 'src/auth/dto/token.model';
 @Injectable()
 export class UserService {
   constructor(
@@ -38,11 +39,11 @@ export class UserService {
     private readonly redisCacheService: RedisCacheService,
     private readonly emailService: EmailService,
     private readonly authService: AuthService,
-  ) {}
+  ) { }
 
   async userExistByEmail(email: string): Promise<Boolean> {
     const user = await this.userRepository.findOne({
-      where: {email},
+      where: { email },
     });
     if (user) {
       return true;
@@ -52,14 +53,18 @@ export class UserService {
 
   async userExistByUsernam(username: string): Promise<Boolean> {
     const user = await this.userRepository.findOne({
-      where: {username},
+      where: { username },
     });
     if (user) {
       return true;
     }
     return false;
   }
+  async updateImage(user: number, imageId: ProfileImgUpload): Promise<string> {
+    const response = await this.userRepository.update(user, { profileImage: imageId }).catch(e => console.log).then(_ => `Successfully updated ${user} profile picture with image id ${imageId}`)
+    return response
 
+  }
   // THIS FUNCTION IS NOT USED IN RESOLVERS INSTEAD IT IS USED IN TESTS TO CREATE AND POPULATE DATA
   async create(createUserInput: CreateUserInput): Promise<User> {
     // check if the user is unique or not
@@ -68,7 +73,7 @@ export class UserService {
         {
           lowerCasedUsername: createUserInput.username.toLowerCase(),
         },
-        {email: createUserInput.email},
+        { email: createUserInput.email },
       ],
     });
     if (!checkUser) {
@@ -101,7 +106,7 @@ export class UserService {
         {
           lowerCasedUsername: firstStageDTO.username.toLowerCase(),
         },
-        {email: firstStageDTO.email},
+        { email: firstStageDTO.email },
       ],
     });
     if (!checkUser) {
@@ -160,7 +165,7 @@ export class UserService {
 
   async findOne(user: User, id: number): Promise<User> {
     if (this.checkAuthorities(user, id)) {
-      return await this.userRepository.findOne({where: {id}});
+      return await this.userRepository.findOne({ where: { id } });
     } else {
       throw new UnauthorizedException();
     }
@@ -168,7 +173,7 @@ export class UserService {
 
   // this function is for internal use
   async internalFindOne(id: number): Promise<User> {
-    return await this.userRepository.findOne({where: {id}});
+    return await this.userRepository.findOne({ where: { id } });
   }
 
   async update(
@@ -183,7 +188,7 @@ export class UserService {
     if (!user) {
       throw new HttpException('User Not Found!', HttpStatus.NOT_FOUND);
     } else {
-      const {id, ...data} = updateUserInput;
+      const { id, ...data } = updateUserInput;
       await this.userRepository
         .update(userId, data)
         .then((updatedUser) => updatedUser.raw[0]);
@@ -198,7 +203,7 @@ export class UserService {
   }
 
   async findByUsername(username: string): Promise<User> {
-    return await this.userRepository.findOne({where: {username}});
+    return await this.userRepository.findOne({ where: { username } });
   }
 
   // a method which check the authority of a user
@@ -220,8 +225,8 @@ export class UserService {
   async validUserConfirmation(
     emailVerificationInput: EmailVerificationInput,
   ): Promise<TokenModel> {
-    const {userId, token, verificationToken} = emailVerificationInput;
-    const user: User = await this.userRepository.findOne({where: {id: userId}});
+    const { userId, token, verificationToken } = emailVerificationInput;
+    const user: User = await this.userRepository.findOne({ where: { id: userId } });
     if (user) {
       const emailConfirmation = await this.emailService.confirmEmail(
         user,
@@ -247,8 +252,8 @@ export class UserService {
   async sendResetPasswordEmail(
     resetPasswordEmail: ResetPasswordEmailInput,
   ): Promise<Boolean> {
-    const {email} = resetPasswordEmail;
-    const user: User = await this.userRepository.findOne({where: {email}});
+    const { email } = resetPasswordEmail;
+    const user: User = await this.userRepository.findOne({ where: { email } });
     if (user) {
       const isEmailSent: Boolean = await this.emailService.sendEmail(
         user,
@@ -265,8 +270,8 @@ export class UserService {
   }
 
   async resetPassword(resetPasswordInput: ResetPasswordInput) {
-    const {email, password, token, verificationToken} = resetPasswordInput;
-    const user: User = await this.userRepository.findOne({where: {email}});
+    const { email, password, token, verificationToken } = resetPasswordInput;
+    const user: User = await this.userRepository.findOne({ where: { email } });
     if (user) {
       const emailConfirmation = await this.emailService.confirmEmail(
         user,
@@ -299,6 +304,6 @@ export class UserService {
     );
     // add the new refresh token to the cache
     await this.redisCacheService.set(user.username, refreshToken);
-    return {user, access_token: accessToken, refresh_token: refreshToken};
+    return { user, access_token: accessToken, refresh_token: refreshToken };
   }
 }

@@ -7,7 +7,7 @@ import { Dependencies, HttpService, Injectable, NotFoundException } from '@nestj
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ADDRESS_SAVE_ISSUE_ERROR_MESSAGE, LOCATION_NOT_FOUND_ERROR_MESSAGE, LOCATION_SAVE_ISSUE_ERROR_MESSAGE } from '../utils/constants';
-import { Location } from './entities/location.entity'
+import { Location, xy_limits } from './entities/location.entity'
 import { Exception } from 'handlebars';
 import { AddressCreationInput } from './dto/address-creation.input';
 import { LocationCreationInput } from './dto/location-creation.input';
@@ -57,12 +57,21 @@ export class LocationService {
       params: {
         key: process.env.LOCATIONIQ_TOKEN,
         q: text.text,
-        format: "json"
+        format: "json",
+        polygon_kml: 1,
+
       }
     }).toPromise().then(e => {
       data = e.data;
     })
-    return data;
+    const mappedData = data.filter((e: Location) => {
+      const lat = parseInt(e.lat, 10);
+      const lon = parseInt(e.lon, 10);
+      return (lat <= xy_limits.lat_max && lat >= xy_limits.lat_min) && (lon <= xy_limits.lon_max && lon >= xy_limits.lon_min)
+    })
+    if (mappedData.length > 0)
+      return mappedData;
+    else throw new NotFoundException(LOCATION_NOT_FOUND_ERROR_MESSAGE)
   }
   async reverseSearchLocation(xy: ReverseLocationSearchInput): Promise<Location[]> {
     var data: Location[];

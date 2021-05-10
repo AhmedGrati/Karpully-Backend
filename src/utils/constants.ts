@@ -33,3 +33,4 @@ export const LOCATION_API_RESPONSE_ERROR: string = "LocationIQ API has issues or
 export const LONGITUDE_OUT_OF_BORDER_MESSAGE: string = "Please provide a longitiude within the bounding box of Tunisia";
 export const LATITUDE_OUT_OF_BORDER_MESSAGE: string = "Please provide a latitude within the bounding box of Tunisia";
 export const WRONG_COUNTRY_NAME_ERROR_MESSAGE: string = "Only Tunisian locations are supported at this point. Please use Tunisia/TN in your relevent inputs"
+export const FAILURE_UPON_PROFULE_IMAGE_UPDATE: string = "Failed to update user Profile Image."
