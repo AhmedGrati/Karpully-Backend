@@ -1,18 +1,18 @@
-import {Test, TestingModule} from '@nestjs/testing';
-import {getRepositoryToken} from '@nestjs/typeorm';
-import {User} from '../user/entities/user.entity';
-import {CaslAbilityFactory, Subjects} from '../casl/casl-ability.factory';
-import {CityService} from '../city/city.service';
-import {CarpoolService} from './carpool.service';
-import {Carpool} from './entities/carpool.entity';
-import {Ability} from '@casl/ability';
-import {PaginatedCarpool} from './entities/paginatedCarpool.entity';
-import {CreateCarpoolInput} from './dto/create-carpool.input';
-import {City} from '../city/entities/city.entity';
-import {PaginationInput} from 'src/generics/pagination.input';
-import {Where} from './dto/where.input';
-import {Logger, UnauthorizedException} from '@nestjs/common';
-import {CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE} from '../utils/constants';
+import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { User } from '../user/entities/user.entity';
+import { CaslAbilityFactory, Subjects } from '../casl/casl-ability.factory';
+import { CityService } from '../city/city.service';
+import { CarpoolService } from './carpool.service';
+import { Carpool } from './entities/carpool.entity';
+import { Ability } from '@casl/ability';
+import { PaginatedCarpool } from './entities/paginatedCarpool.entity';
+import { CreateCarpoolInput } from './dto/create-carpool.input';
+import { City } from '../city/entities/city.entity';
+import { PaginationInput } from 'src/generics/pagination.input';
+import { Where } from './dto/where.input';
+import { Logger, UnauthorizedException } from '@nestjs/common';
+import { CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE } from '../utils/constants';
 
 describe('CarpoolService', () => {
   let service: CarpoolService;
@@ -83,7 +83,7 @@ describe('CarpoolService', () => {
   });
 
   it('should create a carpool', async () => {
-    expect(await service.create(user, createCarpoolInput)).toEqual(carpool);
+    expect(await service.create(createCarpoolInput)).toEqual(carpool);
     expect(mockCarpoolRepository.create).toBeCalled();
     expect(mockCarpoolRepository.save).toBeCalled();
     expect(mockCityService.findOne).toBeCalled();
