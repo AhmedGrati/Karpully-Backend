@@ -9,7 +9,7 @@ import {GqlExecutionContext} from '@nestjs/graphql';
 import {Observable} from 'rxjs';
 import {UserRoleEnum} from '../../user/entities/user-role.enum';
 import {ROLES_KEY} from '../decorators/roles.decorator';
-
+require('dotenv').config();
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
@@ -22,7 +22,8 @@ export class RolesGuard implements CanActivate {
       [context.getHandler(), context.getClass()],
     );
     // if the required roles are undefined we return true so we don't activate the guard
-    if (!requiredRoles) {
+
+    if (!requiredRoles || process.env.GUARDS == 'false') {
       return true;
     } else {
       const ctx = GqlExecutionContext.create(context);
