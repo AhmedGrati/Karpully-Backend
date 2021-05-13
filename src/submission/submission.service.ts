@@ -53,7 +53,6 @@ export class SubmissionService {
   ): Promise<Submission> {
     const carpoolId: number = createSubmissionInput.carpoolId;
     const carpool = await this.carpoolService.findOne(carpoolId);
-
     if (carpool) {
       if (await this.verifyConditionsForSubmitting(owner, carpool)) {
         const createdSubmission: Submission = await this.submissionRepository.create();
