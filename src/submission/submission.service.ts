@@ -65,7 +65,9 @@ export class SubmissionService {
         // create a notification and publish it
         const notification = await this.notificationService.create(
           carpool.owner,
-          submitNotificationMessage(owner),
+          submitNotificationMessage(owner, carpool),
+          carpoolId,
+          owner.id,
         );
         this.notificationService.publishNotification(notification);
         return createdSubmission;
@@ -184,7 +186,9 @@ export class SubmissionService {
           // push notification
           const notification = await this.notificationService.create(
             submission.owner,
-            acceptNotificationMessage(carpool.owner),
+            acceptNotificationMessage(carpool.owner, carpool),
+            carpool.id,
+            carpool.owner.id,
           );
           this.notificationService.publishNotification(notification);
           // update the carpool
@@ -222,7 +226,9 @@ export class SubmissionService {
         // push notification
         const notification = await this.notificationService.create(
           submissionToRemove.owner,
-          rejectNotificationMessage(carpool.owner),
+          rejectNotificationMessage(carpool.owner, carpool),
+          carpool.id,
+          carpool.owner.id,
         );
         this.notificationService.publishNotification(notification);
 

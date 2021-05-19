@@ -95,6 +95,11 @@ type Carpool {
   submissions: Submission!
 }
 
+type NotificationMeta {
+  carpoolId: Float!
+  userId: Float!
+}
+
 type Notification {
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -102,6 +107,7 @@ type Notification {
   id: Float!
   receiver: User!
   content: String!
+  meta: NotificationMeta!
 }
 
 type Connection {
@@ -382,7 +388,6 @@ input CreateCarpoolInput {
   departureLocationLatitude: String!
   destinationLocationLongitude: String!
   destinationLocationLatitude: String!
-  ownerId: Float!
 }
 
 input UpdateCarpoolInput {

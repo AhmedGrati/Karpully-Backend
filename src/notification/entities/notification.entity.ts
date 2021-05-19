@@ -1,7 +1,8 @@
-import { ObjectType, Field, Int, InputType } from '@nestjs/graphql';
-import { TimestampEntites } from '../../generics/timestamp.entity';
-import { User } from '../../user/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {ObjectType, Field, Int, InputType} from '@nestjs/graphql';
+import {TimestampEntites} from '../../generics/timestamp.entity';
+import {User} from '../../user/entities/user.entity';
+import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {NotificationMeta} from './meta';
 
 @ObjectType()
 @Entity()
@@ -19,4 +20,7 @@ export class Notification extends TimestampEntites {
   @Field()
   @Column()
   content: string;
+
+  @Field(() => NotificationMeta)
+  meta: NotificationMeta;
 }

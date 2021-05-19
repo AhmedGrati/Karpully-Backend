@@ -1,6 +1,6 @@
-import { Location } from './../../location/entities/location.entity';
-import { InputType, Int, Field } from '@nestjs/graphql';
-import { User } from '../../user/entities/user.entity';
+import {Location} from './../../location/entities/location.entity';
+import {InputType, Int, Field} from '@nestjs/graphql';
+import {User} from '../../user/entities/user.entity';
 
 @InputType()
 export class CreateCarpoolInput {
@@ -20,14 +20,11 @@ export class CreateCarpoolInput {
   departureLocationLongitude: string;
 
   @Field()
-  departureLocationLatitude: string
+  departureLocationLatitude: string;
 
   @Field()
-  destinationLocationLongitude: string
+  destinationLocationLongitude: string;
 
   @Field()
-  destinationLocationLatitude: string
-
-  @Field()
-  ownerId: number;
+  destinationLocationLatitude: string;
 }

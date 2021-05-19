@@ -18,10 +18,17 @@ export class NotificationService {
     private readonly notificationRepository: Repository<Notification>,
     @Inject('PUB_SUB') private readonly pubSub: PubSub,
   ) {}
-  async create(receiver: User, content: string): Promise<Notification> {
+  // user Id is the triggerer id
+  async create(
+    receiver: User,
+    content: string,
+    carpoolId: number,
+    userId: number,
+  ): Promise<Notification> {
     const notification = await this.notificationRepository.create();
     notification.content = content;
     notification.receiver = receiver;
+    notification.meta = {carpoolId, userId};
     return await this.notificationRepository.save(notification);
   }
 

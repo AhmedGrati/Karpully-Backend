@@ -1,6 +1,6 @@
-import { Location } from './../../location/entities/location.entity';
-import { ObjectType, Field, Int, InputType } from '@nestjs/graphql';
-import { Gov } from '../../gov/entities/gov.entity';
+import {Location} from './../../location/entities/location.entity';
+import {ObjectType, Field, Int, InputType} from '@nestjs/graphql';
+import {Gov} from '../../gov/entities/gov.entity';
 import {
   BeforeInsert,
   Check,
@@ -12,14 +12,14 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { City } from '../../city/entities/city.entity';
-import { User } from '../../user/entities/user.entity';
-import { Max, Min } from 'class-validator';
-import { TimestampEntites } from '../../generics/timestamp.entity';
-import { Submission } from '../../submission/entities/submission.entity';
-import { DatesOperations } from '../../utils/dates-operation';
-import { BadRequestException } from '@nestjs/common';
-import { DEPARTURE_DATE_ERROR_MESSAGE } from '../../utils/constants';
+import {City} from '../../city/entities/city.entity';
+import {User} from '../../user/entities/user.entity';
+import {Max, Min} from 'class-validator';
+import {TimestampEntites} from '../../generics/timestamp.entity';
+import {Submission} from '../../submission/entities/submission.entity';
+import {DatesOperations} from '../../utils/dates-operation';
+import {BadRequestException} from '@nestjs/common';
+import {DEPARTURE_DATE_ERROR_MESSAGE} from '../../utils/constants';
 
 /*
   constraints:
@@ -36,7 +36,7 @@ export class Carpool extends TimestampEntites {
   id: number;
 
   @Field((type) => Date)
-  @Column({ type: 'timestamptz' })
+  @Column({type: 'timestamptz'})
   departureDate: Date;
 
   @Field()
@@ -54,12 +54,15 @@ export class Carpool extends TimestampEntites {
   hasSmokePermission: boolean;
 
   @Field((type) => Location)
-  @ManyToOne(() => Location, (location) => location.departureCarpools)
+  @ManyToOne(() => Location, (location) => location.departureCarpools, {
+    eager: true,
+  })
   departureLocation: Location;
 
   @Field((type) => Location)
-
-  @ManyToOne(() => Location, (location) => location.destinationCarpools)
+  @ManyToOne(() => Location, (location) => location.destinationCarpools, {
+    eager: true,
+  })
   destinationLocation: Location;
 
   @Field((type) => User)
@@ -72,7 +75,6 @@ export class Carpool extends TimestampEntites {
   @Field((type) => Submission)
   @OneToMany((type) => Submission, (submission) => submission.carpool)
   submissions: Submission[];
-
 
   @BeforeInsert()
   checkDepartureDateValidity() {

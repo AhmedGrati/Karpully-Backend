@@ -54,8 +54,10 @@ describe('NotificationService', () => {
     expect(mockNotificationRepository.findOne).toBeCalled();
   });
   it('should create a notification', async () => {
-    expect(await service.create(receiver, content)).toBeDefined();
-    expect(await service.create(receiver, content)).toMatchObject(notification);
+    expect(await service.create(receiver, content, 1, 1)).toBeDefined();
+    expect(await service.create(receiver, content, 1, 1)).toMatchObject(
+      notification,
+    );
     expect(mockNotificationRepository.create).toBeCalled();
     expect(mockNotificationRepository.save).toBeCalled();
   });
