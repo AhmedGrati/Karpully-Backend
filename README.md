@@ -88,8 +88,7 @@ you should just change the "--type=start", and fit it to your needs.<br> 5. In
 application in a kubernetes environment run
 
 ```linux
-./k8
-s/run-stop.sh --type=start
+./k8s/run-stop.sh --type=start
 ```
 
 #### _It should be noted that test implementation is not ready._
