@@ -1,17 +1,25 @@
-import { ProfileImgUpload } from './../../profile-img-upload/entities/profile-img-upload.entity';
+import {ProfileImgUpload} from './../../profile-img-upload/entities/profile-img-upload.entity';
 import {
   BeforeInsert,
   BeforeUpdate,
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { Field, HideField, ID, InputType, Int, ObjectType } from '@nestjs/graphql';
-import { Gender } from './gender';
+import {
+  Field,
+  HideField,
+  ID,
+  InputType,
+  Int,
+  ObjectType,
+} from '@nestjs/graphql';
+import {Gender} from './gender';
 import * as bcrypt from 'bcrypt';
 import {
   IsEmail,
@@ -21,49 +29,51 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { UserRoleEnum } from './user-role.enum';
-import { Email } from '../../email/entities/email.entity';
-import { Logger } from '@nestjs/common';
-import { Carpool } from '../../carpool/entities/carpool.entity';
-import { TimestampEntites } from '../../generics/timestamp.entity';
-import { Submission } from '../../submission/entities/submission.entity';
-import { Notification } from '../../notification/entities/notification.entity';
-import { ConnectionHistoric } from '../../connection-historic/entities/connection-historic.entity';
+import {UserRoleEnum} from './user-role.enum';
+import {Email} from '../../email/entities/email.entity';
+import {Logger} from '@nestjs/common';
+import {Carpool} from '../../carpool/entities/carpool.entity';
+import {TimestampEntites} from '../../generics/timestamp.entity';
+import {Submission} from '../../submission/entities/submission.entity';
+import {Notification} from '../../notification/entities/notification.entity';
+import {ConnectionHistoric} from '../../connection-historic/entities/connection-historic.entity';
+import {Chat} from '../../chat/entities/chat.entity';
+import {Message} from '../../message/entities/message.entity';
 
 @Entity()
 @ObjectType()
 export class User extends TimestampEntites {
   @PrimaryGeneratedColumn()
-  @Field((type) => Int, { nullable: true })
+  @Field((type) => Int, {nullable: true})
   id: number;
 
-  @Column({ unique: true })
+  @Column({unique: true})
   @Field()
   username: string;
 
-  @Column({ nullable: true })
-  @Field({ nullable: true })
+  @Column({nullable: true})
+  @Field({nullable: true})
   firstname: string;
 
-  @Column({ nullable: true })
-  @Field({ nullable: true })
+  @Column({nullable: true})
+  @Field({nullable: true})
   lastname: string;
 
   @Field()
-  @Column({ default: false })
+  @Column({default: false})
   completedSignUp: boolean;
 
-  @Column({ nullable: true })
-  @Field({ nullable: true })
+  @Column({nullable: true})
+  @Field({nullable: true})
   age: number;
 
-  @Column({ default: 0.0 })
-  @Field({ nullable: true })
+  @Column({default: 0.0})
+  @Field({nullable: true})
   @Min(0)
   @Max(5)
   rate: number;
 
-  @Column({ unique: true })
+  @Column({unique: true})
   @Field()
   @IsEmail()
   email: string;
@@ -72,12 +82,12 @@ export class User extends TimestampEntites {
   @HideField()
   salt: string;
 
-  @Column({ nullable: true })
-  @Field({ nullable: true })
+  @Column({nullable: true})
+  @Field({nullable: true})
   localization: string;
 
-  @Column({ nullable: true })
-  @Field({ nullable: true })
+  @Column({nullable: true})
+  @Field({nullable: true})
   @IsPhoneNumber()
   telNumber: string;
 
@@ -85,8 +95,8 @@ export class User extends TimestampEntites {
   @HideField()
   password: string;
 
-  @Column('text', { array: true, default: null, nullable: true })
-  @Field(() => [String], { nullable: true })
+  @Column('text', {array: true, default: null, nullable: true})
+  @Field(() => [String], {nullable: true})
   authorities: string[];
 
   @Column({
@@ -99,42 +109,50 @@ export class User extends TimestampEntites {
   @Field((type) => [UserRoleEnum])
   roles: string[];
 
-  @Column({ nullable: true })
+  @Column({nullable: true})
   @Field((type) => Gender)
   gender: Gender;
 
-  @Column({ unique: true })
+  @Column({unique: true})
   @Field()
   lowerCasedUsername: string;
 
-  @Column({ default: false })
+  @Column({default: false})
   @Field()
   isConfirmed: boolean;
 
   @OneToMany(() => Email, (email) => email.sender)
-  @Field((type) => [Email], { nullable: true })
+  @Field((type) => [Email], {nullable: true})
   sentEmails: [Email];
 
   @OneToMany(() => Carpool, (carpool) => carpool.owner)
-  @Field((type) => [Carpool], { nullable: true })
+  @Field((type) => [Carpool], {nullable: true})
   carpools: Carpool[];
 
-  @Field((type) => [Submission], { nullable: true })
+  @Field((type) => [Submission], {nullable: true})
   @OneToMany((type) => Submission, (submission) => submission.owner)
   submissions: Submission[];
 
-  @Field((type) => [Notification], { nullable: true })
+  @Field((type) => [Notification], {nullable: true})
   @OneToMany((type) => Notification, (notification) => notification.receiver)
   notifications: Notification[];
 
-  @Field((type) => ConnectionHistoric, { nullable: true })
+  @Field((type) => ConnectionHistoric, {nullable: true})
   @OneToOne((type) => ConnectionHistoric, (historic) => historic.owner, {
     cascade: true,
   })
   historic: ConnectionHistoric;
 
-  @Field({ nullable: true })
-  @OneToOne(type => ProfileImgUpload, { eager: true })
+  @Field((type) => [Chat], {nullable: true})
+  @ManyToMany((type) => Chat, (chat) => chat.users)
+  chats: Chat[];
+
+  @Field((type) => [Message], {nullable: true})
+  @OneToMany((type) => Message, (message) => message.sender)
+  sentMessages: Message[];
+
+  @Field({nullable: true})
+  @OneToOne((type) => ProfileImgUpload, {eager: true})
   @JoinColumn()
   profileImage: ProfileImgUpload;
   @BeforeInsert()

@@ -1,7 +1,24 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import {ObjectType, Field, Int} from '@nestjs/graphql';
+import {Chat} from '../../chat/entities/chat.entity';
+import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {User} from '../../user/entities/user.entity';
 
 @ObjectType()
+@Entity()
 export class Message {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @Field()
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Field(() => Chat)
+  @ManyToOne(() => Chat, (chat) => chat.messages, {eager: true})
+  chat: Chat;
+
+  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.sentMessages, {eager: true})
+  sender: User;
+
+  @Field(() => Boolean)
+  @Column()
+  isRead: boolean;
 }

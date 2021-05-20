@@ -127,6 +127,19 @@ type ConnectionHistoric {
   owner: User!
 }
 
+type Message {
+  id: Float!
+  chat: Chat!
+  sender: User!
+  isRead: Boolean!
+}
+
+type Chat {
+  id: Float!
+  messages: [Message!]!
+  users: User!
+}
+
 type User {
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -151,6 +164,8 @@ type User {
   submissions: [Submission!]
   notifications: [Notification!]
   historic: ConnectionHistoric
+  chats: [Chat!]
+  sentMessages: [Message!]
   profileImage: ProfileImgUpload
 }
 
@@ -256,6 +271,8 @@ type Query {
   notification(id: Int!): Notification!
   notifications(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
   multiPointsDirection(pointsArray: MultiPointsDirectionInput!): Direction!
+  chat(id: Int!): Chat!
+  message(id: Int!): Message!
 }
 
 input Where {
@@ -324,6 +341,12 @@ type Mutation {
   rejectSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
   acceptSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
   removeSubmission(id: Int!): Submission!
+  createChat(createChatInput: CreateChatInput!): Chat!
+  updateChat(updateChatInput: UpdateChatInput!): Chat!
+  removeChat(id: Int!): Chat!
+  createMessage(createMessageInput: CreateMessageInput!): Message!
+  updateMessage(updateMessageInput: UpdateMessageInput!): Message!
+  removeMessage(id: Int!): Message!
 }
 
 input FirstStageDTOInput {
@@ -428,6 +451,28 @@ input CreateSubmissionInput {
 
 input UpdateSubmissionInput {
   carpoolId: Float
+  id: Int!
+}
+
+input CreateChatInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateChatInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateMessageInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateMessageInput {
+  """Example field (placeholder)"""
+  exampleField: Int
   id: Int!
 }
 
