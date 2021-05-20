@@ -11,12 +11,15 @@ import {Message} from './entities/message.entity';
 import {CreateMessageInput} from './dto/create-message.input';
 import {UpdateMessageInput} from './dto/update-message.input';
 import {Logger} from '@nestjs/common';
+import {Auth} from '../shared/decorators/auth.decorator';
+import {UserRoleEnum} from '../user/entities/user-role.enum';
 
 @Resolver(() => Message)
 export class MessageResolver {
   constructor(private readonly messageService: MessageService) {}
 
   @Mutation(() => Message)
+  @Auth(UserRoleEnum.USER)
   createMessage(
     @Args('createMessageInput') createMessageInput: CreateMessageInput,
   ) {
@@ -24,6 +27,7 @@ export class MessageResolver {
   }
 
   @Subscription(() => Message)
+  @Auth(UserRoleEnum.USER)
   message(@Args('userId') userId: number) {
     return this.messageService.message(userId);
   }
