@@ -84,7 +84,13 @@ query {
 
 where $MODE is in (test | prod | dev).<br> 4. To stop or restart the application
 you should just change the "--type=start", and fit it to your needs.<br> 5. In
-.env file, the HOST key should have 'postgres' as value.
+.env file, the HOST key should have 'postgres' as value. <br> 6. To run the
+application in a kubernetes environment run
+
+```linux
+./k8
+s/run-stop.sh --type=start
+```
 
 #### _It should be noted that test implementation is not ready._
 
