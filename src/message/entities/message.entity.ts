@@ -11,7 +11,7 @@ export class Message {
   id: number;
 
   @Field(() => Chat)
-  @ManyToOne(() => Chat, (chat) => chat.messages, {eager: true})
+  @ManyToOne(() => Chat, (chat) => chat.messages)
   chat: Chat;
 
   @Field(() => User)
@@ -19,6 +19,10 @@ export class Message {
   sender: User;
 
   @Field(() => Boolean)
-  @Column()
+  @Column({default: false})
   isRead: boolean;
+
+  @Field()
+  @Column({nullable: false})
+  content: string;
 }

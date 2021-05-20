@@ -132,12 +132,13 @@ type Message {
   chat: Chat!
   sender: User!
   isRead: Boolean!
+  content: String!
 }
 
 type Chat {
   id: Float!
-  messages: [Message!]!
-  users: User!
+  messages: [Message!]
+  users: [User!]!
 }
 
 type User {
@@ -272,7 +273,6 @@ type Query {
   notifications(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
   multiPointsDirection(pointsArray: MultiPointsDirectionInput!): Direction!
   chat(id: Int!): Chat!
-  message(id: Int!): Message!
 }
 
 input Where {
@@ -342,11 +342,7 @@ type Mutation {
   acceptSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
   removeSubmission(id: Int!): Submission!
   createChat(createChatInput: CreateChatInput!): Chat!
-  updateChat(updateChatInput: UpdateChatInput!): Chat!
-  removeChat(id: Int!): Chat!
   createMessage(createMessageInput: CreateMessageInput!): Message!
-  updateMessage(updateMessageInput: UpdateMessageInput!): Message!
-  removeMessage(id: Int!): Message!
 }
 
 input FirstStageDTOInput {
@@ -455,27 +451,16 @@ input UpdateSubmissionInput {
 }
 
 input CreateChatInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdateChatInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  userIds: [Float!]!
 }
 
 input CreateMessageInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdateMessageInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  chatId: Float!
+  senderId: Float!
+  content: String!
 }
 
 type Subscription {
   notification(userId: Float!): Notification!
+  message(userId: Float!): Message!
 }

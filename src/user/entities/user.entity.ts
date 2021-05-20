@@ -144,8 +144,7 @@ export class User extends TimestampEntites {
   historic: ConnectionHistoric;
 
   @Field((type) => [Chat], {nullable: true})
-  @ManyToMany((type) => Chat, (chat) => chat.users)
-  chats: Chat[];
+  chats?: Chat[];
 
   @Field((type) => [Message], {nullable: true})
   @OneToMany((type) => Message, (message) => message.sender)
