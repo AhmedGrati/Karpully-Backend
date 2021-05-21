@@ -1,6 +1,6 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ChatResolver } from './chat.resolver';
-import { ChatService } from './chat.service';
+import {Test, TestingModule} from '@nestjs/testing';
+import {ChatResolver} from './chat.resolver';
+import {ChatService} from './chat.service';
 
 describe('ChatResolver', () => {
   let resolver: ChatResolver;
@@ -8,7 +8,10 @@ describe('ChatResolver', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [ChatResolver, ChatService],
-    }).compile();
+    })
+      .overrideProvider(ChatService)
+      .useValue({})
+      .compile();
 
     resolver = module.get<ChatResolver>(ChatResolver);
   });
