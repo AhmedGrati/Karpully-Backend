@@ -141,6 +141,12 @@ type Chat {
   users: [User!]!
 }
 
+type Invitation {
+  id: Float!
+  sender: User!
+  receiver: User!
+}
+
 type User {
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -168,6 +174,9 @@ type User {
   chats: [Chat!]
   sentMessages: [Message!]
   profileImage: ProfileImgUpload
+  friends: [User!]
+  sentInvitations: Invitation!
+  receivedInvitations: Invitation!
 }
 
 enum UserRoleEnum {
@@ -273,6 +282,7 @@ type Query {
   notifications(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
   multiPointsDirection(pointsArray: MultiPointsDirectionInput!): Direction!
   chat(id: Int!): Chat!
+  invitation(id: Int!): Invitation!
 }
 
 input Where {
@@ -343,6 +353,9 @@ type Mutation {
   removeSubmission(id: Int!): Submission!
   createChat(createChatInput: CreateChatInput!): Chat!
   createMessage(createMessageInput: CreateMessageInput!): Message!
+  createInvitation(createInvitationInput: CreateInvitationInput!): Invitation!
+  updateInvitation(updateInvitationInput: UpdateInvitationInput!): Invitation!
+  removeInvitation(id: Int!): Invitation!
 }
 
 input FirstStageDTOInput {
@@ -458,6 +471,17 @@ input CreateMessageInput {
   chatId: Float!
   senderId: Float!
   content: String!
+}
+
+input CreateInvitationInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateInvitationInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
 
 type Subscription {
