@@ -5,6 +5,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   OneToMany,
   OneToOne,
@@ -154,6 +155,12 @@ export class User extends TimestampEntites {
   @OneToOne((type) => ProfileImgUpload, {eager: true})
   @JoinColumn()
   profileImage: ProfileImgUpload;
+
+  @Field({nullable: true})
+  @ManyToMany(() => User, (user) => user.friends)
+  @JoinTable()
+  friends: Promise<User[]>;
+
   @BeforeInsert()
   async hashPassword() {
     this.salt = await bcrypt.genSalt();

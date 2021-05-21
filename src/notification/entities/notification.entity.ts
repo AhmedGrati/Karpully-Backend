@@ -22,5 +22,6 @@ export class Notification extends TimestampEntites {
   content: string;
 
   @Field(() => NotificationMeta)
+  @Column((type) => NotificationMeta)
   meta: NotificationMeta;
 }
