@@ -27,7 +27,6 @@ export class MessageResolver {
   }
 
   @Subscription(() => Message)
-  @Auth(UserRoleEnum.USER)
   message(@Args('userId') userId: number) {
     return this.messageService.message(userId);
   }
