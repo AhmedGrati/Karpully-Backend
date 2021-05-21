@@ -3,9 +3,9 @@ import {Column} from 'typeorm';
 
 @ObjectType()
 export class NotificationMeta {
-  @Field()
-  @Column()
-  carpoolId: number;
+  @Field({nullable: true})
+  @Column({nullable: true})
+  carpoolId?: number;
 
   @Field()
   @Column()

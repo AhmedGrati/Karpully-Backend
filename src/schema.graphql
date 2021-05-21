@@ -96,7 +96,7 @@ type Carpool {
 }
 
 type NotificationMeta {
-  carpoolId: Float!
+  carpoolId: Float
   userId: Float!
 }
 
@@ -145,6 +145,13 @@ type Invitation {
   id: Float!
   sender: User!
   receiver: User!
+  status: InvitationStatusEnum!
+}
+
+enum InvitationStatusEnum {
+  ACCEPTED
+  REJECTED
+  PENDING
 }
 
 type User {
@@ -474,13 +481,11 @@ input CreateMessageInput {
 }
 
 input CreateInvitationInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  receiverId: Float!
 }
 
 input UpdateInvitationInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  receiverId: Float
   id: Int!
 }
 

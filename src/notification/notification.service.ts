@@ -22,8 +22,8 @@ export class NotificationService {
   async create(
     receiver: User,
     content: string,
-    carpoolId: number,
     userId: number,
+    carpoolId?: number,
   ): Promise<Notification> {
     const notification = await this.notificationRepository.create();
     notification.content = content;

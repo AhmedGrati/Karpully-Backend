@@ -42,3 +42,4 @@ export const WRONG_COUNTRY_NAME_ERROR_MESSAGE: string =
 export const FAILURE_UPON_PROFULE_IMAGE_UPDATE: string =
   'Failed to update user Profile Image.';
 export const MESSAGE_BASE_TOPIC_NAME: string = 'MESSAGE_QUEUE_';
+export const INVITATION_ERROR_MESSAGE: string = 'A User cannot invite himself!';
