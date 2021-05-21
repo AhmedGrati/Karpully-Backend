@@ -128,6 +128,9 @@ type ConnectionHistoric {
 }
 
 type Message {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
   id: Float!
   chat: Chat!
   sender: User!
@@ -136,12 +139,18 @@ type Message {
 }
 
 type Chat {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
   id: Float!
   messages: [Message!]
   users: [User!]!
 }
 
 type Invitation {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
   id: Float!
   sender: User!
   receiver: User!
@@ -289,7 +298,6 @@ type Query {
   notifications(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
   multiPointsDirection(pointsArray: MultiPointsDirectionInput!): Direction!
   chat(id: Int!): Chat!
-  invitation(id: Int!): Invitation!
 }
 
 input Where {
@@ -361,8 +369,7 @@ type Mutation {
   createChat(createChatInput: CreateChatInput!): Chat!
   createMessage(createMessageInput: CreateMessageInput!): Message!
   createInvitation(createInvitationInput: CreateInvitationInput!): Invitation!
-  updateInvitation(updateInvitationInput: UpdateInvitationInput!): Invitation!
-  removeInvitation(id: Int!): Invitation!
+  manageInvitation(action: String!, id: Float!): Invitation!
 }
 
 input FirstStageDTOInput {
@@ -482,11 +489,6 @@ input CreateMessageInput {
 
 input CreateInvitationInput {
   receiverId: Float!
-}
-
-input UpdateInvitationInput {
-  receiverId: Float
-  id: Int!
 }
 
 type Subscription {

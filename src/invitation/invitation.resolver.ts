@@ -7,6 +7,7 @@ import {Auth} from '../shared/decorators/auth.decorator';
 import {UserRoleEnum} from '../user/entities/user-role.enum';
 import {CurrentUser} from '../shared/decorators/current-user.decorator';
 import {User} from '../user/entities/user.entity';
+import {InvitationActionEnum} from './dto/invitation-action.enum';
 
 @Resolver(() => Invitation)
 export class InvitationResolver {
@@ -21,28 +22,37 @@ export class InvitationResolver {
     return this.invitationService.create(createInvitationInput, owner);
   }
 
-  @Query(() => [Invitation], {name: 'invitation'})
-  findAll() {
-    return this.invitationService.findAll();
-  }
-
-  @Query(() => Invitation, {name: 'invitation'})
-  findOne(@Args('id', {type: () => Int}) id: number) {
-    return this.invitationService.findOne(id);
-  }
-
   @Mutation(() => Invitation)
-  updateInvitation(
-    @Args('updateInvitationInput') updateInvitationInput: UpdateInvitationInput,
+  @Auth(UserRoleEnum.USER)
+  manageInvitation(
+    @Args('id') invitationId: number,
+    @Args('action') action: InvitationActionEnum,
+    @CurrentUser() owner: User,
   ) {
-    return this.invitationService.update(
-      updateInvitationInput.id,
-      updateInvitationInput,
-    );
+    return this.invitationService.manageInvitation(owner, invitationId, action);
   }
+  // @Query(() => [Invitation], {name: 'invitation'})
+  // findAll() {
+  //   return this.invitationService.findAll();
+  // }
 
-  @Mutation(() => Invitation)
-  removeInvitation(@Args('id', {type: () => Int}) id: number) {
-    return this.invitationService.remove(id);
-  }
+  // @Query(() => Invitation, {name: 'invitation'})
+  // findOne(@Args('id', {type: () => Int}) id: number) {
+  //   return this.invitationService.findOne(id);
+  // }
+
+  // @Mutation(() => Invitation)
+  // updateInvitation(
+  //   @Args('updateInvitationInput') updateInvitationInput: UpdateInvitationInput,
+  // ) {
+  //   return this.invitationService.update(
+  //     updateInvitationInput.id,
+  //     updateInvitationInput,
+  //   );
+  // }
+
+  // @Mutation(() => Invitation)
+  // removeInvitation(@Args('id', {type: () => Int}) id: number) {
+  //   return this.invitationService.remove(id);
+  // }
 }

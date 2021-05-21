@@ -10,10 +10,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import {User} from '../../user/entities/user.entity';
+import {TimestampEntites} from '../../generics/timestamp.entity';
 
 @ObjectType()
 @Entity()
-export class Chat {
+export class Chat extends TimestampEntites {
   @Field()
   @PrimaryGeneratedColumn()
   id: number;
