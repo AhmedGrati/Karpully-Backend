@@ -108,6 +108,12 @@ type Notification {
   receiver: User!
   content: String!
   meta: NotificationMeta!
+  type: NotificationTypeEnum!
+}
+
+enum NotificationTypeEnum {
+  SUBMISSION
+  INVITATION
 }
 
 type Connection {

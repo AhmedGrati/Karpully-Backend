@@ -2,6 +2,7 @@ import {Test, TestingModule} from '@nestjs/testing';
 import {getRepositoryToken} from '@nestjs/typeorm';
 import {PubSub} from 'graphql-subscriptions';
 import {User} from '../user/entities/user.entity';
+import {NotificationTypeEnum} from './entities/notification-type.enum';
 import {Notification} from './entities/notification.entity';
 import {NotificationService} from './notification.service';
 
@@ -54,10 +55,24 @@ describe('NotificationService', () => {
     expect(mockNotificationRepository.findOne).toBeCalled();
   });
   it('should create a notification', async () => {
-    expect(await service.create(receiver, content, 1, 1)).toBeDefined();
-    expect(await service.create(receiver, content, 1, 1)).toMatchObject(
-      notification,
-    );
+    expect(
+      await service.create(
+        receiver,
+        content,
+        1,
+        NotificationTypeEnum.SUBMISSION,
+        1,
+      ),
+    ).toBeDefined();
+    expect(
+      await service.create(
+        receiver,
+        content,
+        1,
+        NotificationTypeEnum.SUBMISSION,
+        1,
+      ),
+    ).toMatchObject(notification);
     expect(mockNotificationRepository.create).toBeCalled();
     expect(mockNotificationRepository.save).toBeCalled();
   });

@@ -36,6 +36,7 @@ import {
 } from '../utils/notification-messages';
 import {Notification} from '../notification/entities/notification.entity';
 import {PubSub} from 'graphql-subscriptions';
+import {NotificationTypeEnum} from '../notification/entities/notification-type.enum';
 
 @Injectable()
 export class SubmissionService {
@@ -66,8 +67,9 @@ export class SubmissionService {
         const notification = await this.notificationService.create(
           carpool.owner,
           submitNotificationMessage(owner, carpool),
-          carpoolId,
           owner.id,
+          NotificationTypeEnum.SUBMISSION,
+          carpoolId,
         );
         this.notificationService.publishNotification(notification);
         return createdSubmission;
@@ -187,8 +189,9 @@ export class SubmissionService {
           const notification = await this.notificationService.create(
             submission.owner,
             acceptNotificationMessage(carpool.owner, carpool),
-            carpool.id,
             carpool.owner.id,
+            NotificationTypeEnum.SUBMISSION,
+            carpool.id,
           );
           this.notificationService.publishNotification(notification);
           // update the carpool
@@ -227,8 +230,9 @@ export class SubmissionService {
         const notification = await this.notificationService.create(
           submissionToRemove.owner,
           rejectNotificationMessage(carpool.owner, carpool),
-          carpool.id,
           carpool.owner.id,
+          NotificationTypeEnum.SUBMISSION,
+          carpool.id,
         );
         this.notificationService.publishNotification(notification);
 

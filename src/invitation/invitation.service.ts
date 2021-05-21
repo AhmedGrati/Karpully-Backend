@@ -26,6 +26,7 @@ import {
 } from '../utils/notification-messages';
 import {InvitationStatusEnum} from './entities/invitation-status.enum';
 import {InvitationActionEnum} from './dto/invitation-action.enum';
+import {NotificationTypeEnum} from '../notification/entities/notification-type.enum';
 
 @Injectable()
 export class InvitationService {
@@ -65,6 +66,7 @@ export class InvitationService {
       receiver,
       sendInvitationNotificationMessage(owner),
       owner.id,
+      NotificationTypeEnum.INVITATION,
     );
     this.notificationService.publishNotification(notification);
   }
@@ -128,6 +130,7 @@ export class InvitationService {
       invitation.sender,
       acceptInvitationNotificationMessage(receiver),
       receiver.id,
+      NotificationTypeEnum.INVITATION,
     );
 
     // add the sender of the invitation as a friend of receiver
