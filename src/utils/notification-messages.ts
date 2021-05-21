@@ -53,3 +53,12 @@ export function rejectNotificationMessage(
     triggerer.id
   }) Rejects Your Submission To The ${carpoolNotificationPart(carpool)}`;
 }
+
+export function sendInvitationNotificationMessage(triggerer: User): string {
+  const first = triggerer.gender === Gender.MALE ? 'Mr' : 'Mrs';
+  return `[${first} ${triggerer.firstname} ${triggerer.lastname}](/user/${triggerer.id}) Sent you a friend request.`;
+}
+export function acceptInvitationNotificationMessage(triggerer: User): string {
+  const first = triggerer.gender === Gender.MALE ? 'Mr' : 'Mrs';
+  return `[${first} ${triggerer.firstname} ${triggerer.lastname}](/user/${triggerer.id}) Accepted your friend request.`;
+}

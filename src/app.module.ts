@@ -29,6 +29,7 @@ import { DirectionModule } from './direction/direction.module';
 import { ProfileImgUploadModule } from './profile-img-upload/profile-img-upload.module';
 import { ChatModule } from './chat/chat.module';
 import { MessageModule } from './message/message.module';
+import { InvitationModule } from './invitation/invitation.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { MessageModule } from './message/message.module';
     ProfileImgUploadModule,
     ChatModule,
     MessageModule,
+    InvitationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

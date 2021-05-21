@@ -5,6 +5,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   OneToMany,
   OneToOne,
@@ -39,6 +40,7 @@ import {Notification} from '../../notification/entities/notification.entity';
 import {ConnectionHistoric} from '../../connection-historic/entities/connection-historic.entity';
 import {Chat} from '../../chat/entities/chat.entity';
 import {Message} from '../../message/entities/message.entity';
+import {Invitation} from '../../invitation/entities/invitation.entity';
 
 @Entity()
 @ObjectType()
@@ -154,6 +156,20 @@ export class User extends TimestampEntites {
   @OneToOne((type) => ProfileImgUpload, {eager: true})
   @JoinColumn()
   profileImage: ProfileImgUpload;
+
+  @Field(() => [User], {nullable: true})
+  @ManyToMany(() => User, (user) => user.friends)
+  @JoinTable()
+  friends: Promise<User[]>;
+
+  @Field(() => Invitation)
+  @OneToMany(() => Invitation, (invitation) => invitation.sender)
+  sentInvitations;
+
+  @Field(() => Invitation)
+  @OneToMany(() => Invitation, (invitation) => invitation.receiver)
+  receivedInvitations;
+
   @BeforeInsert()
   async hashPassword() {
     this.salt = await bcrypt.genSalt();

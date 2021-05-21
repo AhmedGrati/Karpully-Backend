@@ -10,6 +10,7 @@ import {PubSub} from 'graphql-subscriptions';
 import {Pagination} from '../utils/pagination';
 import {PaginationInput} from '../generics/pagination.input';
 import {PaginatedNotification} from './entities/paginatedNotification.entity';
+import {NotificationTypeEnum} from './entities/notification-type.enum';
 
 @Injectable()
 export class NotificationService {
@@ -22,12 +23,14 @@ export class NotificationService {
   async create(
     receiver: User,
     content: string,
-    carpoolId: number,
     userId: number,
+    type: NotificationTypeEnum,
+    carpoolId?: number,
   ): Promise<Notification> {
     const notification = await this.notificationRepository.create();
     notification.content = content;
     notification.receiver = receiver;
+    notification.type = type;
     notification.meta = {carpoolId, userId};
     return await this.notificationRepository.save(notification);
   }
