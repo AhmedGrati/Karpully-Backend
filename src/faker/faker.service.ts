@@ -20,8 +20,9 @@ export class FakerService implements OnApplicationBootstrap {
     await this.fakerUserService.seed();
     await this.fakerGovService.seed();
     await this.fakerCityService.seed();
-    await this.fakerCarpoolService.seed();
     await this.fakerAddressService.seed();
     await this.fakerLocationService.seed();
+    await this.fakerCarpoolService.seed();
+
   }
 }

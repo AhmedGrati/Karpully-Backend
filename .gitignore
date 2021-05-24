@@ -12,6 +12,7 @@ lerna-debug.log*
 
 #images
 /src/images
+!/src/images/default-user.png
 # OS
 .DS_Store
 

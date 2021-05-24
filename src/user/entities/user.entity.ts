@@ -8,6 +8,7 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  ManyToOne
 } from 'typeorm';
 
 import { Field, HideField, ID, InputType, Int, ObjectType } from '@nestjs/graphql';
@@ -134,7 +135,7 @@ export class User extends TimestampEntites {
   historic: ConnectionHistoric;
 
   @Field({ nullable: true })
-  @OneToOne(type => ProfileImgUpload, { eager: true })
+  @ManyToOne(() => ProfileImgUpload, (img) => img.users, { eager: true })
   @JoinColumn()
   profileImage: ProfileImgUpload;
   @BeforeInsert()

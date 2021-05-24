@@ -1,9 +1,14 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "../../user/entities/user.entity";
+import { Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 @ObjectType()
 export class ProfileImgUpload {
+    constructor(id: number, name: string) {
+        this.id = id;
+        this.name = name;
+    }
     @PrimaryGeneratedColumn()
     @Field()
     id: number;
@@ -11,4 +16,7 @@ export class ProfileImgUpload {
     @Field()
     @Column()
     name: string;
+
+    @OneToMany(() => User, (user) => user.profileImage)
+    users: User[]
 }

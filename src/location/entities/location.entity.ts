@@ -84,7 +84,7 @@ export class Location {
   @OneToMany(() => Carpool, carpool => carpool.departureLocation)
   departureCarpools: Carpool[];
   @OneToMany(() => Carpool, carpool => carpool.destinationLocation)
-  destinationCarpools: Location[];
+  destinationCarpools: Carpool[];
   @BeforeInsert()
   checkInformationRelativityToTunisia() {
     const lat = this.lat
