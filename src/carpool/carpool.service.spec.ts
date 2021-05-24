@@ -1,19 +1,20 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from '../user/entities/user.entity';
-import { CaslAbilityFactory, Subjects } from '../casl/casl-ability.factory';
-import { CityService } from '../city/city.service';
-import { CarpoolService } from './carpool.service';
-import { Carpool } from './entities/carpool.entity';
-import { Ability } from '@casl/ability';
-import { PaginatedCarpool } from './entities/paginatedCarpool.entity';
-import { CreateCarpoolInput } from './dto/create-carpool.input';
-import { City } from '../city/entities/city.entity';
-import { PaginationInput } from 'src/generics/pagination.input';
-import { Where } from './dto/where.input';
-import { Logger, UnauthorizedException } from '@nestjs/common';
-import { CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE } from '../utils/constants';
-
+import {Test, TestingModule} from '@nestjs/testing';
+import {getRepositoryToken} from '@nestjs/typeorm';
+import {User} from '../user/entities/user.entity';
+import {CaslAbilityFactory, Subjects} from '../casl/casl-ability.factory';
+import {CityService} from '../city/city.service';
+import {CarpoolService} from './carpool.service';
+import {Carpool} from './entities/carpool.entity';
+import {Ability} from '@casl/ability';
+import {PaginatedCarpool} from './entities/paginatedCarpool.entity';
+import {CreateCarpoolInput} from './dto/create-carpool.input';
+import {City} from '../city/entities/city.entity';
+import {PaginationInput} from '../generics/pagination.input';
+import {Where} from './dto/where.input';
+import {Logger, UnauthorizedException} from '@nestjs/common';
+import {CASL_RESSOURCE_FORBIDDEN_ERROR_MESSAGE} from '../utils/constants';
+import {LocationService} from '../location/location.service';
+import {Location} from '../location/entities/location.entity';
 describe('CarpoolService', () => {
   let service: CarpoolService;
   const carpool = new Carpool();
@@ -34,6 +35,9 @@ describe('CarpoolService', () => {
   };
   const where: Where = {
     id: 1,
+  };
+  const mockLocationService = {
+    reverseSearchLocation: jest.fn().mockResolvedValue(new Location()),
   };
 
   const mockCarpoolRepository = {
@@ -61,10 +65,13 @@ describe('CarpoolService', () => {
         },
         CityService,
         CaslAbilityFactory,
+        LocationService,
       ],
     })
       .overrideProvider(CityService)
       .useValue(mockCityService)
+      .overrideProvider(LocationService)
+      .useValue(mockLocationService)
       .overrideProvider(CaslAbilityFactory)
       .useValue(mockCaslFactory)
       .compile();
@@ -83,10 +90,11 @@ describe('CarpoolService', () => {
   });
 
   it('should create a carpool', async () => {
-    expect(await service.create(createCarpoolInput)).toEqual(carpool);
+    expect(await service.create(new User(), createCarpoolInput)).toEqual(
+      carpool,
+    );
     expect(mockCarpoolRepository.create).toBeCalled();
     expect(mockCarpoolRepository.save).toBeCalled();
-    expect(mockCityService.findOne).toBeCalled();
   });
 
   it('should find a carpool with the specific id', async () => {

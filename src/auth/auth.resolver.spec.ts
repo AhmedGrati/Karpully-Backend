@@ -10,6 +10,7 @@ describe('AuthResolver', () => {
   let resolver: AuthResolver;
   const token: TokenModel = {
     access_token: 'access_token',
+    refresh_token: 'refresh_token',
     user: new User(),
   };
   const credentialsInput: CredentialsInput = {

@@ -11,6 +11,8 @@ import {Notification} from './entities/notification.entity';
 import {Logger} from '@nestjs/common';
 import {PaginationInput} from '../generics/pagination.input';
 import {PaginatedNotification} from './entities/paginatedNotification.entity';
+import {Auth} from '../shared/decorators/auth.decorator';
+import {UserRoleEnum} from '../user/entities/user-role.enum';
 
 @Resolver(() => Notification)
 export class NotificationResolver {

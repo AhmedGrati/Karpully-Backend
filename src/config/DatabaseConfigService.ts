@@ -37,6 +37,7 @@ class DatabaseConfigService {
       entities: [entitiesPath + '/**/*.entity{.ts,.js}'],
       // logging:true,
       synchronize: true,
+      keepConnectionAlive: true,
     };
   }
 }

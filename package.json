@@ -101,6 +101,7 @@
       "json",
       "ts"
     ],
+    "collectCoverage":true,
     "setupFilesAfterEnv": [
       "jest-chain"
     ],
@@ -112,6 +113,7 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
+    "coverageReporters":["lcov"],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   },

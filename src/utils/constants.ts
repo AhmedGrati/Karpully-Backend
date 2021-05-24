@@ -27,10 +27,27 @@ export const UNAUTHORIZED_SUBMISSION_ERROR_MESSAGE: String =
 export const BASE_TOPIC_NAME: string = 'User_';
 export const EMAIL_NOT_FOUND_ERROR_MESSAGE: String = 'Invalid Email!';
 export const EMAIL_EXPIRED_ERROR_MESSAGE: String = 'Email Expired!';
-export const LOCATION_SAVE_ISSUE_ERROR_MESSAGE: string = 'Location can not be saved'
-export const ADDRESS_SAVE_ISSUE_ERROR_MESSAGE: string = 'Address can not be saved'
-export const LOCATION_API_RESPONSE_ERROR: string = "LocationIQ API has issues or might be down, Please check their status";
-export const LONGITUDE_OUT_OF_BORDER_MESSAGE: string = "Please provide a longitiude within the bounding box of Tunisia";
-export const LATITUDE_OUT_OF_BORDER_MESSAGE: string = "Please provide a latitude within the bounding box of Tunisia";
-export const WRONG_COUNTRY_NAME_ERROR_MESSAGE: string = "Only Tunisian locations are supported at this point. Please use Tunisia/TN in your relevent inputs"
-export const FAILURE_UPON_PROFULE_IMAGE_UPDATE: string = "Failed to update user Profile Image."
+export const LOCATION_SAVE_ISSUE_ERROR_MESSAGE: string =
+  'Location can not be saved';
+export const ADDRESS_SAVE_ISSUE_ERROR_MESSAGE: string =
+  'Address can not be saved';
+export const LOCATION_API_RESPONSE_ERROR: string =
+  'LocationIQ API has issues or might be down, Please check their status';
+export const LONGITUDE_OUT_OF_BORDER_MESSAGE: string =
+  'Please provide a longitiude within the bounding box of Tunisia';
+export const LATITUDE_OUT_OF_BORDER_MESSAGE: string =
+  'Please provide a latitude within the bounding box of Tunisia';
+export const WRONG_COUNTRY_NAME_ERROR_MESSAGE: string =
+  'Only Tunisian locations are supported at this point. Please use Tunisia/TN in your relevent inputs';
+export const FAILURE_UPON_PROFULE_IMAGE_UPDATE: string =
+  'Failed to update user Profile Image.';
+export const MESSAGE_BASE_TOPIC_NAME: string = 'MESSAGE_QUEUE_';
+export const INVITATION_ERROR_MESSAGE: string = 'A User cannot invite himself!';
+export const REDUNDANT_INVITATION_ERROR_MESSAGE: string =
+  'The invitation between these two users already exists.';
+
+export const INVITATION_NOT_FOUND_ERROR_MESSAGE: String =
+  'Invitation Not Found!';
+export const ACTION_NOT_FOUND: string = `Action Is not valid: try 'accept' or 'reject'`;
+export const INVITATION_MANAGING_ERROR_MESSAGE: string = `A User cannot reject or accept this invitation because he is its owner.`;
+export const INVITATION_ALREADY_MANAGED_ERROR_MESSAGE: string = `This invitation is already accepted or refused!`;

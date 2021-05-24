@@ -5,13 +5,22 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   ManyToOne
 } from 'typeorm';
 
-import { Field, HideField, ID, InputType, Int, ObjectType } from '@nestjs/graphql';
+import {
+  Field,
+  HideField,
+  ID,
+  InputType,
+  Int,
+  ObjectType,
+} from '@nestjs/graphql';
 import { Gender } from './gender';
 import * as bcrypt from 'bcrypt';
 import {
@@ -30,6 +39,9 @@ import { TimestampEntites } from '../../generics/timestamp.entity';
 import { Submission } from '../../submission/entities/submission.entity';
 import { Notification } from '../../notification/entities/notification.entity';
 import { ConnectionHistoric } from '../../connection-historic/entities/connection-historic.entity';
+import { Chat } from '../../chat/entities/chat.entity';
+import { Message } from '../../message/entities/message.entity';
+import { Invitation } from '../../invitation/entities/invitation.entity';
 
 @Entity()
 @ObjectType()
@@ -138,6 +150,27 @@ export class User extends TimestampEntites {
   @ManyToOne(() => ProfileImgUpload, (img) => img.users, { eager: true })
   @JoinColumn()
   profileImage: ProfileImgUpload;
+
+  @Field((type) => [Chat], { nullable: true })
+  chats?: Chat[];
+
+  @Field((type) => [Message], { nullable: true })
+  @OneToMany((type) => Message, (message) => message.sender)
+  sentMessages: Message[];
+
+  @Field(() => [User], { nullable: true })
+  @ManyToMany(() => User, (user) => user.friends)
+  @JoinTable()
+  friends: Promise<User[]>;
+
+  @Field(() => Invitation)
+  @OneToMany(() => Invitation, (invitation) => invitation.sender)
+  sentInvitations;
+
+  @Field(() => Invitation)
+  @OneToMany(() => Invitation, (invitation) => invitation.receiver)
+  receivedInvitations;
+
   @BeforeInsert()
   async hashPassword() {
     this.salt = await bcrypt.genSalt();

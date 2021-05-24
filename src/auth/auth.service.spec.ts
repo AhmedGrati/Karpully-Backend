@@ -1,6 +1,9 @@
 import {JwtService} from '@nestjs/jwt';
 import {Test, TestingModule} from '@nestjs/testing';
 import {getRepositoryToken} from '@nestjs/typeorm';
+import {RedisCacheService} from '../redis-cache/redis-cache.service';
+import {ConnectionHistoricService} from '../connection-historic/connection-historic.service';
+import {ConnectionService} from '../connection/connection.service';
 import {User} from '../user/entities/user.entity';
 import {AuthService} from './auth.service';
 
@@ -15,6 +18,9 @@ describe('AuthService', () => {
     }),
   };
   const mockJwtService = {};
+  const mockConnectionService = {};
+  const mockConnectionHistoricService = {};
+  const mockRedisCacheService = {};
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -24,10 +30,19 @@ describe('AuthService', () => {
           useValue: mockUserRepository,
         },
         JwtService,
+        ConnectionService,
+        ConnectionHistoricService,
+        RedisCacheService,
       ],
     })
       .overrideProvider(JwtService)
       .useValue(mockJwtService)
+      .overrideProvider(ConnectionService)
+      .useValue(mockConnectionService)
+      .overrideProvider(ConnectionHistoricService)
+      .useValue(mockConnectionHistoricService)
+      .overrideProvider(RedisCacheService)
+      .useValue(mockRedisCacheService)
       .compile();
 
     service = module.get<AuthService>(AuthService);

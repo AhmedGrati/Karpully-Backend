@@ -27,6 +27,10 @@ import { ConnectionHistoricModule } from './connection-historic/connection-histo
 import { ConnectionModule } from './connection/connection.module';
 import { DirectionModule } from './direction/direction.module';
 import { ProfileImgUploadModule } from './profile-img-upload/profile-img-upload.module';
+import { ChatModule } from './chat/chat.module';
+import { MessageModule } from './message/message.module';
+import { InvitationModule } from './invitation/invitation.module';
+
 @Module({
   imports: [
     UserModule,
@@ -58,6 +62,9 @@ import { ProfileImgUploadModule } from './profile-img-upload/profile-img-upload.
     ConnectionModule,
     DirectionModule,
     ProfileImgUploadModule,
+    ChatModule,
+    MessageModule,
+    InvitationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

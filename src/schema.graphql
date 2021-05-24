@@ -95,6 +95,11 @@ type Carpool {
   submissions: Submission!
 }
 
+type NotificationMeta {
+  carpoolId: Float
+  userId: Float!
+}
+
 type Notification {
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -102,6 +107,13 @@ type Notification {
   id: Float!
   receiver: User!
   content: String!
+  meta: NotificationMeta!
+  type: NotificationTypeEnum!
+}
+
+enum NotificationTypeEnum {
+  SUBMISSION
+  INVITATION
 }
 
 type Connection {
@@ -119,6 +131,42 @@ type ConnectionHistoric {
   id: Float!
   connections: [Connection!]!
   owner: User!
+}
+
+type Message {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  id: Float!
+  chat: Chat!
+  sender: User!
+  isRead: Boolean!
+  content: String!
+}
+
+type Chat {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  id: Float!
+  messages: [Message!]
+  users: [User!]!
+}
+
+type Invitation {
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime!
+  id: Float!
+  sender: User!
+  receiver: User!
+  status: InvitationStatusEnum!
+}
+
+enum InvitationStatusEnum {
+  ACCEPTED
+  REJECTED
+  PENDING
 }
 
 type User {
@@ -146,6 +194,11 @@ type User {
   notifications: [Notification!]
   historic: ConnectionHistoric
   profileImage: ProfileImgUpload
+  chats: [Chat!]
+  sentMessages: [Message!]
+  friends: [User!]
+  sentInvitations: Invitation!
+  receivedInvitations: Invitation!
 }
 
 enum UserRoleEnum {
@@ -251,6 +304,7 @@ type Query {
   notification(id: Int!): Notification!
   notifications(paginationInput: PaginationInput!, userId: Float!): PaginatedNotification!
   multiPointsDirection(pointsArray: MultiPointsDirectionInput!): Direction!
+  chat(id: Int!): Chat!
 }
 
 input CarpoolsProximityInput {
@@ -330,6 +384,10 @@ type Mutation {
   rejectSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
   acceptSubmission(updateSubmissionInput: UpdateSubmissionInput!): Submission!
   removeSubmission(id: Int!): Submission!
+  createChat(createChatInput: CreateChatInput!): Chat!
+  createMessage(createMessageInput: CreateMessageInput!): Message!
+  createInvitation(createInvitationInput: CreateInvitationInput!): Invitation!
+  manageInvitation(action: String!, id: Float!): Invitation!
 }
 
 input FirstStageDTOInput {
@@ -394,7 +452,6 @@ input CreateCarpoolInput {
   departureLocationLatitude: String!
   destinationLocationLongitude: String!
   destinationLocationLatitude: String!
-  ownerId: Float!
 }
 
 input UpdateCarpoolInput {
@@ -438,6 +495,21 @@ input UpdateSubmissionInput {
   id: Int!
 }
 
+input CreateChatInput {
+  userIds: [Float!]!
+}
+
+input CreateMessageInput {
+  chatId: Float!
+  senderId: Float!
+  content: String!
+}
+
+input CreateInvitationInput {
+  receiverId: Float!
+}
+
 type Subscription {
   notification(userId: Float!): Notification!
+  message(userId: Float!): Message!
 }

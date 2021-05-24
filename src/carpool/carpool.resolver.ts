@@ -29,11 +29,12 @@ export class CarpoolResolver {
   //   return this.carpoolService.create(owner, createCarpoolInput);
   // }
   @Mutation(() => Carpool)
-  // @Auth(UserRoleEnum.USER)
+  @Auth(UserRoleEnum.USER)
   createCarpool(
-    @Args('createCarpoolInput') createCarpoolInput: CreateCarpoolInput
+    @CurrentUser() owner: User,
+    @Args('createCarpoolInput') createCarpoolInput: CreateCarpoolInput,
   ): Promise<Carpool> {
-    return this.carpoolService.create(createCarpoolInput);
+    return this.carpoolService.create(owner, createCarpoolInput);
   }
 
   @Query(() => [Carpool], { name: 'carpoolsByProximity' })
