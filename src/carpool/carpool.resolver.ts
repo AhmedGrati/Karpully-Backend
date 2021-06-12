@@ -19,15 +19,6 @@ import { CarpoolsProximityInput } from './dto/proximity/carpools-proximity.input
 @Resolver(() => Carpool)
 export class CarpoolResolver {
   constructor(private readonly carpoolService: CarpoolService) { }
-  // TODO: return current user arg after dev phase is done
-  // @Mutation(() => Carpool)
-  // // @Auth(UserRoleEnum.USER)
-  // createCarpool(
-  //   @CurrentUser() owner: User,
-  //   @Args('createCarpoolInput') createCarpoolInput: CreateCarpoolInput
-  // ): Promise<Carpool> {
-  //   return this.carpoolService.create(owner, createCarpoolInput);
-  // }
   @Mutation(() => Carpool)
   @Auth(UserRoleEnum.USER)
   createCarpool(
