@@ -44,6 +44,7 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-jest": "^24.2.0",
     "faker": "^5.5.2",
+    "file-type": "^16.0.1",
     "graphql": "^15.5.0",
     "graphql-relay": "^0.6.0",
     "graphql-tools": "^7.0.4",
@@ -101,7 +102,7 @@
       "json",
       "ts"
     ],
-    "collectCoverage":true,
+    "collectCoverage": true,
     "setupFilesAfterEnv": [
       "jest-chain"
     ],
@@ -113,7 +114,9 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
-    "coverageReporters":["lcov"],
+    "coverageReporters": [
+      "lcov"
+    ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   },

@@ -185,7 +185,7 @@ type User {
   telNumber: String
   authorities: [String!]
   roles: [UserRoleEnum!]!
-  gender: Gender!
+  gender: Gender
   lowerCasedUsername: String!
   isConfirmed: Boolean!
   sentEmails: [Email!]

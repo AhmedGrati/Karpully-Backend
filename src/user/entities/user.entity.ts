@@ -113,7 +113,7 @@ export class User extends TimestampEntites {
   roles: string[];
 
   @Column({ nullable: true })
-  @Field((type) => Gender)
+  @Field((type) => Gender, { nullable: true })
   gender: Gender;
 
   @Column({ unique: true })
@@ -165,11 +165,11 @@ export class User extends TimestampEntites {
 
   @Field(() => Invitation)
   @OneToMany(() => Invitation, (invitation) => invitation.sender)
-  sentInvitations;
+  sentInvitations: Invitation[];
 
   @Field(() => Invitation)
   @OneToMany(() => Invitation, (invitation) => invitation.receiver)
-  receivedInvitations;
+  receivedInvitations: Invitation[];
 
   @BeforeInsert()
   async hashPassword() {

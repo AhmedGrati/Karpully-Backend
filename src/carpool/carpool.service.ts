@@ -33,9 +33,6 @@ export class CarpoolService {
     private readonly carpoolRepository: Repository<Carpool>,
     private caslAbilityFactory: CaslAbilityFactory<Carpool>,
     private locationService: LocationService,
-
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>
   ) {
     this.CARPOOL_REPO = carpoolRepository;
   }
