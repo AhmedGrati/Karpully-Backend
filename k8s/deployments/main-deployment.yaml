@@ -15,7 +15,10 @@ spec:
     matchLabels:
       io.kompose.service: main
   strategy:
-    type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
   template:
     metadata:
       annotations:
@@ -102,7 +105,7 @@ spec:
                 secretKeyRef:
                   key: POSTGRES_USER
                   name: postgres-secret
-          image: karpully/karpully-backend:latest
+          image: karpully/karpully-backend:#{Build.BuildId}#
           name: karpully-backend
           ports:
             - containerPort: 4000
