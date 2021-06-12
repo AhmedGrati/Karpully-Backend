@@ -36,7 +36,7 @@ export class ProfileImgUploadController {
     }),
   )
   // @CurrentUser()
-  create(@Query('id') user: number, @UploadedFile() file: any, @Res() res) {
+  create(@CurrentUser() user: User, @UploadedFile() file: any, @Res() res) {
     return this.profileImgUploadService.create(file, user, res);
   }
 
