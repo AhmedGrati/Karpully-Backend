@@ -1,3 +1,125 @@
+<div style="width:80%; margin:0 auto;">
+  <img src="./readme_assets/nestjs.png" width=120>
+
+  <img src="./readme_assets/azure.png" width=120>
+  <img src="./readme_assets/docker.png" width=120>
+  <img src="./readme_assets/jest.png" width=120>
+  <img src="./readme_assets/kubernetes.png" width=120>
+  <img src="./readme_assets/typeorm.png" width=100>
+</div>
+<br>
+<div style="margin:0 auto;">
+
+[![CodeFactor](https://www.codefactor.io/repository/github/ahmedgrati/karpully-backend/badge)](https://www.codefactor.io/repository/github/ahmedgrati/karpully-backend)
+<img src="https://img.shields.io/github/license/AhmedGrati/Karpully-Backend">
+<img src="https://img.shields.io/github/issues/AhmedGrati/Karpully-Backend">
+<img src="https://img.shields.io/github/stars/AhmedGrati/Karpully-Backend">
+
+<div>
+
+# Karpully
+
+Carpooling web server which manages and organizes carpools between Tunisian
+cities.
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to
+your .env files. The value of some of these keys could be retrieved from the
+file `.example.env`
+
+`PORT`
+
+`HOST`
+
+`DB_PORT`
+
+`POSTGRES_PASSWORD`
+
+`POSTGRES_DB`
+
+`POSTGRES_USER`
+
+`PG_DATA`
+
+`REDIS_HOST`
+
+`REDIS_PORT`
+
+`JWT_ACCESS_TOKEN_SECRET`
+
+`JWT_REFRESH_TOKEN_SECRET`
+
+`KARPULLY_EMAIL_LOGIN`
+
+`KARPULLY_EMAIL_PASSWORD`
+
+`SEED_NUMBER`
+
+`LOCATIONIQ_TOKEN`
+
+`FRONT_END_BASE_URL`
+
+`GUARDS`
+
+## Application Management:
+
+1. Make sure you have docker installed on your host.
+2. Make the file run-stop.sh executable.
+3. To run the up on a specific mode run the following command<br>
+
+```linux
+./run-stop.sh --type=start --mode=$MODE
+```
+
+where $MODE is in (test | prod | dev).<br> 4. To stop or restart the application
+you should just change the "--type=start", and fit it to your needs.<br> 5. In
+.env file, the HOST key should have 'postgres' as value. <br> 6. To run the
+application in a kubernetes environment run
+
+```linux
+./k8s/run-stop.sh --type=start
+```
+
+## Application Management:
+
+1. Make sure you have docker installed on your host.
+2. Make the file run-stop.sh executable.
+3. To run the up on a specific mode run the following command<br>
+
+```linux
+./run-stop.sh --type=start --mode=$MODE
+```
+
+where $MODE is in (test | prod | dev).<br> 4. To stop or restart the application
+you should just change the "--type=start", and fit it to your needs.<br> 5. In
+.env file, the HOST key should have 'postgres' as value. <br> 6. To run the
+application in a kubernetes environment run
+
+```linux
+./k8s/run-stop.sh --type=start
+```
+
+## Running Tests
+
+To run unit tests, run the following command
+
+```bash
+  npm run test
+```
+
+To run e2e tests, run the following command
+
+```bash
+  npm run test:e2e
+```
+
+To generate code coverage, run the following command
+
+```bash
+  npm run test:cov
+```
+
 ## Important Notes:
 
 1. Look up for the file .env.example to get an idea about environment variables.
@@ -71,27 +193,6 @@ query {
    submission.
 4. The owner of a carpool cannot accept submissions anymore when the available
    number of places of the carpool reaches 0.
-
-## Application Management:
-
-1. Make sure you have docker installed on your host.
-2. Make the file run-stop.sh executable.
-3. To run the up on a specific mode run the following command<br>
-
-```linux
-./run-stop.sh --type=start --mode=$MODE
-```
-
-where $MODE is in (test | prod | dev).<br> 4. To stop or restart the application
-you should just change the "--type=start", and fit it to your needs.<br> 5. In
-.env file, the HOST key should have 'postgres' as value. <br> 6. To run the
-application in a kubernetes environment run
-
-```linux
-./k8s/run-stop.sh --type=start
-```
-
-#### _It should be noted that test implementation is not ready._
 
 ## License
 
