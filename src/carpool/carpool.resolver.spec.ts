@@ -1,25 +1,25 @@
-import {Test, TestingModule} from '@nestjs/testing';
-import {User} from '../user/entities/user.entity';
-import {PaginationInput} from '../generics/pagination.input';
-import {CarpoolResolver} from './carpool.resolver';
-import {CarpoolService} from './carpool.service';
-import {Where} from './dto/where.input';
-import {Carpool} from './entities/carpool.entity';
-import {PaginatedCarpool} from './entities/paginatedCarpool.entity';
-import {CreateCarpoolInput} from './dto/create-carpool.input';
+import { Test, TestingModule } from '@nestjs/testing';
+import { User } from '../user/entities/user.entity';
+import { PaginationInput } from '../generics/pagination.input';
+import { CarpoolResolver } from './carpool.resolver';
+import { CarpoolService } from './carpool.service';
+import { Where } from './dto/where.input';
+import { Carpool } from './entities/carpool.entity';
+import { PaginatedCarpool } from './entities/paginatedCarpool.entity';
+import { CreateCarpoolInput } from './dto/create-carpool.input';
 
 describe('CarpoolResolver', () => {
   let resolver: CarpoolResolver;
   const carpoolMockService = {
     paginatedCarpools: jest.fn().mockImplementation(
       (paginationInput, where?): PaginatedCarpool => {
-        return {meta: {itemCount: 0, currentPage: 1}, items: []};
+        return { meta: { itemCount: 0, currentPage: 1 }, items: [] };
       },
     ),
     restoreCarpool: jest.fn().mockImplementation((user, id) => new Carpool()),
     remove: jest.fn().mockImplementation((user, id) => new Carpool()),
     findOne: jest.fn().mockImplementation((id) => {
-      return {id};
+      return { id };
     }),
     create: jest.fn().mockImplementation((dto) => {
       return {
@@ -73,7 +73,8 @@ describe('CarpoolResolver', () => {
 
   it('should find a carpool with the specific id', () => {
     const id: number = 1;
-    expect(resolver.findOneCarpool(id)).toMatchObject({id});
+    resolver.findOneCarpool(id).then(e => console.log(e))
+    expect(resolver.findOneCarpool(id)).toMatchObject({ id });
     expect(carpoolMockService.findOne).toBeCalledWith(id);
   });
   it('should find a carpool with the specific id', () => {

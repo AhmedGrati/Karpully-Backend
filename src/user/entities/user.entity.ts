@@ -113,7 +113,7 @@ export class User extends TimestampEntites {
   roles: string[];
 
   @Column({ nullable: true })
-  @Field((type) => Gender)
+  @Field((type) => Gender, { nullable: true })
   gender: Gender;
 
   @Column({ unique: true })
