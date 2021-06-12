@@ -1,15 +1,18 @@
 <div float="left">
-  <img src="./readme_assets/nestjs.png" width=150>
+  <img src="./readme_assets/nestjs.png" width=100>
 
-  <img src="./readme_assets/azure.png" width=150>
-  <img src="./readme_assets/docker.png" width=150>
-  <img src="./readme_assets/jest.png" width=150>
-  <img src="./readme_assets/kubernetes.png" width=150>
-  <img src="./readme_assets/typeorm.png" width=150>
+  <img src="./readme_assets/azure.png" width=100>
+  <img src="./readme_assets/docker.png" width=100>
+  <img src="./readme_assets/jest.png" width=100>
+  <img src="./readme_assets/kubernetes.png" width=100>
+  <img src="./readme_assets/typeorm.png" width=100>
 </div>
 <br>
 
 [![CodeFactor](https://www.codefactor.io/repository/github/ahmedgrati/karpully-backend/badge)](https://www.codefactor.io/repository/github/ahmedgrati/karpully-backend)
+<img src="https://img.shields.io/github/license/AhmedGrati/Karpully-Backend">
+<img src="https://img.shields.io/github/issues/AhmedGrati/Karpully-Backend">
+<img src="https://img.shields.io/github/stars/AhmedGrati/Karpully-Backend">
 
 # Karpully
 
