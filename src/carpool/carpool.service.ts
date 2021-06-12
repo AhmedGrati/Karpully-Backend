@@ -3,29 +3,28 @@ import {
   LOCATION_NOT_FOUND_ERROR_MESSAGE,
   LOCATION_SAVE_ISSUE_ERROR_MESSAGE,
 } from './../utils/constants';
-import {LocationService} from './../location/location.service';
-import {Inject, Injectable, NotFoundException} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
+import { LocationService } from './../location/location.service';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import {
   CARPOOL_NOT_FOUND_ERROR_MESSAGE,
   USER_NOT_FOUND_ERROR_MESSAGE,
 } from '../utils/constants';
-import {Repository} from 'typeorm';
-import {CreateCarpoolInput} from './dto/create-carpool.input';
-import {UpdateCarpoolInput} from './dto/update-carpool.input';
-import {Carpool} from './entities/carpool.entity';
-import {User} from '../user/entities/user.entity';
-import {CaslAbilityFactory} from '../casl/casl-ability.factory';
-import {Action} from '../casl/enums/action.enum';
-import {PaginationInput} from '../generics/pagination.input';
-import {PaginatedCarpool} from './entities/paginatedCarpool.entity';
-import {Pagination} from '../utils/pagination';
-import {Where} from './dto/where.input';
-import {checkCASLAndExecute} from '../utils/casl-authority-check';
-import {ReverseLocationSearchInput} from '../location/dto/reverse-location-search-input';
-import {Location} from '../location/entities/location.entity';
-import {Exception} from 'handlebars';
-import {FakerCreateCarpoolInput} from './dto/faker-create-carpool.input';
+import { Repository } from 'typeorm';
+import { CreateCarpoolInput } from './dto/create-carpool.input';
+import { UpdateCarpoolInput } from './dto/update-carpool.input';
+import { Carpool } from './entities/carpool.entity';
+import { User } from '../user/entities/user.entity';
+import { CaslAbilityFactory } from '../casl/casl-ability.factory';
+import { Action } from '../casl/enums/action.enum';
+import { PaginationInput } from '../generics/pagination.input';
+import { PaginatedCarpool } from './entities/paginatedCarpool.entity';
+import { Pagination } from '../utils/pagination';
+import { Where } from './dto/where.input';
+import { checkCASLAndExecute } from '../utils/casl-authority-check';
+import { ReverseLocationSearchInput } from '../location/dto/reverse-location-search-input';
+import { CarpoolsProximityInput } from './dto/proximity/carpools-proximity.input';
+import { calculateViewBox } from '../utils/proximity-operations';
 @Injectable()
 export class CarpoolService {
   CARPOOL_REPO: Repository<Carpool>;
@@ -34,6 +33,9 @@ export class CarpoolService {
     private readonly carpoolRepository: Repository<Carpool>,
     private caslAbilityFactory: CaslAbilityFactory<Carpool>,
     private locationService: LocationService,
+
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>
   ) {
     this.CARPOOL_REPO = carpoolRepository;
   }
@@ -63,8 +65,7 @@ export class CarpoolService {
     if (departureLocation.length == 0 || destinationLocation.length == 0) {
       throw new NotFoundException(LOCATION_API_RESPONSE_ERROR);
     }
-    // const owner = await this.userRepository.findOne({ id: createCarpoolInput.ownerId })
-
+    // const owner = await this.userRepository.findOneOrFail(createCarpoolInput.ownerId);
     if (owner && departureLocation && destinationLocation) {
       // create a new carpool
       const createdCarpool = await this.carpoolRepository.create(
@@ -73,9 +74,9 @@ export class CarpoolService {
       // assign the properties
       this.carpoolRepository.merge(
         createdCarpool,
-        {owner},
-        {departureLocation: departureLocation[0]},
-        {destinationLocation: destinationLocation[0]},
+        { owner },
+        { departureLocation: departureLocation[0] },
+        { destinationLocation: destinationLocation[0] },
       );
 
       // save the created carpool
@@ -94,12 +95,12 @@ export class CarpoolService {
   }
 
   async findOne(id: number): Promise<Carpool> {
-    const carpool = await this.carpoolRepository.findOne({where: {id}});
+    const carpool = await this.carpoolRepository.findOne({ where: { id } });
     if (!carpool) {
       throw new NotFoundException(CARPOOL_NOT_FOUND_ERROR_MESSAGE);
     }
     return carpool;
-  }
+  } // 
 
   async paginatedCarpools(
     paginationInput: PaginationInput,
@@ -121,7 +122,7 @@ export class CarpoolService {
       this.carpoolRepository,
       async () => {
         await this.carpoolRepository.restore(id);
-        return await this.carpoolRepository.findOne({where: {id}});
+        return await this.carpoolRepository.findOne({ where: { id } });
       },
     );
 
@@ -140,7 +141,7 @@ export class CarpoolService {
       carpoolId,
       this.carpoolRepository,
       async () => {
-        const {id, ...data} = updateCarpoolInput;
+        const { id, ...data } = updateCarpoolInput;
         await this.carpoolRepository
           .update(carpoolId, data)
           .then((updatedCarpool) => updatedCarpool.raw[0]);
@@ -170,6 +171,62 @@ export class CarpoolService {
     );
 
     return executedFunction;
+  }
+  async findApproximateCarpools(input: CarpoolsProximityInput): Promise<Carpool[]> {
+    const depLoc = input.departureLoc;
+    const destLoc = input.destinationLoc;
+    if (depLoc && !destLoc) {
+      const depViewBox = calculateViewBox(depLoc.lon, depLoc.lat, depLoc.radius);
+      const fileteredCarpools = this.carpoolRepository.createQueryBuilder("carpool")
+        .leftJoinAndSelect("carpool.departureLocation", "location")
+        .leftJoinAndSelect("carpool.destinationLocation", "destLocation")
+        .leftJoinAndSelect("carpool.owner", "user")
+        .andWhere("location.lon >= :minLon", { minLon: depViewBox.minLon })
+        .andWhere("location.lon <= :maxLon", { maxLon: depViewBox.maxLon })
+        .andWhere("location.lat >= :minLat", { minLat: depViewBox.minLat })
+        .andWhere("location.lat <= :maxLat", { maxLat: depViewBox.maxLat })
+        .printSql()
+        .getMany()
+      // console.log(fileteredCarpools)
+      return await fileteredCarpools;
+    }
+    else if (!depLoc && destLoc) {
+      const destViewBox = calculateViewBox(destLoc.lon, destLoc.lat, destLoc.radius);
+      const fileteredCarpools = this.carpoolRepository.createQueryBuilder("carpool")
+        .leftJoinAndSelect("carpool.departureLocation", "location")
+        .leftJoinAndSelect("carpool.destinationLocation", "destLocation")
+        .leftJoinAndSelect("carpool.owner", "user")
+        .andWhere("destLocation.lon >= :minLon", { minLon: destViewBox.minLon })
+        .andWhere("destLocation.lon <= :maxLon", { maxLon: destViewBox.maxLon })
+        .andWhere("destLocation.lat >= :minLat", { minLat: destViewBox.minLat })
+        .andWhere("destLocation.lat <= :maxLat", { maxLat: destViewBox.maxLat })
+        .printSql()
+        .getMany()
+      return await fileteredCarpools;
+    }
+    else if (depLoc && destLoc) {
+      const depViewBox = calculateViewBox(depLoc.lon, depLoc.lat, depLoc.radius);
+      const destViewBox = calculateViewBox(destLoc.lon, destLoc.lat, destLoc.radius);
+      const fileteredCarpools = this.carpoolRepository.createQueryBuilder("carpool")
+        .leftJoinAndSelect("carpool.departureLocation", "location")
+        .leftJoinAndSelect("carpool.destinationLocation", "destLocation")
+        .leftJoinAndSelect("carpool.owner", "user")
+        .andWhere("destLocation.lon >= :minLonDest", { minLonDest: destViewBox.minLon })
+        .andWhere("destLocation.lon <= :maxLonDest", { maxLonDest: destViewBox.maxLon })
+        .andWhere("destLocation.lat >= :minLatDest", { minLatDest: destViewBox.minLat })
+        .andWhere("destLocation.lat <= :maxLatDest", { maxLatDest: destViewBox.maxLat })
+        .andWhere("location.lon >= :minLon", { minLon: depViewBox.minLon })
+        .andWhere("location.lon <= :maxLon", { maxLon: depViewBox.maxLon })
+        .andWhere("location.lat >= :minLat", { minLat: depViewBox.minLat })
+        .andWhere("location.lat <= :maxLat", { maxLat: depViewBox.maxLat })
+        .printSql()
+        .getMany()
+      return await fileteredCarpools;
+
+    }
+    else {
+      throw new BadRequestException('Wrong Proxmity Search Input')
+    }
   }
 
   // async checkCASLAndExecute(user: User, action: Action, carpoolId: number, func: () => Promise<Carpool>): Promise<Carpool> {

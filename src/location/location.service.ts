@@ -65,8 +65,8 @@ export class LocationService {
       data = e.data;
     })
     const mappedData = data.filter((e: Location) => {
-      const lat = parseInt(e.lat, 10);
-      const lon = parseInt(e.lon, 10);
+      const lat = e.lat
+      const lon = e.lon
       return (lat <= xy_limits.lat_max && lat >= xy_limits.lat_min) && (lon <= xy_limits.lon_max && lon >= xy_limits.lon_min)
     })
     if (mappedData.length > 0)

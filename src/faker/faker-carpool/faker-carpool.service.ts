@@ -21,12 +21,14 @@ export class FakerCarpoolService {
     const allLocations = await this.locationService.findAll()
     const allCarpools = await this.carpoolService.findAll();
     const allUsers = await this.userService.findAll();
+    const maxContent = allLocations.length;
     if (allCarpools.length < seedNumber) {
       return await Array.from({ length: seedNumber }).map<Promise<Carpool | void>>(
         async (_, i) => {
           //
-          const departureLocation = allLocations[i % seedNumber]
-          const destinationLocation = allLocations[(i + 1) % seedNumber]
+          // const randomizer = i % maxContent; > 95 ? i % seedNumber - Math.floor(Math.random() * 10) : i % seedNumber;
+          const departureLocation = allLocations[i % maxContent]
+          const destinationLocation = allLocations[(i + 1) % maxContent]
           const owner = allUsers[0];
           const hasSmokePermission: boolean = faker.random.arrayElement([
             true,
@@ -58,6 +60,8 @@ export class FakerCarpoolService {
             { departureLocation },
             { destinationLocation }
           )
+
+
           return await this.carpoolService.createFake(carpool).catch(e => {
             throw new Exception('failed to created carpool ')
           });

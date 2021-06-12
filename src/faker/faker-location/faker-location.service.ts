@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from '../../common/EnvironmentVariables';
 import { Location } from '../../location/entities/location.entity'
 import { LocationCreationInput } from '../../location/dto/location-creation.input';
+import { Address } from 'src/location/entities/address.entity';
 const faker = require('faker')
 @Injectable()
 export class FakerLocationService {
@@ -16,6 +17,8 @@ export class FakerLocationService {
         const seedNumber = this.configService.get<number>('SEED_NUMBER');
         const allAddress = await this.locationService.findAllAddress();
         const allLocations = await this.locationService.findAll();
+        console.log('address', allAddress)
+        console.log(allLocations)
         if (allLocations.length < seedNumber) {
             return await Array.from({ length: seedNumber }).map<Promise<Location | void>>(
                 async (_, i) => {
@@ -45,7 +48,7 @@ export class FakerLocationService {
                         type,
                         importance,
                         icon,
-                        address,
+                        address: { ID: i } as Address,
                     };
                     return await this.locationService.create(loc)
                 }

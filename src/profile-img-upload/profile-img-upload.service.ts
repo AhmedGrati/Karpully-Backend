@@ -17,13 +17,13 @@ export class ProfileImgUploadService {
     private readonly userService: UserService) { }
 
 
-  async create(file: any, user: number, res) {
+  async create(file: any, user: User, res) {
     const newImage = this.imageRepository.create({
       name: file.filename
     })
     const savedImage = await this.imageRepository.save(newImage)
 
-    await this.userService.updateImage(user, savedImage).catch(e => {
+    await this.userService.updateImage(user.id, savedImage).catch(e => {
       throw new Error(FAILURE_UPON_PROFULE_IMAGE_UPDATE)
     })
 
