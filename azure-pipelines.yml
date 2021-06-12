@@ -29,7 +29,7 @@ stages:
               dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
               repository: $(repositoryName)
               tags: |
-                latest
+                $(tag)
           - task: CopyFiles@2
             inputs:
               Contents: k8s/**
