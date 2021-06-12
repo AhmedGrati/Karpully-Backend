@@ -32,9 +32,6 @@ export class ProfileImgUploadService {
 
   }
 
-  findAll() {
-    return `This action returns all profileImgUpload`;
-  }
 
   async findOne(id: number, res: any) {
     const img = await this.imageRepository.findOne(id)
@@ -42,11 +39,4 @@ export class ProfileImgUploadService {
       .sendFile(img.name, { root: './src/images' })
   }
 
-  update(id: number, updateProfileImgUploadDto: UpdateProfileImgUploadDto) {
-    return `This action updates a #${id} profileImgUpload`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} profileImgUpload`;
-  }
 }
