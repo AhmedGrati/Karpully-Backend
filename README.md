@@ -1,4 +1,4 @@
-<div float="left">
+<div style="width:80%; margin:0 auto;">
   <img src="./readme_assets/nestjs.png" width=100>
 
   <img src="./readme_assets/azure.png" width=100>
@@ -8,12 +8,14 @@
   <img src="./readme_assets/typeorm.png" width=100>
 </div>
 <br>
+<div style="width: 80%; margin:0 auto;">
 
 [![CodeFactor](https://www.codefactor.io/repository/github/ahmedgrati/karpully-backend/badge)](https://www.codefactor.io/repository/github/ahmedgrati/karpully-backend)
 <img src="https://img.shields.io/github/license/AhmedGrati/Karpully-Backend">
 <img src="https://img.shields.io/github/issues/AhmedGrati/Karpully-Backend">
 <img src="https://img.shields.io/github/stars/AhmedGrati/Karpully-Backend">
 
+<div>
 # Karpully
 
 Carpooling web server which manages and organizes carpools between Tunisian
