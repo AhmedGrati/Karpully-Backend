@@ -1,11 +1,12 @@
 <div style="width:80%; margin:0 auto;">
-  <img src="./readme_assets/nestjs.png" width=120>
+  <img src="./readme_assets/nestjs.png" width=100>
 
-  <img src="./readme_assets/azure.png" width=120>
-  <img src="./readme_assets/docker.png" width=120>
-  <img src="./readme_assets/jest.png" width=120>
-  <img src="./readme_assets/kubernetes.png" width=120>
+  <img src="./readme_assets/azure.png" width=100>
+  <img src="./readme_assets/docker.png" width=100>
+  <img src="./readme_assets/jest.png" width=100>
+  <img src="./readme_assets/kubernetes.png" width=100>
   <img src="./readme_assets/typeorm.png" width=100>
+  <img src="./readme_assets/postgres.png" width=100>
 </div>
 <br>
 <div style="margin:0 auto;">
