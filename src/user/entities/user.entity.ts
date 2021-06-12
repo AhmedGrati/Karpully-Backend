@@ -165,11 +165,11 @@ export class User extends TimestampEntites {
 
   @Field(() => Invitation)
   @OneToMany(() => Invitation, (invitation) => invitation.sender)
-  sentInvitations;
+  sentInvitations: Invitation[];
 
   @Field(() => Invitation)
   @OneToMany(() => Invitation, (invitation) => invitation.receiver)
-  receivedInvitations;
+  receivedInvitations: Invitation[];
 
   @BeforeInsert()
   async hashPassword() {

@@ -17,8 +17,6 @@ export class FakerLocationService {
         const seedNumber = this.configService.get<number>('SEED_NUMBER');
         const allAddress = await this.locationService.findAllAddress();
         const allLocations = await this.locationService.findAll();
-        console.log('address', allAddress)
-        console.log(allLocations)
         if (allLocations.length < seedNumber) {
             return await Array.from({ length: seedNumber }).map<Promise<Location | void>>(
                 async (_, i) => {
