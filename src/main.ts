@@ -1,12 +1,12 @@
-import {Logger, ValidationPipe} from '@nestjs/common';
-import {NestFactory} from '@nestjs/core';
-import {AppModule} from './app.module';
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
 import * as helmet from 'helmet';
-import {TrimDataPipe} from './shared/pipes/trim-data.pipe';
+import { TrimDataPipe } from './shared/pipes/trim-data.pipe';
 
 const port = process.env.PORT || 3000;
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   // This is usefull to enable graphql playground without any CSP problems
   app.use(
     helmet({
