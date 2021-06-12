@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - karpully.20.62.213.228.nip.io # update IP address here
+        - karpully.20.81.113.137.nip.io # update IP address here
       secretName: app-web-cert
   rules:
-    - host: karpully.20.62.213.228.nip.io # update IP address here
+    - host: karpully.20.81.113.137.nip.io # update IP address here
       http:
         paths:
           - backend:

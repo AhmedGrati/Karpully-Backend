@@ -33,17 +33,17 @@ start)
     kubectl apply -f ./provision-claims
     kubectl apply -f ./services
     kubectl apply -f ./deployments
-    #kubectl apply -f ./tls
+    kubectl apply -f ./tls
     ;;
 stop)
     kubectl delete -f ./services
     kubectl delete -f ./deployments
-    #kubectl delete -f ./provision-claims
+    kubectl delete -f ./provision-claims
     kubectl delete -f ./networks
-    #kubectl delete -f ./tls    
+    kubectl delete -f ./tls    
     kubectl delete -f ./secrets
     kubectl delete -f ./configs
-    #kubectl delete -f ./namespaces
+    kubectl delete -f ./namespaces
     ;;
 esac;
     
