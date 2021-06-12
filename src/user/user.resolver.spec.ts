@@ -1,17 +1,17 @@
-import {Test, TestingModule} from '@nestjs/testing';
-import {EmailVerificationInput} from 'src/email/dto/email-verification.input';
-import {ResetPasswordEmailInput} from 'src/email/dto/reset-password-email.input';
-import {EmailTypeEnum} from 'src/email/entities/email-type.enum';
-import {Email} from 'src/email/entities/email.entity';
-import {AuthService} from '../auth/auth.service';
-import {CreateUserInput} from './dto/create-user.input';
-import {FirstStageDTOInput} from './dto/first-stage-dto.input';
-import {ResetPasswordInput} from './dto/reset-password.input';
-import {SecondStageDTOInput} from './dto/second-stage-dto.input';
-import {Gender} from './entities/gender';
-import {User} from './entities/user.entity';
-import {UserResolver} from './user.resolver';
-import {UserService} from './user.service';
+import { Test, TestingModule } from '@nestjs/testing';
+import { EmailVerificationInput } from 'src/email/dto/email-verification.input';
+import { ResetPasswordEmailInput } from 'src/email/dto/reset-password-email.input';
+import { EmailTypeEnum } from 'src/email/entities/email-type.enum';
+import { Email } from 'src/email/entities/email.entity';
+import { AuthService } from '../auth/auth.service';
+import { CreateUserInput } from './dto/create-user.input';
+import { FirstStageDTOInput } from './dto/first-stage-dto.input';
+import { ResetPasswordInput } from './dto/reset-password.input';
+import { SecondStageDTOInput } from './dto/second-stage-dto.input';
+import { Gender } from './entities/gender';
+import { User } from './entities/user.entity';
+import { UserResolver } from './user.resolver';
+import { UserService } from './user.service';
 
 describe('UserResolver', () => {
   let resolver: UserResolver;
@@ -131,7 +131,7 @@ describe('UserResolver', () => {
 
   it('should return a user that match with the specific id', () => {
     const id: number = 1;
-    const user = {email: 'ahmedgrati1999@gmail.com', id};
+    const user = { email: 'ahmedgrati1999@gmail.com', id };
     expect(resolver.findOne(user as User, id)).toMatchObject(user);
     expect(userMockService.findOne).toHaveBeenCalledTimes(1);
     expect(userMockService.findOne).toHaveBeenCalledWith(user as User, id);

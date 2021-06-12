@@ -23,9 +23,6 @@ import { Pagination } from '../utils/pagination';
 import { Where } from './dto/where.input';
 import { checkCASLAndExecute } from '../utils/casl-authority-check';
 import { ReverseLocationSearchInput } from '../location/dto/reverse-location-search-input';
-import { Location } from '../location/entities/location.entity';
-import { Exception } from 'handlebars';
-import { FakerCreateCarpoolInput } from './dto/faker-create-carpool.input';
 import { CarpoolsProximityInput } from './dto/proximity/carpools-proximity.input';
 import { calculateViewBox } from '../utils/proximity-operations';
 @Injectable()
@@ -103,7 +100,7 @@ export class CarpoolService {
       throw new NotFoundException(CARPOOL_NOT_FOUND_ERROR_MESSAGE);
     }
     return carpool;
-  }
+  } // 
 
   async paginatedCarpools(
     paginationInput: PaginationInput,
