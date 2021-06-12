@@ -71,10 +71,10 @@ describe('CarpoolResolver', () => {
     expect(carpoolMockService.remove).toBeCalledWith(user, id);
   });
 
-  it('should find a carpool with the specific id', () => {
+  it('should find a carpool with the specific id', async () => {
     const id: number = 1;
-    resolver.findOneCarpool(id).then(e => console.log(e))
-    expect(resolver.findOneCarpool(id)).toMatchObject({ id });
+    const data = await resolver.findOneCarpool(id);
+    expect(data).toMatchObject({ id });
     expect(carpoolMockService.findOne).toBeCalledWith(id);
   });
   it('should find a carpool with the specific id', () => {
